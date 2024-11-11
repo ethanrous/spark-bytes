@@ -26,7 +26,6 @@ const SearchID: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [pageSize, setPageSize] = useState<number>(10);
-  const [totalProducts, setTotalProducts] = useState<number>(0);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [keywordSearch, setKeywordSearch] = useState<boolean>(false);
@@ -37,12 +36,10 @@ const SearchID: React.FC = () => {
     async function getProducts() {
       setLoading(true);
       let productsApiURL = `http://localhost:5001/products`;
-      let countApiURL = `http://localhost:5001/products/count`;
 
       const encodedQuery = encodeURIComponent(searchQuery);
       if (!searchQuery || keywordSearch) {
-        productsApiURL += `?page=${currentPage}&limit=${pageSize}&q=${encodedQuery}`;
-        countApiURL += `?q=${encodedQuery}`;
+        productsApiURL += `/search/${encodedQuery}`; // `?page=${currentPage}&limit=${pageSize}&q=${encodedQuery}`;
       } else {
         productsApiURL += `/${encodedQuery}`;
       }
@@ -56,25 +53,16 @@ const SearchID: React.FC = () => {
         return [];
       }
 
-      const respCount = await fetch(countApiURL);
-      const count = await respCount.json();
-      if (!respCount.ok) {
-        setHttpErrorCode(`${respCount.status}`);
-        setHttpErrorMessage(count.detail);
-        setLoading(false);
-        return [];
-      }
 
       setProducts(productsData);
-      setTotalProducts(
-        keywordSearch || searchQuery === "" ? count : productsData.length
-      );
       setHttpErrorCode("");
       setHttpErrorMessage("");
       setLoading(false);
     }
     getProducts().catch(console.error);
   }, [currentPage, pageSize, searchQuery, keywordSearch]);
+
+  const totalProducts = 5;
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

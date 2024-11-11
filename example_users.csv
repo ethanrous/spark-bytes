@@ -1,0 +1,2 @@
+first_name, last_name, email, password_hash, is_verified
+Administrator,Person,bown@bu.edu,a1,true

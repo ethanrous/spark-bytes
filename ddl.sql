@@ -1,12 +1,14 @@
-CREATE DATABASE product_db;
-\c product_db
+CREATE DATABASE sparkbytes_db;
+\c sparkbytes_db
 
-CREATE TABLE products (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255),
-    description TEXT,
-    price DECIMAL(10, 2),
-    created_at TIMESTAMP DEFAULT NOW()
+CREATE TABLE users (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255),
+    email VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    is_verified BOOLEAN DEFAULT FALSE,
+    joined_at TIMESTAMP DEFAULT NOW()
 );
-COPY products(name, description, price)
-FROM '/docker-entrypoint-initdb.d/product_data.csv' DELIMITER ',' CSV HEADER;
+COPY users(first_name, last_name, email, password_hash, is_verified)
+FROM '/docker-entrypoint-initdb.d/example_users.csv' DELIMITER ',' CSV HEADER;
