@@ -3,7 +3,7 @@ services:
   db:
     image: postgres:latest
     restart: always
-    container_name: hw6_postgres
+    container_name: sparkbytes
     environment:
       POSTGRES_USER: p_user
       POSTGRES_PASSWORD: p_password
@@ -12,6 +12,6 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
       - ./ddl.sql:/docker-entrypoint-initdb.d/ddl.sql
-      - ./product_data.csv:/docker-entrypoint-initdb.d/product_data.csv
+      - ./example_users.csv:/docker-entrypoint-initdb.d/example_users.csv
 volumes:
   postgres-data:

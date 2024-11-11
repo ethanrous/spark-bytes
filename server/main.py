@@ -10,7 +10,7 @@ import asyncpg
 # ======================================== database setup =========================================
 
 # Database connection details
-DATABASE_URL = "postgresql://p_user:p_password@localhost:5432/product_db"
+DATABASE_URL = "postgresql://p_user:p_password@localhost:5432/sparkbytes_db"
 
 # Establishing a connection to the database
 async def connect(): return await asyncpg.connect(DATABASE_URL)
@@ -66,7 +66,8 @@ async def count_all(table_name : str, q : str = ""):
 async def get_product_by_id(q : str = "", page : int = 1, limit : int = 10):
     q = q.replace("'", "\\'")
     try:
-        db_response = await app.state.db.fetch(f"SELECT * FROM products WHERE UPPER(name) LIKE '%{q.upper()}%' LIMIT {limit} OFFSET {(page - 1) * limit}")
+        #db_response = await app.state.db.fetch(f"SELECT * FROM products WHERE UPPER(name) LIKE '%{q.upper()}%' LIMIT {limit} OFFSET {(page - 1) * limit}")
+        db_response = await app.state.db.fetch(f"SELECT * FROM users")
     except Exception as error:
         print(error)
         raise HTTPException(status_code=500, detail=[{"msg": "Internal server error."}])
