@@ -9,25 +9,33 @@ import (
 	_ "github.com/lib/pq"
 )
 
-var db *sqlx.DB
-
-func InitDB() {
+func InitDB() (Database, error) {
 	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", "localhost", 5432, "p_user", "p_password", "product_db")
 
 	postgresDB, err := sqlx.Connect("postgres", psqlInfo)
 	if err != nil {
-		log.Fatal(err)
+		return Database{}, err
 	}
 
-	pingErr := postgresDB.Ping()
-	if pingErr != nil {
-		log.Fatal(pingErr)
+	err = postgresDB.Ping()
+	if err != nil {
+		return Database{}, err
 	}
 	log.Println("DB Connected!")
-	db = postgresDB
+
+	_, err = postgresDB.Exec(usersTable)
+	if err != nil {
+		return Database{}, err
+	}
+
+	return Database{postgresDB}, nil
 }
 
-func SearchByKeyword(keyword string) ([]models.Product, error) {
+type Database struct {
+	*sqlx.DB
+}
+
+func (db Database) SearchByKeyword(keyword string) ([]models.Product, error) {
 	keyword = "%" + keyword + "%"
 	rows, err := db.Queryx("SELECT * FROM products WHERE LOWER(name) LIKE $1 OR LOWER(description) LIKE $1", keyword)
 	if err != nil {
