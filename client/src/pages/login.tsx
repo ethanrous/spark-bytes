@@ -4,11 +4,43 @@ import React, { useState } from 'react';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [successfulLogin, setSuccessfulLogin] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Add authentication logic here
     console.log('Logging in with', email, password);
+    setSuccessfulLogin(false);
+
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('http://localhost:5001/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      });
+
+      if (response.ok) {
+        console.log('Login successful');
+        setSuccessfulLogin(true);
+      } else {
+        setError(`Login failed: ${response.status === 401 ? "Incorrect email or password." : "An error has occurred while logging in."}`);
+      }
+    } catch (err) {
+      console.error('Error logging in:', err);
+      setError('An error occurred while trying to login.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -31,7 +63,9 @@ const LoginPage = () => {
           style={styles.input}
           required
         />
-        <button type="submit" style={styles.button}>Log in</button>
+        <button type="submit" style={styles.button} disabled={loading}>{loading ? 'Logging in...' : 'Login'}</button>
+        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {successfulLogin && <p style={{ color: 'blue' }}>Welcome {email}!</p>}
       </form>
     </div>
   );
