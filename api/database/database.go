@@ -10,7 +10,7 @@ import (
 )
 
 func InitDB() (Database, error) {
-	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", "localhost", 5432, "p_user", "p_password", "product_db")
+	psqlInfo := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", "localhost", 5432, "p_user", "p_password", "sparkbytes_db")
 
 	postgresDB, err := sqlx.Connect("postgres", psqlInfo)
 	if err != nil {
