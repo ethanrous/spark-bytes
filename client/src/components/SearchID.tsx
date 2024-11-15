@@ -22,6 +22,7 @@ interface Product {
   created_at: string;
 }
 
+
 const SearchID: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
