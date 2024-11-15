@@ -52,9 +52,12 @@ export default function Home() {
           <Button type="link" style={{ color: "white" }}>
             Create Events
           </Button>
-          <Button type="link" style={{ color: "white" }}>
-            Sign Up
-          </Button>
+          <Link href="/signup"> 
+            <Button type="link" style={{ color: "white" }}>
+              Sign Up
+            </Button>
+          </Link>
+          
           <Link href="/login" passHref> {/* Link to the login page */}
             <Button type="link" style={{ color: "white" }}>
               Log In
