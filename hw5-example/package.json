@@ -1,0 +1,29 @@
+{
+  "name": "solved",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@ant-design/cssinjs": "^1.17.0",
+    "antd": "^5.9.4",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "javascript-obfuscator": "^4.1.0",
+    "nextjs-obfuscator": "^2.0.1",
+    "postcss-obfuscator": "^1.6.0",
+    "typescript": "latest"
+  }
+}
