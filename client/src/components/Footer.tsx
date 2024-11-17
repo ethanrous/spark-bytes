@@ -24,7 +24,7 @@ const Footer: React.FC = () => {
         }}
       >
         <a
-          href="https://www.instagram.com"
+          href="https://www.instagram.com/bu_spark/"
           target="_blank"
           rel="noopener noreferrer"
           style={{ textDecoration: 'none' }}
@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
           <InstagramOutlined style={logoStyle} />
         </a>
         <a
-          href="https://www.facebook.com"
+          href="https://www.facebook.com/sparkbu"
           target="_blank"
           rel="noopener noreferrer"
           style={{ textDecoration: 'none' }}
@@ -40,7 +40,7 @@ const Footer: React.FC = () => {
           <FacebookOutlined style={logoStyle} />
         </a>
         <a
-          href="https://www.twitter.com"
+          href="https://x.com/bu_spark/"
           target="_blank"
           rel="noopener noreferrer"
           style={{ textDecoration: 'none' }}
