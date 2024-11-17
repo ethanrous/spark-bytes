@@ -13,7 +13,7 @@ const Home: React.FC = () => {
   const heroSectionStyle: React.CSSProperties = {
     position: 'relative',
     height: '100vh',
-    backgroundImage: `url('..client\src\assets\IMG_673.jpg')`,
+    backgroundImage: `url('/assets/IMG_673.jpg')`,
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     color: '#FFFBE6',

@@ -105,7 +105,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    backgroundImage: 'url(client\src\assets\food squares.jpeg)', 
+    backgroundImage: 'url(/assets/food_squares.jpeg)', 
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     position: 'relative',

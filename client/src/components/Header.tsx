@@ -1,5 +1,6 @@
 // src/components/Header.tsx
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Header: React.FC = () => {
   const headerStyle = {
@@ -37,8 +38,8 @@ const Header: React.FC = () => {
     <header style={headerStyle}>
       {/* Logo and Text */}
       <div style={{ display: 'flex', alignItems: 'center' }}>
-        <img
-          src="/client/src/assets/spark_logo.png"
+        <Image
+          src="/assets/spark_logo.png"
           alt="Spark! Bytes Logo"
           width={40}
           height={40}
