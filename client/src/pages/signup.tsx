@@ -1,42 +1,50 @@
-// pages/login.tsx
+// pages/signup.tsx
 import React, { useState } from 'react';
 
-const LoginPage: React.FC = () => {
+const SignUpPage: React.FC = () => {
   const [email, setEmail] = useState('');
+  const [buid, setBuid] = useState('');
   const [password, setPassword] = useState('');
+  const [retypePassword, setRetypePassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [successfulLogin, setSuccessfulLogin] = useState(false);
+  const [successfulSignUp, setSuccessfulSignUp] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Logging in with', email, password);
-    setSuccessfulLogin(false);
+    console.log('Signing up with', email, buid, password, retypePassword);
+    setSuccessfulSignUp(false);
+
+    if (password !== retypePassword) {
+      setError('Passwords do not match!');
+      return;
+    }
 
     setLoading(true);
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5001/users/login', {
+      const response = await fetch('http://localhost:5001/users/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email,
+          buid,
           password,
         }),
       });
 
       if (response.ok) {
-        console.log('Login successful');
-        setSuccessfulLogin(true);
+        console.log('Sign Up successful');
+        setSuccessfulSignUp(true);
       } else {
-        setError(`Login failed: ${response.status === 401 ? "Incorrect email or password." : "An error has occurred while logging in."}`);
+        setError(`Sign Up failed: ${response.status === 400 ? "Invalid input." : "An error has occurred while signing up."}`);
       }
     } catch (err) {
-      console.error('Error logging in:', err);
-      setError('An error occurred while trying to login.');
+      console.error('Error signing up:', err);
+      setError('An error occurred while trying to sign up.');
     } finally {
       setLoading(false);
     }
@@ -45,29 +53,45 @@ const LoginPage: React.FC = () => {
   return (
     <div style={styles.container}>
       <form onSubmit={handleSubmit} style={styles.form}>
-        {/* "Log In" text inside the white box */}
-        <h1 style={styles.title}>Log In</h1>
+        {/* "Create an Account" text inside the white box */}
+        <h1 style={styles.title}>Create an Account</h1>
         <input
           type="email"
-          placeholder="Email address"
+          placeholder="Enter BU email address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={styles.input}
           required
         />
         <input
+          type="text"
+          placeholder="Enter BUID"
+          value={buid}
+          onChange={(e) => setBuid(e.target.value)}
+          style={styles.input}
+          required
+        />
+        <input
           type="password"
-          placeholder="Password"
+          placeholder="Create password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           style={styles.input}
           required
         />
+        <input
+          type="password"
+          placeholder="Retype password"
+          value={retypePassword}
+          onChange={(e) => setRetypePassword(e.target.value)}
+          style={styles.input}
+          required
+        />
         <button type="submit" style={styles.button} disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? 'Signing up...' : 'Sign Up!'}
         </button>
         {error && <p style={styles.error}>{error}</p>}
-        {successfulLogin && <p style={styles.success}>Welcome {email}!</p>}
+        {successfulSignUp && <p style={styles.success}>Account created successfully!</p>}
       </form>
     </div>
   );
@@ -81,7 +105,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    backgroundImage: 'url(client\src\assets\steak.jpeg)',
+    backgroundImage: 'url(client\src\assets\food squares.jpeg)', 
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     position: 'relative',
@@ -133,4 +157,4 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 };
 
-export default LoginPage;
+export default SignUpPage;

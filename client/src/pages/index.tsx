@@ -3,36 +3,75 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 const Home: React.FC = () => {
+  const mainStyle: React.CSSProperties = {
+    textAlign: 'left',
+    padding: '50px',
+    backgroundColor: '#FFFBE6',
+    fontFamily: '"Lato", sans-serif',
+  };
+
+  const heroSectionStyle: React.CSSProperties = {
+    position: 'relative',
+    height: '100vh',
+    backgroundImage: `url('..client\src\assets\IMG_673.jpg')`,
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    color: '#FFFBE6',
+  };
+
+  const heroTextStyle: React.CSSProperties = {
+    position: 'absolute',
+    top: '30%',
+    left: '10%',
+    maxWidth: '400px',
+    color: '#FFFBE6',
+    fontFamily: '"Josefin Sans", sans-serif',
+  };
+
+  const buttonStyle: React.CSSProperties = {
+    padding: '10px 20px',
+    backgroundColor: '#00712D',
+    border: 'none',
+    color: '#FFFBE6',
+    fontFamily: '"Lato", sans-serif',
+    fontSize: '16px',
+    cursor: 'pointer',
+    borderRadius: '5px',
+  };
+
+  const sectionStyle = (backgroundColor: string): React.CSSProperties => ({
+    padding: '50px',
+    backgroundColor,
+    textAlign: 'center',
+    fontFamily: '"Josefin Sans", sans-serif',
+    color: '#264039',
+  });
+
   return (
     <>
       <Header />
-      <main style={{ textAlign: 'left', padding: '50px', backgroundColor: '#F0F2F0' }}>
-        <section 
-          style={{ 
-            position: 'relative', 
-            height: '100vh', 
-            backgroundImage: 'url(/IMG_673.png)', 
-            backgroundSize: 'cover', 
-            backgroundPosition: 'center' 
-          }}
-        >
-          <div style={{ color: '#F0F2F0', position: 'absolute', top: '30%', left: '10%', maxWidth: '400px' }}>
-            <h1>Sustainability at its core</h1>
-            <p>Turn Leftovers into Opportunities: Free Food, Zero Waste</p>
-            <button style={{
-              padding: '10px 20px',
-              backgroundColor: '#7D8C6D',
-              border: 'none',
-              color: '#F0F2F0',
-              cursor: 'pointer'
-            }}>Find Events</button>
+      <main style={mainStyle}>
+        <section style={heroSectionStyle}>
+          <div style={heroTextStyle}>
+            <h1 style={{ fontSize: '36px', marginBottom: '20px' }}>Sustainability at its core</h1>
+            <p style={{ fontSize: '18px', marginBottom: '20px' }}>Turn Leftovers into Opportunities: Free Food, Zero Waste</p>
+            <button style={buttonStyle}>Find Events</button>
           </div>
         </section>
 
-        {/* Additional sections can be added here */}
-        <section style={{ padding: '50px', backgroundColor: '#C2D9BF' }}>Section 1</section>
-        <section style={{ padding: '50px', backgroundColor: '#B2BF9F' }}>Section 2</section>
-        <section style={{ padding: '50px', backgroundColor: '#7D8C6D' }}>Section 3</section>
+        {/* Additional sections */}
+        <section style={sectionStyle('#D5ED9F')}>
+          <h2>Discover Events Near You</h2>
+          <p>Join us in reducing food waste by finding events offering free food.</p>
+        </section>
+        <section style={sectionStyle('#FFFBE6')}>
+          <h2>Get Involved</h2>
+          <p>Create events and share your leftovers with the BU community.</p>
+        </section>
+        <section style={sectionStyle('#FF9100')}>
+          <h2>Why Spark! Bytes?</h2>
+          <p>Making sustainability simple, accessible, and delicious.</p>
+        </section>
       </main>
       <Footer />
     </>
