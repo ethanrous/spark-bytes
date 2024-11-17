@@ -23,7 +23,8 @@ const Header: React.FC = () => {
 
   const navStyle = {
     display: 'flex',
-    gap: '15px',
+    justifyContent: 'space-evenly', 
+    gap: '20px',
   };
 
   const linkStyle = {

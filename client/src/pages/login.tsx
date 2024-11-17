@@ -91,7 +91,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     flexDirection: 'column',
     width: '100%',
     maxWidth: '400px',
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
     padding: '20px',
     borderRadius: '8px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
