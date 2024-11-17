@@ -5,18 +5,21 @@ import Footer from '../components/Footer';
 const Home: React.FC = () => {
   const mainStyle: React.CSSProperties = {
     textAlign: 'left',
-    padding: '50px',
-    backgroundColor: '#FFFBE6',
     fontFamily: '"Lato", sans-serif',
+    margin: 0, 
+    padding: 0, 
   };
 
   const heroSectionStyle: React.CSSProperties = {
     position: 'relative',
-    height: '100vh',
-    backgroundImage: `url('/assets/IMG_673.jpg')`,
-    backgroundSize: 'cover',
-    backgroundPosition: 'center',
+    height: '100vh', 
+    width: '100%', 
+    backgroundImage: `url('/assets/green_planet.jpeg')`,
+    backgroundSize: 'cover', 
+    backgroundPosition: 'center', 
     color: '#FFFBE6',
+    margin: 0, 
+    padding: 0, 
   };
 
   const heroTextStyle: React.CSSProperties = {
@@ -30,21 +33,23 @@ const Home: React.FC = () => {
 
   const buttonStyle: React.CSSProperties = {
     padding: '10px 20px',
-    backgroundColor: '#00712D',
+    backgroundColor: '#FF9100',
     border: 'none',
     color: '#FFFBE6',
     fontFamily: '"Lato", sans-serif',
     fontSize: '16px',
     cursor: 'pointer',
     borderRadius: '5px',
+    fontWeight: 'bold',
   };
 
-  const sectionStyle = (backgroundColor: string): React.CSSProperties => ({
+  const sectionStyle = (backgroundColor: string, marginBottom: string = '0'): React.CSSProperties => ({
     padding: '50px',
     backgroundColor,
     textAlign: 'center',
     fontFamily: '"Josefin Sans", sans-serif',
     color: '#264039',
+    marginBottom,
   });
 
   return (
@@ -68,7 +73,7 @@ const Home: React.FC = () => {
           <h2>Get Involved</h2>
           <p>Create events and share your leftovers with the BU community.</p>
         </section>
-        <section style={sectionStyle('#FF9100')}>
+        <section style={sectionStyle('#FF9100', '40px')}> 
           <h2>Why Spark! Bytes?</h2>
           <p>Making sustainability simple, accessible, and delicious.</p>
         </section>
