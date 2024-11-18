@@ -1,46 +1,63 @@
 // pages/signup.tsx
 import React, { useState } from 'react';
+import { Divider } from "antd";
+import Brand from "../components/Brand";
 
 const SignUpPage: React.FC = () => {
+  const [first_name, setFirstName] = useState('');
+  const [last_name, setLastName] = useState('');
   const [email, setEmail] = useState('');
-  const [buid, setBuid] = useState('');
   const [password, setPassword] = useState('');
-  const [retypePassword, setRetypePassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [successfulSignUp, setSuccessfulSignUp] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Signing up with', email, buid, password, retypePassword);
+    console.log('Signing up with: ', first_name, last_name, email, password, confirmPassword);
     setSuccessfulSignUp(false);
-
-    if (password !== retypePassword) {
-      setError('Passwords do not match!');
-      return;
-    }
-
     setLoading(true);
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5001/users/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          buid,
-          password,
-        }),
-      });
 
-      if (response.ok) {
-        console.log('Sign Up successful');
-        setSuccessfulSignUp(true);
+      //seeing if account already exists
+      const alreadySignedUp = await fetch(`http://localhost:5001/users/?email=${email}`)
+      if (alreadySignedUp.ok) {
+        {/*
+          TODO:
+          -make the 'Please log in.' or 'log in' part of the text a blue hyperlink to the login page
+          */}
+        setError("An account with that email already exists. Please log in.")
+        return;
+      } else if (password.length <= 7) {
+        setError("Password must be at least 7 characters.")
+        return;
+      } else if (password !== confirmPassword) {
+        setError('Passwords do not match.');
+        return;
       } else {
-        setError(`Sign Up failed: ${response.status === 400 ? "Invalid input." : "An error has occurred while signing up."}`);
+      //adding user to db
+        const response = await fetch('http://localhost:5001/users/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            password,
+            first_name,
+            last_name
+          }),
+        });
+
+        if (response.ok) {
+          console.log('Sign Up successful');
+          setSuccessfulSignUp(true);
+        } else {
+          setError(`Sign Up failed: ${response.status === 400 ? "Please use BU email address." : "An error has occurred while signing up."}`);
+        }
       }
     } catch (err) {
       console.error('Error signing up:', err);
@@ -52,28 +69,38 @@ const SignUpPage: React.FC = () => {
 
   return (
     <div style={styles.container}>
+      <Brand/>
       <form onSubmit={handleSubmit} style={styles.form}>
         {/* "Create an Account" text inside the white box */}
         <h1 style={styles.title}>Create an Account</h1>
         <input
+          type="text"
+          placeholder="First name"
+          value={first_name}
+          onChange={(e) => setFirstName(e.target.value)}
+          style={styles.input}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Last name"
+          value={last_name}
+          onChange={(e) => setLastName(e.target.value)}
+          style={styles.input}
+          required
+        />
+        <Divider style={styles.divider}/>
+        <input
           type="email"
-          placeholder="Enter BU email address"
+          placeholder="BU email address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           style={styles.input}
           required
         />
         <input
-          type="text"
-          placeholder="Enter BUID"
-          value={buid}
-          onChange={(e) => setBuid(e.target.value)}
-          style={styles.input}
-          required
-        />
-        <input
           type="password"
-          placeholder="Create password"
+          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           style={styles.input}
@@ -81,9 +108,9 @@ const SignUpPage: React.FC = () => {
         />
         <input
           type="password"
-          placeholder="Retype password"
-          value={retypePassword}
-          onChange={(e) => setRetypePassword(e.target.value)}
+          placeholder="Confirm password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
           style={styles.input}
           required
         />
@@ -91,7 +118,7 @@ const SignUpPage: React.FC = () => {
           {loading ? 'Signing up...' : 'Sign Up!'}
         </button>
         {error && <p style={styles.error}>{error}</p>}
-        {successfulSignUp && <p style={styles.success}>Account created successfully!</p>}
+        {successfulSignUp && <p style={styles.success}>Account created successfully! <br/> Please check your inbox for verification.</p>}
       </form>
     </div>
   );
@@ -105,7 +132,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    backgroundImage: 'url(/assets/food_squares.jpeg)', 
+    backgroundImage: 'url(/assets/crowded.jpg)', 
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     position: 'relative',
@@ -135,9 +162,13 @@ const styles: { [key: string]: React.CSSProperties } = {
     border: '1px solid #ccc',
     outline: 'none',
   },
+  divider: {
+    backgroundColor: "black",
+    margin: "10px 0"
+  },
   button: {
     padding: '12px',
-    backgroundColor: '#C74B33',
+    backgroundColor: '#FF9100',
     color: '#fff',
     fontSize: '1rem',
     fontWeight: 'bold',
