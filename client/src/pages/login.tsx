@@ -1,5 +1,6 @@
 // pages/login.tsx
 import React, { useState } from 'react';
+import Brand from "../components/Brand";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -44,6 +45,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div style={styles.container}>
+      <Brand/>
       <form onSubmit={handleSubmit} style={styles.form}>
         {/* "Log In" text inside the white box */}
         <h1 style={styles.title}>Log In</h1>
@@ -64,7 +66,7 @@ const LoginPage: React.FC = () => {
           required
         />
         <button type="submit" style={styles.button} disabled={loading}>
-          {loading ? 'Logging in...' : 'Login'}
+          {loading ? 'Logging in...' : 'Log in'}
         </button>
         {error && <p style={styles.error}>{error}</p>}
         {successfulLogin && <p style={styles.success}>Welcome {email}!</p>}
@@ -81,7 +83,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    backgroundImage: 'url(/assets/steak.jpeg)',
+    backgroundImage: 'url(/assets/field.jpg)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     position: 'relative',
@@ -113,7 +115,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   button: {
     padding: '12px',
-    backgroundColor: '#C74B33',
+    backgroundColor: '#FF9100',
     color: '#fff',
     fontSize: '1rem',
     fontWeight: 'bold',
