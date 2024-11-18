@@ -1,6 +1,6 @@
 // src/components/Header.tsx
 import Link from 'next/link';
-import Image from 'next/image';
+import Brand from "./Brand";
 
 const Header: React.FC = () => {
   const headerStyle = {
@@ -11,14 +11,6 @@ const Header: React.FC = () => {
     backgroundColor: '#00712D',
     color: '#FFFBE6',
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  };
-
-  const logoTextStyle = {
-    fontSize: '20px',
-    fontWeight: 'bold',
-    marginLeft: '10px',
-    color: '#FFFBE6',
-    fontFamily: '"Josefin Sans", sans-serif',
   };
 
   const navStyle = {
@@ -35,25 +27,22 @@ const Header: React.FC = () => {
     fontSize: '16px',
   };
 
+  {/*
+    TODO:
+    -ensure everything is center vertical alligned
+    -make it so that the page you are on is highlighted or smth similar in the header
+      (ex- when youre at localhost:3000/view-events, the 'View Events' portion should be highlighted or underlined or smth)
+  */}
   return (
     <header style={headerStyle}>
-      {/* Logo and Text */}
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Image
-          src="/assets/spark_logo.png"
-          alt="Spark! Bytes Logo"
-          width={40}
-          height={40}
-        />
-        <span style={logoTextStyle}>Spark! Bytes</span>
-      </div>
+      <Brand/>
 
       {/* Navigation Links */}
       <nav style={navStyle}>
         <Link href="/view-events" style={linkStyle}>
           View Events
         </Link>
-        <Link href="/create-events" style={linkStyle}>
+        <Link href="/create" style={linkStyle}>
           Create Events
         </Link>
         <Link href="/signup" style={linkStyle}>
