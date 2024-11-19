@@ -1,47 +1,56 @@
-// components/Footer.tsx
-import React from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+// src/components/Footer.tsx
+import { InstagramOutlined, FacebookOutlined, TwitterOutlined } from '@ant-design/icons';
 
 const Footer: React.FC = () => {
-    return (
-        <footer className="footer">
-            <div className="social-icons">
-                <Link href="#"><a><Image src="/instagram-icon.png" alt="Instagram" width={20} height={20} /></a></Link>
-                <Link href="#"><a><Image src="/x-icon.png" alt="X" width={20} height={20} /></a></Link>
-                <Link href="#"><a><Image src="/facebook-icon.png" alt="Facebook" width={20} height={20} /></a></Link>
-                <Link href="#"><a><Image src="/link-icon.png" alt="Website Link" width={20} height={20} /></a></Link>
-            </div>
-            <p>Copyright © 2024 *Spark!*, All rights reserved.</p>
-            <p>Want to change how you receive these emails?<br />
-                You can <Link href="#"><a>update your preferences</a></Link> or <Link href="#"><a>unsubscribe from this list</a></Link>.
-            </p>
-            <style jsx>{`
-                .footer {
-                    background-color: #e0f2f1;
-                    text-align: center;
-                    padding: 20px;
-                    width: 100%;
-                    position: fixed;
-                    bottom: 0;
-                }
-                .social-icons {
-                    display: flex;
-                    justify-content: center;
-                    gap: 10px;
-                    margin-bottom: 10px;
-                }
-                p {
-                    color: #333;
-                    font-size: 14px;
-                }
-                a {
-                    color: black;
-                    text-decoration: none;
-                }
-            `}</style>
-        </footer>
-    );
+  const logoStyle = {
+    fontSize: '24px',
+    margin: '0 10px',
+    color: '#FFFBE6',
+    cursor: 'pointer',
+  };
+
+  return (
+    <footer
+      style={{
+        backgroundColor: '#00712D',
+        color: '#FFFBE6',
+        textAlign: 'center',
+        padding: '20px',
+      }}
+    >
+      <div
+        style={{
+          marginBottom: '20px',
+        }}
+      >
+        <a
+          href="https://www.instagram.com/bu_spark/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: 'none' }}
+        >
+          <InstagramOutlined style={logoStyle} />
+        </a>
+        <a
+          href="https://www.facebook.com/sparkbu"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: 'none' }}
+        >
+          <FacebookOutlined style={logoStyle} />
+        </a>
+        <a
+          href="https://x.com/bu_spark/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: 'none' }}
+        >
+          <TwitterOutlined style={logoStyle} />
+        </a>
+      </div>
+      <p>© {new Date().getFullYear()} Spark! Bytes. All rights reserved.</p>
+    </footer>
+  );
 };
 
 export default Footer;

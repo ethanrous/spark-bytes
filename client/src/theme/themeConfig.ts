@@ -1,11 +1,15 @@
-// theme/themeConfig.ts
-import type { ThemeConfig } from "antd";
-
-const theme: ThemeConfig = {
-  token: {
-    fontSize: 16,
-    colorPrimary: "#52c41a",
+// src/theme/themeConfig.ts
+const themeConfig = {
+  colors: {
+    primary: '#264039',
+    background: '#F0F2F0',
+    secondaryBackground: '#C2D9BF',
+    textPrimary: '#264039',
+  },
+  typography: {
+    fontFamily: '"Josefin Sans", sans-serif', 
+    fontFamilySparkBytes: '"Lato", sans-serif', 
   },
 };
 
-export default theme;
+export default themeConfig;
