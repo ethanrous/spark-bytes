@@ -1,0 +1,199 @@
+{
+  "count": 5928,
+  "next": "https://api.spaceflightnewsapi.net/v4/articles/?has_launch=true&limit=10&offset=10",
+  "previous": null,
+  "results": [
+    {
+      "id": 21014,
+      "title": "NASA's Perseverance Captures Dust-Filled Martian Whirlwind",
+      "url": "https://mars.nasa.gov/news/9490/",
+      "image_url": "https://mars.nasa.gov/system/news_items/main_images/9490_PIA26074.gif",
+      "news_site": "NASA",
+      "summary": "The six-wheeled geologist spotted the twister as part of an atmospheric exploration of Jezero Crater.",
+      "published_at": "2023-09-29T16:08:00Z",
+      "updated_at": "2023-09-30T07:16:50.576000Z",
+      "featured": false,
+      "launches": [
+        {
+          "launch_id": "c4db6995-f25f-4608-8eb9-ce95d5226af2",
+          "provider": "Launch Library 2"
+        }
+      ],
+      "events": []
+    },
+    {
+      "id": 21011,
+      "title": "China to attempt lunar far side sample return in 2024",
+      "url": "https://spacenews.com/china-to-attempt-lunar-far-side-sample-return-in-2024/",
+      "image_url": "https://spacenews.com/wp-content/uploads/2020/12/CE5-ascent-liftoff-image-ignition-cnsa-clep-3dec2020-300x190.jpg",
+      "news_site": "SpaceNews",
+      "summary": "China will launch its Chang’e-6 lunar sample return mission next year in an attempt at a first-ever collection of material from the far side of the moon.",
+      "published_at": "2023-09-29T08:45:43Z",
+      "updated_at": "2023-09-29T08:54:18.688000Z",
+      "featured": false,
+      "launches": [
+        {
+          "launch_id": "9e857a6e-3b00-48db-859c-658c5bfe8b47",
+          "provider": "Launch Library 2"
+        }
+      ],
+      "events": []
+    },
+    {
+      "id": 21010,
+      "title": "NASA delays Psyche launch a week",
+      "url": "https://spacenews.com/nasa-delays-psyche-launch-a-week/",
+      "image_url": "https://spacenews.com/wp-content/uploads/2023/09/53213229385_ea592a9520_k-300x200.jpg",
+      "news_site": "SpaceNews",
+      "summary": "NASA has postponed the launch of the asteroid mission Psyche a week to update the configuration of thrusters on the spacecraft.",
+      "published_at": "2023-09-29T02:50:16Z",
+      "updated_at": "2023-09-29T08:54:05.892000Z",
+      "featured": false,
+      "launches": [
+        {
+          "launch_id": "66133437-db31-4098-8e3e-cf34c8125f9b",
+          "provider": "Launch Library 2"
+        }
+      ],
+      "events": []
+    },
+    {
+      "id": 21005,
+      "title": "SpaceX to close out third quarter with record-breaking Starlink mission",
+      "url": "https://www.nasaspaceflight.com/2023/09/starlink-group-6-19/",
+      "image_url": "https://www.nasaspaceflight.com/wp-content/uploads/2023/09/FoPuEZCWIAEsPA5-1170x780.jpg",
+      "news_site": "NASASpaceflight",
+      "summary": "SpaceX is set to close the third quarter of 2023 with its 70th launch of the year. The mission, Starlink Group 6-19, is set to lift off this Friday, Sept. 29, at 6:39 PM EDT (22:29 UTC) from Space Launch Complex 40 (SLC-40), at Cape Canaveral Space Force Station in Florida.",
+      "published_at": "2023-09-28T17:42:14Z",
+      "updated_at": "2023-09-28T19:47:46.278000Z",
+      "featured": false,
+      "launches": [
+        {
+          "launch_id": "1c75cf8f-7097-46cc-9fe3-28c4886df4a6",
+          "provider": "Launch Library 2"
+        }
+      ],
+      "events": []
+    },
+    {
+      "id": 20997,
+      "title": "FAA closes New Shepard mishap investigation",
+      "url": "https://spacenews.com/faa-closes-new-shepard-mishap-investigation/",
+      "image_url": "https://spacenews.com/wp-content/uploads/2022/09/ns23-plume-300x166.jpg",
+      "news_site": "SpaceNews",
+      "summary": "The Federal Aviation Administration announced Sept. 26 it had closed the mishap investigation into a failed launch by Blue Origin’s New Shepard vehicle more than a year ago, but said the vehicle is not yet cleared to resume flights.",
+      "published_at": "2023-09-27T23:00:55Z",
+      "updated_at": "2023-09-28T09:29:45.316000Z",
+      "featured": false,
+      "launches": [
+        {
+          "launch_id": "d4a6a953-d1b2-4f68-b891-b9c75fc96ff2",
+          "provider": "Launch Library 2"
+        }
+      ],
+      "events": []
+    },
+    {
+      "id": 20993,
+      "title": "FAA closes investigation into Blue Origin rocket failure, requires 21 ‘corrective actions’",
+      "url": "https://www.cnbc.com/2023/09/27/faa-closes-investigation-into-blue-origins-new-shepard-rocket-failure.html",
+      "image_url": "https://image.cnbcfm.com/api/v1/image/107214866-1679675175583-blue_origin_ns23_booster.png",
+      "news_site": "CNBC",
+      "summary": "The Federal Aviation Administration closed its investigation into last year’s failed flight of a cargo mission by Jeff Bezos’ Blue Origin, the regulator announced on Wednesday.",
+      "published_at": "2023-09-27T21:38:25Z",
+      "updated_at": "2023-09-28T09:30:10.644000Z",
+      "featured": false,
+      "launches": [
+        {
+          "launch_id": "d4a6a953-d1b2-4f68-b891-b9c75fc96ff2",
+          "provider": "Launch Library 2"
+        }
+      ],
+      "events": []
+    },
+    {
+      "id": 20990,
+      "title": "Record-Setting NASA Astronaut, Crewmates Return from Space Mission",
+      "url": "http://www.nasa.gov/press-release/record-setting-nasa-astronaut-crewmates-return-from-space-mission",
+      "image_url": "https://www.nasa.gov/sites/default/files/thumbnails/image/screenshot_2023-09-27_at_7.53.55_am.png?itok=_axdrdMX",
+      "news_site": "NASA",
+      "summary": "During his record-breaking mission, Rubio spent many hours on scientific activities aboard the space station, conducting a variety of tasks ranging from plant research to physical sciences studies.",
+      "published_at": "2023-09-27T12:18:00Z",
+      "updated_at": "2023-09-27T16:12:09.575000Z",
+      "featured": false,
+      "launches": [
+        {
+          "launch_id": "bc73ec4f-633e-4eb5-8b8e-5c996ea1733f",
+          "provider": "Launch Library 2"
+        },
+        {
+          "launch_id": "e3290e0e-d967-4a5d-95eb-f8fae06a9034",
+          "provider": "Launch Library 2"
+        }
+      ],
+      "events": []
+    },
+    {
+      "id": 20989,
+      "title": "Frank Rubio Back on Terra Firma After Record-Setting 371-Day Spaceflight",
+      "url": "https://spacepolicyonline.com/news/frank-rubio-back-on-terra-firma-after-record-setting-371-day-spaceflight/",
+      "image_url": "https://spacepolicyonline.com/wp-content/uploads/2023/09/Rubio-out-300x202.png",
+      "news_site": "SpacePolicyOnline.com",
+      "summary": "NASA astronaut Frank Rubio and two Russian colleagues landed in Kazakhstan this morning after 371 days in space, a new record for a U.S. astronaut. The duration was a surprise. […]",
+      "published_at": "2023-09-27T12:03:38Z",
+      "updated_at": "2023-09-27T16:12:20.672000Z",
+      "featured": false,
+      "launches": [
+        {
+          "launch_id": "bc73ec4f-633e-4eb5-8b8e-5c996ea1733f",
+          "provider": "Launch Library 2"
+        },
+        {
+          "launch_id": "e3290e0e-d967-4a5d-95eb-f8fae06a9034",
+          "provider": "Launch Library 2"
+        }
+      ],
+      "events": []
+    },
+    {
+      "id": 20988,
+      "title": "Soyuz returns ISS crew after record-setting stay",
+      "url": "https://spacenews.com/soyuz-returns-iss-crew-after-record-setting-stay/",
+      "image_url": "https://spacenews.com/wp-content/uploads/2023/09/soyuzms23-landing-300x164.jpg",
+      "news_site": "SpaceNews",
+      "summary": "A Soyuz capsule landed in Kazakhstan Sept. 27, returning two Russians and one American from the International Space Station after more than a year in orbit.",
+      "published_at": "2023-09-27T12:02:21Z",
+      "updated_at": "2023-09-27T16:12:26.612000Z",
+      "featured": false,
+      "launches": [
+        {
+          "launch_id": "bc73ec4f-633e-4eb5-8b8e-5c996ea1733f",
+          "provider": "Launch Library 2"
+        },
+        {
+          "launch_id": "e3290e0e-d967-4a5d-95eb-f8fae06a9034",
+          "provider": "Launch Library 2"
+        }
+      ],
+      "events": []
+    },
+    {
+      "id": 20983,
+      "title": "After setting new record for responsive launch, Space Force eyes next challenge",
+      "url": "https://spacenews.com/after-setting-new-record-for-responsive-launch-space-force-eyes-next-challenge/",
+      "image_url": "https://spacenews.com/wp-content/uploads/2023/09/F6DBVZXWwAApx0H-300x200.jpeg",
+      "news_site": "SpaceNews",
+      "summary": "The U.S. Space Force Victus Nox mission that Firefly Aerospace launched Sept. 14 set a new record for how quickly a national security payload can be put on orbit",
+      "published_at": "2023-09-26T22:27:28Z",
+      "updated_at": "2023-09-27T07:29:42.941000Z",
+      "featured": false,
+      "launches": [
+        {
+          "launch_id": "b8f2e028-285c-457d-b807-a6749cfc3af6",
+          "provider": "Launch Library 2"
+        }
+      ],
+      "events": []
+    }
+  ]
+}

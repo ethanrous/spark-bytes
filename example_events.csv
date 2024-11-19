@@ -1,0 +1,2 @@
+name, location, description, dietary_info, owner_id, start_time, end_time, attendees
+Food Event,CDS 2nd Floor,Come get food,"Gluten-Free, Vegan, Vegetarian",1,2019-11-19 00:00:00,2019-11-19 23:00:00,50
