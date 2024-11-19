@@ -12,3 +12,17 @@ CREATE TABLE users (
 );
 COPY users(first_name, last_name, email, password_hash, is_verified)
 FROM '/docker-entrypoint-initdb.d/example_users.csv' DELIMITER ',' CSV HEADER;
+
+CREATE TABLE events (
+    id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    dietary_info VARCHAR(255),
+    owner_id INT REFERENCES users(id),
+    start_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP NOT NULL,
+    attendees INT
+);
+COPY events(name, location, description, dietary_info, owner_id, start_time, end_time, attendees)
+FROM '/docker-entrypoint-initdb.d/example_events.csv' DELIMITER ',' CSV HEADER;
