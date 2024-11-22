@@ -8,6 +8,7 @@ const { Content } = Layout;
 const CreateEventPage: React.FC = () => {
   const [form] = Form.useForm();
 
+  //jude will handle this part once bowen uploads the api routes
   const handleSubmit = (values: any) => {
     const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
     const updatedEvents = [...storedEvents, values];
@@ -15,6 +16,16 @@ const CreateEventPage: React.FC = () => {
     form.resetFields();
   };
 
+  
+  {/*
+    TODO:
+    -necessary fields (1 field for each, all required except maybe? dietary_info):
+      event name, location, description, dietary_info, start_time, end_time, attendees (capacity)
+    -make visual style consistent with the sign up and log in pages (keep header)
+      -i would prefer it to be the same coding style as well but that is up to you
+      -id also say that start/end time should be in the same line
+    
+    */}
   return (
     <Layout>
       <Header />
