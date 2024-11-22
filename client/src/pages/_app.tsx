@@ -1,12 +1,44 @@
-import React from "react";
-import { ConfigProvider } from "antd";
-import type { AppProps } from "next/app";
-import theme from "@/theme/themeConfig";
+import type { AppProps } from 'next/app';
+import themeConfig from '../theme/themeConfig';
 
-const App = ({ Component, pageProps }: AppProps) => (
-  <ConfigProvider theme={theme}>
-    <Component {...pageProps} />
-  </ConfigProvider>
-);
+function MyApp({ Component, pageProps }: AppProps) {
+  return (
+    <div
+      style={{
+        fontFamily: themeConfig.typography.fontFamily,
+        backgroundColor: themeConfig.colors.background,
+        color: themeConfig.colors.textPrimary,
+        width: '100vw',
+        height: '100vh',
+        margin: 0,
+        padding: 0,
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column',
+        overflowX: 'hidden', // Prevent horizontal scroll
+      }}
+    >
+      {/* Reset styles */}
+      <style global jsx>{`
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
 
-export default App;
+        html,
+        body,
+        #__next {
+          height: 100%;
+          width: 100%;
+          overflow: hidden; /* Prevent extra scrollbars */
+        }
+      `}</style>
+
+      <Component {...pageProps} />
+    </div>
+  );
+}
+
+export default MyApp;
+

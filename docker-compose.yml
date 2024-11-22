@@ -13,5 +13,6 @@ services:
       - postgres-data:/var/lib/postgresql/data
       - ./ddl.sql:/docker-entrypoint-initdb.d/ddl.sql
       - ./example_users.csv:/docker-entrypoint-initdb.d/example_users.csv
+      - ./example_events.csv:/docker-entrypoint-initdb.d/example_events.csv
 volumes:
   postgres-data:
