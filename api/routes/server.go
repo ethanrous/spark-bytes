@@ -48,6 +48,7 @@ func NewServer(db database.Database) *Server {
 
 	r.Route("/events", func(r chi.Router) {
 		r.Get("/", getEvents)
+		r.Post("/", createEvent)
 	})
 
 	return &Server{r: r}
