@@ -69,7 +69,7 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 }
 
 type WlClaims struct {
-	Email string `json:"email"`
+	ID int `json:"id"`
 	jwt.RegisteredClaims
 }
 
@@ -97,7 +97,7 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 
 	expires := time.Now().Add(time.Hour * 24 * 7)
 	claims := WlClaims{
-		u.Email,
+		u.ID,
 		jwt.RegisteredClaims{
 			ExpiresAt: jwt.NewNumericDate(expires),
 		},
