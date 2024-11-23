@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Divider } from "antd";
 import Brand from "../components/Brand";
+import { UserApi } from '@/api/userApi';
 
 const SignUpPage: React.FC = () => {
   const [first_name, setFirstName] = useState('');
@@ -21,44 +22,14 @@ const SignUpPage: React.FC = () => {
     setError('');
 
     try {
-
-      //seeing if account already exists
-      const alreadySignedUp = await fetch(`http://localhost:5001/users/?email=${email}`)
-      if (alreadySignedUp.ok) {
-        {/*
-          TODO:
-          -make the 'Please log in.' or 'log in' part of the text a blue hyperlink to the login page
-          */}
-        setError("An account with that email already exists. Please log in.")
-        return;
-      } else if (password.length <= 7) {
-        setError("Password must be at least 7 characters.")
-        return;
-      } else if (password !== confirmPassword) {
-        setError('Passwords do not match.');
-        return;
+      const res = await UserApi.createUser({ first_name, last_name, email, password })
+      if (res.status === 201) {
+        console.log('Sign Up successful');
+        setSuccessfulSignUp(true);
       } else {
-      //adding user to db
-        const response = await fetch('http://localhost:5001/users/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email,
-            password,
-            first_name,
-            last_name
-          }),
-        });
-
-        if (response.ok) {
-          console.log('Sign Up successful');
-          setSuccessfulSignUp(true);
-        } else {
-          setError(`Sign Up failed: ${response.status === 400 ? "Please use BU email address." : "An error has occurred while signing up."}`);
-        }
+        setError(`Sign Up failed: ${res.status === 400 ? "Please use BU email address." : "An error has occurred while signing up."}`);
       }
+
     } catch (err) {
       console.error('Error signing up:', err);
       setError('An error occurred while trying to sign up.');
@@ -69,7 +40,7 @@ const SignUpPage: React.FC = () => {
 
   return (
     <div style={styles.container}>
-      <Brand/>
+      <Brand />
       <form onSubmit={handleSubmit} style={styles.form}>
         {/* "Create an Account" text inside the white box */}
         <h1 style={styles.title}>Create an Account</h1>
@@ -89,7 +60,7 @@ const SignUpPage: React.FC = () => {
           style={styles.input}
           required
         />
-        <Divider style={styles.divider}/>
+        <Divider style={styles.divider} />
         <input
           type="email"
           placeholder="BU email address"
@@ -118,7 +89,7 @@ const SignUpPage: React.FC = () => {
           {loading ? 'Signing up...' : 'Sign Up!'}
         </button>
         {error && <p style={styles.error}>{error}</p>}
-        {successfulSignUp && <p style={styles.success}>Account created successfully! <br/> Please check your inbox for verification.</p>}
+        {successfulSignUp && <p style={styles.success}>Account created successfully! <br /> Please check your inbox for verification.</p>}
       </form>
     </div>
   );
@@ -132,7 +103,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    backgroundImage: 'url(/assets/crowded.jpg)', 
+    backgroundImage: 'url(/assets/crowded.jpg)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     position: 'relative',

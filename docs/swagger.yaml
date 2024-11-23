@@ -1,0 +1,79 @@
+basePath: /api/
+definitions:
+  LoginParams:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  NewUserParams:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        type: string
+    type: object
+host: localhost:5001
+info:
+  contact: {}
+  description: Access to the SparkBytes server
+  title: SparkBytes API
+  version: "1.0"
+paths:
+  /users:
+    post:
+      operationId: CreateUser
+      parameters:
+      - description: New user params
+        in: body
+        name: newUserParams
+        required: true
+        schema:
+          $ref: '#/definitions/NewUserParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+      summary: Create User
+      tags:
+      - Users
+  /users/login:
+    post:
+      operationId: LoginUser
+      parameters:
+      - description: Login params
+        in: body
+        name: loginParams
+        required: true
+        schema:
+          $ref: '#/definitions/LoginParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+      summary: Login User
+      tags:
+      - Users
+schemes:
+- http
+- https
+securityDefinitions:
+  SessionAuth:
+    in: cookie
+    name: spark-bytes-session
+    type: apiKey
+swagger: "2.0"

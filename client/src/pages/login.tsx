@@ -1,6 +1,7 @@
 // pages/login.tsx
 import React, { useState } from 'react';
 import Brand from "../components/Brand";
+import { UserApi } from '@/api/userApi';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -17,19 +18,10 @@ const LoginPage: React.FC = () => {
     setLoading(true);
     setError('');
 
-    try {
-      const response = await fetch('http://localhost:5001/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          password,
-        }),
-      });
 
-      if (response.ok) {
+    try {
+      const response = await UserApi.loginUser({ email, password })
+      if (response.status === 200) {
         console.log('Login successful');
         setSuccessfulLogin(true);
       } else {
@@ -45,8 +37,8 @@ const LoginPage: React.FC = () => {
 
   return (
     <div style={styles.container}>
-      <Brand/>
-      <form onSubmit={handleSubmit} style={styles.form}>
+      <Brand />
+      <form onSubmit={(e) => { handleSubmit(e).catch((err) => console.error(err)) }} style={styles.form}>
         {/* "Log In" text inside the white box */}
         <h1 style={styles.title}>Log In</h1>
         <input
