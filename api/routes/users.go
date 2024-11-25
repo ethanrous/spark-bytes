@@ -1,18 +1,31 @@
 package routes
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
 	"strings"
 	"time"
 
+	"github.com/ethanrous/spark-bytes/database"
 	"github.com/ethanrous/spark-bytes/models"
 	"github.com/ethanrous/spark-bytes/models/rest"
 	"github.com/golang-jwt/jwt/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
+// CreateUser godoc
+//
+//	@ID		CreateUser
+//
+//	@Summary	Create User
+//	@Tags		Users
+//	@Produce	json
+//	@Param		newUserParams	body		rest.NewUserParams	true	"New user params"
+//	@Success	200
+//	@Failure	401
+//	@Router		/users [post]
 func createUser(w http.ResponseWriter, r *http.Request) {
 	newUser, err := readCtxBody[rest.NewUserParams](w, r)
 	if err != nil {
@@ -73,7 +86,19 @@ type WlClaims struct {
 	jwt.RegisteredClaims
 }
 
+// LoginUser godoc
+//
+//	@ID			LoginUser
+//
+//	@Summary	Login User
+//	@Tags		Users
+//	@Produce	json
+//	@Param		loginParams	body		rest.LoginParams	true	"Login params"
+//	@Success	200
+//	@Failure	401
+//	@Router		/users/login [post]
 func loginUser(w http.ResponseWriter, r *http.Request) {
+	log.Println("Login user")
 	login, err := readCtxBody[rest.LoginParams](w, r)
 	if err != nil {
 		return
@@ -83,6 +108,11 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 
 	u, err := db.GetUserByEmail(login.Email)
 	if err != nil {
+		if errors.Is(err, database.ErrUserNotFound) {
+			log.Println("User not found: ", err)
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
 		log.Println("Error getting user: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return

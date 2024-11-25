@@ -13,6 +13,16 @@ import (
 
 type Server struct{ r *chi.Mux }
 
+// @title						SparkBytes API
+// @version					1.0
+// @description				Access to the SparkBytes server
+// @host						localhost:5001
+// @schemes					http https
+// @BasePath					/api/
+//
+// @securityDefinitions.apikey	SessionAuth
+// @in							cookie
+// @name						spark-bytes-session
 func NewServer(db database.Database) *Server {
 
 	r := chi.NewRouter()
@@ -24,26 +34,27 @@ func NewServer(db database.Database) *Server {
 		AllowedOrigins: []string{"https://*", "http://*"},
 		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
+		AllowedHeaders:   []string{"Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With", "Content-Range", "Cookie"},
 		ExposedHeaders:   []string{"Link"},
 		AllowCredentials: false,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
+	r.Route("/api", func(r chi.Router) {
+		r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
+			_, err := w.Write([]byte("pong"))
+			if err != nil {
+				log.Println("Error writing response: ", err)
+				w.WriteHeader(http.StatusInternalServerError)
+				return
+			}
+			w.WriteHeader(http.StatusOK)
+		})
 
-	r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
-		_, err := w.Write([]byte("pong"))
-		if err != nil {
-			log.Println("Error writing response: ", err)
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		w.WriteHeader(http.StatusOK)
-	})
-
-	r.Route("/users", func(r chi.Router) {
-		r.Get("/", getUser)
-		r.Post("/", createUser)
-		r.Post("/login", loginUser)
+		r.Route("/users", func(r chi.Router) {
+			r.Get("/", getUser)
+			r.Post("/", createUser)
+			r.Post("/login", loginUser)
+		})
 	})
 
 	r.Route("/events", func(r chi.Router) {
