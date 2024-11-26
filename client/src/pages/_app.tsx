@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         boxSizing: 'border-box',
         display: 'flex',
         flexDirection: 'column',
-        overflowX: 'hidden', // Prevent horizontal scroll
+        overflowX: 'hidden',
       }}
     >
       {/* Reset styles */}
