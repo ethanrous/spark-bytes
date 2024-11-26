@@ -1,4 +1,4 @@
-// client\src\pages\viewEvents.tsx
+// view-events.tsx
 import { List } from 'antd';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
