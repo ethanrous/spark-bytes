@@ -3,12 +3,12 @@ import { ConfigProvider } from 'antd';
 
 const themeConfig = {
   colors: {
-    primary: '#f0cd4e',
-    secondary: '#f1e0a0',
-    background: '#f2f2f2',
-    textPrimary: '#264039',
-    textSecondary: '#2b2a2a',
-    accent: '#ff9100',
+    primary: '#00712D', // dark green
+    secondary: '#D5ED9F', // light green
+    background: '#FFFBE6', // whiteish
+    accent: '#FF9100', // tangerine
+    textPrimary: '#1D1D1D', // dark text color
+    textSecondary: '#2b2a2a', // secondary text color
   },
   typography: {
     fontFamily: '"Josefin Sans", sans-serif', 
