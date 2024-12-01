@@ -1,8 +1,8 @@
-// pages/signup.tsx
 import React, { useState } from 'react';
 import { Divider } from "antd";
 import Brand from "../components/Brand";
 import { UserApi } from '@/api/userApi';
+import themeConfig from '../theme/themeConfig';
 
 const SignUpPage: React.FC = () => {
   const [first_name, setFirstName] = useState('');
@@ -42,7 +42,6 @@ const SignUpPage: React.FC = () => {
     <div style={styles.container}>
       <Brand />
       <form onSubmit={handleSubmit} style={styles.form}>
-        {/* "Create an Account" text inside the white box */}
         <h1 style={styles.title}>Create an Account</h1>
         <input
           type="text"
@@ -95,7 +94,6 @@ const SignUpPage: React.FC = () => {
   );
 };
 
-// Explicitly type the styles object using React.CSSProperties
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
     display: 'flex',
@@ -122,7 +120,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   title: {
     fontSize: '2.5rem',
     fontWeight: 'bold',
-    color: '#333333',
+    color: themeConfig.colors.textPrimary,
     marginBottom: '20px',
   },
   input: {
@@ -130,16 +128,16 @@ const styles: { [key: string]: React.CSSProperties } = {
     margin: '10px 0',
     fontSize: '1rem',
     borderRadius: '5px',
-    border: '1px solid #ccc',
+    border: `1px solid ${themeConfig.colors.textPrimary}`,
     outline: 'none',
   },
   divider: {
-    backgroundColor: "black",
-    margin: "10px 0"
+    backgroundColor: themeConfig.colors.textSecondary,
+    margin: '10px 0',
   },
   button: {
     padding: '12px',
-    backgroundColor: '#FF9100',
+    backgroundColor: themeConfig.colors.primary,
     color: '#fff',
     fontSize: '1rem',
     fontWeight: 'bold',

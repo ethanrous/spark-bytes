@@ -67,7 +67,6 @@ const LoginPage: React.FC = () => {
   );
 };
 
-// Explicitly type the styles object using React.CSSProperties
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
     display: 'flex',
