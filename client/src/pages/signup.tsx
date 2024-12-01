@@ -1,5 +1,5 @@
+// pages/signup.tsx
 import React, { useState } from 'react';
-import { Divider } from "antd";
 import Brand from "../components/Brand";
 import { UserApi } from '@/api/userApi';
 import themeConfig from '../theme/themeConfig';
@@ -59,7 +59,6 @@ const SignUpPage: React.FC = () => {
           style={styles.input}
           required
         />
-        <Divider style={styles.divider} />
         <input
           type="email"
           placeholder="BU email address"
@@ -101,7 +100,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    backgroundImage: 'url(/assets/crowded.jpg)',
+    backgroundImage: 'url(/assets/colorful-food.jpeg)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     position: 'relative',
@@ -111,7 +110,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     flexDirection: 'column',
     width: '100%',
     maxWidth: '400px',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
     padding: '20px',
     borderRadius: '8px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
@@ -122,6 +121,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     fontWeight: 'bold',
     color: themeConfig.colors.textPrimary,
     marginBottom: '20px',
+    fontFamily: themeConfig.typography.fontFamilySparkBytes,
   },
   input: {
     padding: '12px',
@@ -130,30 +130,30 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: '5px',
     border: `1px solid ${themeConfig.colors.textPrimary}`,
     outline: 'none',
-  },
-  divider: {
-    backgroundColor: themeConfig.colors.textSecondary,
-    margin: '10px 0',
+    fontFamily: themeConfig.typography.fontFamily,
   },
   button: {
     padding: '12px',
-    backgroundColor: themeConfig.colors.primary,
+    backgroundColor: themeConfig.colors.accent,
     color: '#fff',
     fontSize: '1rem',
     fontWeight: 'bold',
     borderRadius: '5px',
     border: 'none',
     cursor: 'pointer',
+    fontFamily: themeConfig.typography.fontFamily,
   },
   error: {
     color: 'red',
     fontSize: '0.9rem',
     marginTop: '10px',
+    fontFamily: themeConfig.typography.fontFamily,
   },
   success: {
     color: 'green',
     fontSize: '0.9rem',
     marginTop: '10px',
+    fontFamily: themeConfig.typography.fontFamily,
   },
 };
 
