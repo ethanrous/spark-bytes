@@ -8,6 +8,7 @@ const themeConfig = {
     background: '#f2f2f2',
     textPrimary: '#264039',
     textSecondary: '#2b2a2a',
+    accent: '#ff9100',
   },
   typography: {
     fontFamily: '"Josefin Sans", sans-serif', 
