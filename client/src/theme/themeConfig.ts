@@ -1,10 +1,13 @@
 // src/theme/themeConfig.ts
+import { ConfigProvider } from 'antd';
+
 const themeConfig = {
   colors: {
-    primary: '#264039',
-    background: '#F0F2F0',
-    secondaryBackground: '#C2D9BF',
+    primary: '#f0cd4e',
+    secondary: '#f1e0a0',
+    background: '#f2f2f2',
     textPrimary: '#264039',
+    textSecondary: '#2b2a2a',
   },
   typography: {
     fontFamily: '"Josefin Sans", sans-serif', 
