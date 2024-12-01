@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Brand from "../components/Brand";
 import { UserApi } from '@/api/userApi';
+import themeConfig from '../theme/themeConfig';
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -18,9 +19,8 @@ const LoginPage: React.FC = () => {
     setLoading(true);
     setError('');
 
-
     try {
-      const response = await UserApi.loginUser({ email, password })
+      const response = await UserApi.loginUser({ email, password });
       if (response.status === 200) {
         console.log('Login successful');
         setSuccessfulLogin(true);
@@ -94,36 +94,41 @@ const styles: { [key: string]: React.CSSProperties } = {
   title: {
     fontSize: '2.5rem',
     fontWeight: 'bold',
-    color: '#333333',
+    color: themeConfig.colors.textPrimary,
     marginBottom: '20px',
+    fontFamily: themeConfig.typography.fontFamilySparkBytes,
   },
   input: {
     padding: '12px',
     margin: '10px 0',
     fontSize: '1rem',
     borderRadius: '5px',
-    border: '1px solid #ccc',
+    border: `1px solid ${themeConfig.colors.textPrimary}`,
     outline: 'none',
+    fontFamily: themeConfig.typography.fontFamily,
   },
   button: {
     padding: '12px',
-    backgroundColor: '#FF9100',
+    backgroundColor: themeConfig.colors.primary,
     color: '#fff',
     fontSize: '1rem',
     fontWeight: 'bold',
     borderRadius: '5px',
     border: 'none',
     cursor: 'pointer',
+    fontFamily: themeConfig.typography.fontFamily,
   },
   error: {
     color: 'red',
     fontSize: '0.9rem',
     marginTop: '10px',
+    fontFamily: themeConfig.typography.fontFamily,
   },
   success: {
     color: 'green',
     fontSize: '0.9rem',
     marginTop: '10px',
+    fontFamily: themeConfig.typography.fontFamily,
   },
 };
 
