@@ -39,7 +39,6 @@ const LoginPage: React.FC = () => {
     <div style={styles.container}>
       <Brand />
       <form onSubmit={(e) => { handleSubmit(e).catch((err) => console.error(err)) }} style={styles.form}>
-        {/* "Log In" text inside the white box */}
         <h1 style={styles.title}>Log In</h1>
         <input
           type="email"
@@ -108,7 +107,7 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
   button: {
     padding: '12px',
-    backgroundColor: themeConfig.colors.primary,
+    backgroundColor: themeConfig.colors.accent,
     color: '#fff',
     fontSize: '1rem',
     fontWeight: 'bold',
