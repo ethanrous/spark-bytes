@@ -1,13 +1,13 @@
 {/*
   TODO:
-  -decide which header/color scheme to use, and update colors in all other components accordingly
     -implement Brand component if you use the latter header, since its a navigation button
   */}
 
 // src/components/Header.tsx
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import Brand from "./Brand";
+import Brand from './Brand';
+import themeConfig from '@/theme/themeConfig';
 
 const Header: React.FC = () => {
   const router = useRouter();
@@ -16,9 +16,9 @@ const Header: React.FC = () => {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: '10px 20px',
-    backgroundColor: '#00712D',
-    color: '#FFFBE6',
+    padding: '3px 10px',
+    backgroundColor: themeConfig.colors.primary,
+    color: themeConfig.colors.background,
     boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   };
 
@@ -26,20 +26,21 @@ const Header: React.FC = () => {
     display: 'flex',
     justifyContent: 'space-evenly',
     gap: '20px',
+    alignItems: 'center',
   };
 
   const linkStyle = {
     textDecoration: 'none',
-    color: '#FFFBE6',
+    color: themeConfig.colors.background,
     fontWeight: '500',
-    fontFamily: '"Lato", sans-serif',
+    fontFamily: themeConfig.typography.fontFamilySparkBytes,
     fontSize: '16px',
   };
 
   const activeLinkStyle = {
     ...linkStyle,
-    color: '#00A2FF', 
-    fontWeight: 'bold', 
+    color: themeConfig.colors.accent,
+    fontWeight: 'bold',
   };
 
   return (
@@ -52,7 +53,7 @@ const Header: React.FC = () => {
           View Events
         </Link>
         <Link href="/create-event" style={router.pathname === '/create-event' ? activeLinkStyle : linkStyle}>
-          Create Events
+          Create Event
         </Link>
         <Link href="/signup" style={router.pathname === '/signup' ? activeLinkStyle : linkStyle}>
           Sign Up
