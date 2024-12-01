@@ -65,7 +65,7 @@
 
 import React, { useState } from "react";
 import { Layout, Form, Input, DatePicker, TimePicker, InputNumber, Button } from "antd";
-import Header from "@/components/Header"; // Assuming this is your header component
+import Header from "@/components/Header";
 
 const { Content } = Layout;
 
@@ -182,63 +182,66 @@ const styles: { [key: string]: React.CSSProperties } = {
     display: "flex",
     flexDirection: "column",
     minHeight: "100vh",
-    backgroundColor: "#f5f5f5", 
+    backgroundColor: "#f5f5f5",
   },
   content: {
     flex: 1,
     padding: "0",
     marginTop: "0",
-    backgroundColor: "#f5f5f5", 
+    backgroundColor: "#f5f5f5",
   },
   container: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "stretch",
-    gap: "0",
+    gap: "30px",
     height: "100%",
+    padding: "20px",
+    flexWrap: "wrap",
   },
   formSection: {
     flex: 1,
-    padding: "0",
-    backgroundColor: "#f5f5f5",
-    margin: 0,
+    padding: "20px",
+    backgroundColor: "#fff",
+    borderRadius: "8px",
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+    minWidth: "300px",
   },
   title: {
     fontSize: "2rem",
-    fontWeight: "bold",
+    fontWeight: "600",
     color: "#333",
-    margin: "20px 0",
-    paddingLeft: "20px", 
+    marginBottom: "20px",
+    textAlign: "center",
   },
   form: {
     display: "flex",
     flexDirection: "column",
-    padding: "20px",
   },
   input: {
-    padding: "8px",
-    fontSize: "1rem", 
+    padding: "10px",
+    fontSize: "1rem",
     borderRadius: "8px",
     border: "1px solid #ccc",
-    marginBottom: "10px",
-    height: "36px", 
+    marginBottom: "15px",
+    height: "40px",
   },
   textarea: {
-    padding: "8px",
-    fontSize: "1rem", 
+    padding: "10px",
+    fontSize: "1rem",
     borderRadius: "8px",
     border: "1px solid #ccc",
-    marginBottom: "10px",
-    height: "80px", 
+    marginBottom: "15px",
+    minHeight: "100px",
   },
   timeRow: {
     display: "flex",
-    gap: "10px",
-    marginBottom: "10px",
+    gap: "15px",
+    marginBottom: "15px",
   },
   button: {
-    padding: "12px",
+    padding: "12px 20px",
     backgroundColor: "#FF9100",
     color: "#fff",
     fontSize: "1rem",
@@ -246,6 +249,10 @@ const styles: { [key: string]: React.CSSProperties } = {
     borderRadius: "8px",
     border: "none",
     cursor: "pointer",
+    transition: "background-color 0.3s ease",
+  },
+  buttonHover: {
+    backgroundColor: "#ff7a00",
   },
   imageSection: {
     flex: 1,
@@ -253,14 +260,15 @@ const styles: { [key: string]: React.CSSProperties } = {
     justifyContent: "center",
     alignItems: "center",
     position: "relative",
-    margin: 0,
-    padding: "0",
-    backgroundColor: "#f5f5f5", 
+    backgroundColor: "#f5f5f5",
+    padding: "0 20px",
+    marginTop: "20px",
   },
   image: {
     width: "100%",
-    height: "100%",
+    height: "auto",
     objectFit: "cover",
+    borderRadius: "8px",
   },
 };
 
