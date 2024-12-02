@@ -26,7 +26,6 @@ const Header: React.FC = () => {
     display: 'flex',
     justifyContent: 'space-evenly',
     gap: '20px',
-    alignItems: 'center',
   };
 
   const linkStyle = {

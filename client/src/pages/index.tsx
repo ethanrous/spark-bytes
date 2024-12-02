@@ -1,3 +1,9 @@
+{/*
+  TODO:
+    -implement Brand component if you use the latter header, since its a navigation button
+  */}
+
+// src/pages/index.tsx
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import themeConfig from '../theme/themeConfig';
@@ -78,7 +84,7 @@ const Home: React.FC = () => {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    padding: '50px',
+    padding: '100px',
     gap: '20px',
   };
 
