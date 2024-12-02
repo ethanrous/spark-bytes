@@ -1,6 +1,11 @@
 {/*
   TODO:
-    -implement Brand component if you use the latter header, since its a navigation button
+    -fix so placement of everything is consistent with all window sizes  
+        -make button hoverable
+    -place in all photos, ensure correct scaling
+          -placement in bottom right or smth similar
+          -same thing with location consistency accross window sizes
+          -consider making this a component
   */}
 
 // src/pages/index.tsx
