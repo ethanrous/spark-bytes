@@ -85,6 +85,20 @@ const Home: React.FC = () => {
     gap: '20px',
   };
 
+  const foodCollageSectionStyle: React.CSSProperties = {
+    width: '100%',
+    height: 'auto',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: '#F4F4F4',
+  };
+
+  const foodCollageImageStyle: React.CSSProperties = {
+    width: '100%',
+    height: 'auto',
+  };
+
   const whatIsSparkBytesSectionStyle: React.CSSProperties = {
     display: 'flex',
     flexDirection: 'row',
@@ -139,7 +153,6 @@ const Home: React.FC = () => {
     borderRadius: '8px',
     fontWeight: 'bold',
     transition: 'background-color 0.3s ease',
-    
   };
 
   return (
@@ -174,6 +187,8 @@ const Home: React.FC = () => {
               No more missed meals or wasted resources. With Spark! Bytes, you'll receive real-time notifications about free food available across campus, tailored to your dietary preferences and location. Whether you're a vegan, have specific dietary needs, or simply love a free snack, we've got you covered.
               <br /><br />
               Our mission is simple: connect hungry students with surplus food, reduce campus food waste, and create a more sustainable, community-driven dining experience. Every notification is a chance to enjoy a meal, meet fellow students, and contribute to a greener campus.
+              <br /><br />
+              Ready to never miss a free bite again? 
             </p>
           </div>
           <div style={{ flex: 1 }}>
@@ -197,10 +212,18 @@ const Home: React.FC = () => {
         </section>
 
         <section style={whySectionStyle}>
-          <h2>Why 'Spark! Bytes'?</h2>
+          <h2>Why Spark! Bytes?</h2>
           <p>
-            Making sustainability simple, accessible, and delicious.
+          Making sustainability simple, accessible, and delicious, Spark! Bytes represents more than just a meal—it's a movement that embodies the spirit of community and smart resource utilization. Together, we can create a campus culture where food waste becomes a thing of the past.
           </p>
+        </section>
+
+        <section style={foodCollageSectionStyle}>
+          <img
+            src="/assets/food-collage.jpeg"
+            alt="Food Collage"
+            style={foodCollageImageStyle}
+          />
         </section>
 
         <section style={discoverSectionStyle}>
