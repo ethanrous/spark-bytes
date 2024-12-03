@@ -10,6 +10,23 @@ definitions:
     - email
     - password
     type: object
+  NewEventParams:
+    properties:
+      description:
+        type: string
+      dietary_info:
+        type: string
+      end_time:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: integer
+      start_time:
+        type: string
+    type: object
   NewUserParams:
     properties:
       email:
@@ -28,6 +45,38 @@ info:
   title: SparkBytes API
   version: "1.0"
 paths:
+  /events:
+    get:
+      operationId: GetEvents
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+      summary: Get All Events
+      tags:
+      - Events
+    post:
+      operationId: CreateEvent
+      parameters:
+      - description: New event params
+        in: body
+        name: newEventParams
+        required: true
+        schema:
+          $ref: '#/definitions/NewEventParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+      summary: Create Event
+      tags:
+      - Events
   /users:
     post:
       operationId: CreateUser

@@ -1,18 +1,12 @@
 package routes
 
 import (
-	// "fmt"
 	"fmt"
 	"log"
 	"net/http"
 
-	// "strings"
-	// "time"
-	// "github.com/ethanrous/spark-bytes/models"
-
 	"github.com/ethanrous/spark-bytes/models/rest"
 	"github.com/golang-jwt/jwt/v5"
-	// "github.com/golang-jwt/jwt/v5"
 )
 
 // CreateEvent godoc
@@ -25,7 +19,7 @@ import (
 // @Param		newEventParams	body		rest.NewEventParams	true	"New event params"
 // @Success		200
 // @Failure		401
-// @Route		/events [post]
+// @Router		/events [post]
 func createEvent(w http.ResponseWriter, r *http.Request) {
 	newEvent, err := readCtxBody[rest.NewEventParams](w, r)
 	if err != nil {
@@ -82,7 +76,7 @@ func createEvent(w http.ResponseWriter, r *http.Request) {
 // @Produce		json
 // @Success		200
 // @Failure		401
-// @Route		/events [get]
+// @Router		/events [get]
 func getEvents(w http.ResponseWriter, r *http.Request) {
 	db := databaseFromContext(r.Context())
 

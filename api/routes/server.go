@@ -55,11 +55,11 @@ func NewServer(db database.Database) *Server {
 			r.Post("/", createUser)
 			r.Post("/login", loginUser)
 		})
-	})
 
-	r.Route("/events", func(r chi.Router) {
-		r.Get("/", getEvents)
-		r.Post("/", createEvent)
+		r.Route("/events", func(r chi.Router) {
+			r.Get("/", getEvents)
+			r.Post("/", createEvent)
+		})
 	})
 
 	return &Server{r: r}
