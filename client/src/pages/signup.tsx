@@ -22,14 +22,21 @@ const SignUpPage: React.FC = () => {
     setError('');
 
     try {
-      const res = await UserApi.createUser({ first_name, last_name, email, password })
-      if (res.status === 201) {
-        console.log('Sign Up successful');
-        setSuccessfulSignUp(true);
+      if (password != confirmPassword) {
+        console.log('Password fields do not match');
+        setError('Passwords do not match.')
+      } else if (password.length <= 6) {
+        console.log('Password too short');
+        setError('Password must be at least 7 characters.')
       } else {
-        setError(`Sign Up failed: ${res.status === 400 ? "Please use BU email address." : "An error has occurred while signing up."}`);
+        const res = await UserApi.createUser({ first_name, last_name, email, password })
+        if (res.status === 201) {
+          console.log('Sign Up successful');
+          setSuccessfulSignUp(true);
+        } else {
+          setError(`Sign Up failed: ${res.status === 400 ? "Please use BU email address." : "An error has occurred while signing up."}`);
+        }
       }
-
     } catch (err) {
       console.error('Error signing up:', err);
       setError('An error occurred while trying to sign up.');

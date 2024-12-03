@@ -1,54 +1,45 @@
-// // client\src\pages\create-event.tsx
-// import React, { useState } from "react";
-// import { Layout, Form, Input, DatePicker, TimePicker, InputNumber, Button } from "antd";
-// import Header from "@/components/Header";
-
-// const { Content } = Layout;
-
-// const CreateEventPage: React.FC = () => {
-//   const [form] = Form.useForm();
-
-//   //jude will handle this part once bowen uploads the api routes
-//   const handleSubmit = (values: any) => {
-//     const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
-//     const updatedEvents = [...storedEvents, values];
-//     localStorage.setItem("events", JSON.stringify(updatedEvents));
-//     form.resetFields();
-//   };
-
-  
-//   {/*
-//     TODO:
-//     -necessary fields (1 field for each, all required except maybe? dietary_info):
-//       event name, location, description, dietary_info, start_time, end_time, attendees (capacity)
-//     -make visual style consistent with the sign up and log in pages (keep header)
-//       -i would prefer it to be the same coding style as well but that is up to you
-//       -id also say that start/end time should be in the same line
-    
-//     */}
-
 import React, { useState } from "react";
 import { Form, Input, DatePicker, TimePicker, InputNumber, Button } from "antd";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import themeConfig from "@/theme/themeConfig";
+import { start } from "repl";
 
 const CreateEventPage: React.FC = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
+  const [name, setName] = useState();
+  const [location, setLocation] = useState();
+  const [description, setDescription] = useState();
+  const [dietary_info, setDietaryInfo] = useState();
+  const [start_time, setStartTime] = useState();
+  const [end_time, setEndTime] = useState();
+  const [attendees, setAttendees] = useState();
 
   const handleSubmit = async (values: any) => {
+    console.log('Creating event with: ', name, location, description, dietary_info, start_time, end_time, attendees);
     setLoading(true);
+
     try {
-      const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
-      const updatedEvents = [...storedEvents, values];
-      localStorage.setItem("events", JSON.stringify(updatedEvents));
-      form.resetFields();
-    } catch (error) {
-      console.error("Error saving event:", error);
+      // const res = await EventApi.createEvent( { } )
+      alert()
+    } catch (err) {
+      console.error('Error creating event: ', err);
     } finally {
       setLoading(false);
+      form.resetFields();
     }
+    // setLoading(true);
+    // try {
+    //   const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
+    //   const updatedEvents = [...storedEvents, values];
+    //   localStorage.setItem("events", JSON.stringify(updatedEvents));
+    //   form.resetFields();
+    // } catch (error) {
+    //   console.error("Error saving event:", error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   return (
@@ -64,50 +55,65 @@ const CreateEventPage: React.FC = () => {
                 label="Event Name"
                 name="name"
                 rules={[{ required: true, message: "Event name is required" }]}>
-                <Input placeholder="Enter event name" style={styles.input} />
+                <Input placeholder="Enter event name" style={styles.input} 
+                onChange={(e) => setName(e.target.value)}/>
               </Form.Item>
 
               <Form.Item
                 label="Location"
                 name="location"
                 rules={[{ required: true, message: "Location is required" }]}>
-                <Input placeholder="Enter event location" style={styles.input} />
+                <Input placeholder="640 Comm Ave, CAS B26, etc." style={styles.input}
+                onChange={(e) => setLocation(e.target.value)} />
               </Form.Item>
 
               <Form.Item
                 label="Description"
                 name="description"
                 rules={[{ required: true, message: "Description is required" }]}>
-                <Input.TextArea rows={4} placeholder="Enter event description" style={styles.textarea} />
+                <Input.TextArea rows={4} placeholder="Available food, highlights, activities, etc." style={styles.textarea}
+                onChange={(e) => setDescription(e.target.value)} />
               </Form.Item>
 
               <Form.Item
+                label="Dietary Info"
+                name="dietary_info"
+                rules={[{ required: true, message: "Dietary information is required" }]}>
+                <Input placeholder="Vegetarian, Gluten-Free, Vegan, etc." style={styles.input}
+                onChange={(e) => setDietaryInfo(e.target.value)} />
+              </Form.Item>
+
+              {/* <Form.Item
                 label="Date of Event"
                 name="date"
                 rules={[{ required: true, message: "Date is required" }]}>
                 <DatePicker style={styles.input} />
-              </Form.Item>
+              </Form.Item> */}
 
               <div style={styles.timeRow}>
                 <Form.Item
                   label="Start Time"
                   name="start_time"
                   rules={[{ required: true, message: "Start time is required" }]}>
-                  <TimePicker use12Hours format="h:mm a" style={styles.input} />
+                  <TimePicker use12Hours format="h:mm a" style={styles.input}
+                  onChange={(e) => setStartTime(e)} />
                 </Form.Item>
+
                 <Form.Item
                   label="End Time"
                   name="end_time"
                   rules={[{ required: true, message: "End time is required" }]}>
-                  <TimePicker use12Hours format="h:mm a" style={styles.input} />
+                  <TimePicker use12Hours format="h:mm a" style={styles.input}
+                  onChange={(e) => setEndTime(e)} />
                 </Form.Item>
               </div>
 
               <Form.Item
-                label="Number of Attendees (Capacity)"
+                label="Number of Attendees"
                 name="capacity"
                 rules={[{ required: true, message: "Capacity is required" }]}>
-                <InputNumber min={1} style={styles.input} />
+                <InputNumber min={1} style={styles.input} 
+                onChange={(e) => setAttendees(e)}/>
               </Form.Item>
 
               <Form.Item>

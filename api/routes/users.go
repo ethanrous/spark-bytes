@@ -65,6 +65,17 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 }
 
+// GetUser godoc
+//
+// @ID			GetUser
+//
+// @Summary		Get User
+// @Tags		Users
+// @Produce		json
+// @Param		email	query	string	true	"User email"
+// @Success		200
+// @Failure		401
+// @Route		/users [get]
 func getUser(w http.ResponseWriter, r *http.Request) {
 	email := r.URL.Query().Get("email")
 
