@@ -3,8 +3,11 @@ import React, { useState } from 'react';
 import Brand from "../components/Brand";
 import { UserApi } from '@/api/userApi';
 import themeConfig from '../theme/themeConfig';
+import { useRouter } from 'next/router';
 
 const SignUpPage: React.FC = () => {
+  const router = useRouter();
+
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -33,6 +36,9 @@ const SignUpPage: React.FC = () => {
         if (res.status === 201) {
           console.log('Sign Up successful');
           setSuccessfulSignUp(true);
+          setTimeout(() => {
+            router.push('/view-events')
+          }, 2000);
         } else {
           setError(`Sign Up failed: ${res.status === 400 ? "Please use BU email address." : "An error has occurred while signing up."}`);
         }
@@ -94,7 +100,7 @@ const SignUpPage: React.FC = () => {
           {loading ? 'Signing up...' : 'Sign Up!'}
         </button>
         {error && <p style={styles.error}>{error}</p>}
-        {successfulSignUp && <p style={styles.success}>Account created successfully! <br /> Please check your inbox for verification.</p>}
+        {successfulSignUp && <p style={styles.success}>Account created successfully! <br/> Redirecting you to events page...</p>}
       </form>
     </div>
   );
