@@ -3,6 +3,7 @@ import { Form, Input, DatePicker, TimePicker, InputNumber, Button } from "antd";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import themeConfig from "@/theme/themeConfig";
+import { EventApi } from '@/api/eventApi';
 import { start } from "repl";
 
 const CreateEventPage: React.FC = () => {
@@ -12,34 +13,60 @@ const CreateEventPage: React.FC = () => {
   const [location, setLocation] = useState();
   const [description, setDescription] = useState();
   const [dietary_info, setDietaryInfo] = useState();
-  const [start_time, setStartTime] = useState();
-  const [end_time, setEndTime] = useState();
+  const [start_time, setStartTime] = useState<Date>();
+  const [end_time, setEndTime] = useState<Date>();
   const [attendees, setAttendees] = useState();
 
   const handleSubmit = async (values: any) => {
     console.log('Creating event with: ', name, location, description, dietary_info, start_time, end_time, attendees);
     setLoading(true);
 
+    if (!start_time || !end_time) {
+      setLoading(false);
+      return
+    }
+
     try {
-      // const res = await EventApi.createEvent( { } )
-      alert()
+      alert("HI")
+      //mock
+      const owner_id = 123
+      
+      // const res = EventApi.createEvent({ 
+      //   name: name,
+      //   location: location,
+      //   description: description,
+      //   dietary_info: dietary_info,
+      //   start_time: (new Date(start_time)).toISOString(),
+      //   end_time: (new Date(end_time)).toISOString(),
+      //   owner_id: owner_id
+      //  })
+
+      // formatting the starting and ending times into the correct string format
+      // const starting = (new Date(start_time)).toISOString()
+      // const ending = (new Date(end_time)).toISOString()
+
+      // const response = await fetch('http://localhost:5001/api/events/', {
+      //   method: 'POST',
+      //   headers: {
+      //       'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //       name,
+      //       location,
+      //       description,
+      //       dietary_info,
+      //       starting,
+      //       ending,
+      //       // owner_id
+      //   }),
+      // });
     } catch (err) {
       console.error('Error creating event: ', err);
+      alert(`ERROR ${err}`)
     } finally {
       setLoading(false);
-      form.resetFields();
+      // form.resetFields();
     }
-    // setLoading(true);
-    // try {
-    //   const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
-    //   const updatedEvents = [...storedEvents, values];
-    //   localStorage.setItem("events", JSON.stringify(updatedEvents));
-    //   form.resetFields();
-    // } catch (error) {
-    //   console.error("Error saving event:", error);
-    // } finally {
-    //   setLoading(false);
-    // }
   };
 
   return (
@@ -47,7 +74,7 @@ const CreateEventPage: React.FC = () => {
       <Header />
       <div style={styles.content}>
         <div style={styles.container}>
-          {/* Left Side: Form */}
+
           <div style={styles.formSection}>
             <h1 style={{ ...styles.title, color: themeConfig.colors.textPrimary }}>Create an Event</h1>
             <Form form={form} layout="vertical" onFinish={handleSubmit} style={styles.form}>
@@ -77,8 +104,8 @@ const CreateEventPage: React.FC = () => {
 
               <Form.Item
                 label="Dietary Info"
-                name="dietary_info"
-                rules={[{ required: true, message: "Dietary information is required" }]}>
+                name="dietary_info">
+                {/* rules={[{ required: true, message: "Dietary information is required" }]}> */}
                 <Input placeholder="Vegetarian, Gluten-Free, Vegan, etc." style={styles.input}
                 onChange={(e) => setDietaryInfo(e.target.value)} />
               </Form.Item>
@@ -96,7 +123,7 @@ const CreateEventPage: React.FC = () => {
                   name="start_time"
                   rules={[{ required: true, message: "Start time is required" }]}>
                   <TimePicker use12Hours format="h:mm a" style={styles.input}
-                  onChange={(e) => setStartTime(e)} />
+                  onChange={(e) => setStartTime(e.toDate())}/>
                 </Form.Item>
 
                 <Form.Item
@@ -104,7 +131,7 @@ const CreateEventPage: React.FC = () => {
                   name="end_time"
                   rules={[{ required: true, message: "End time is required" }]}>
                   <TimePicker use12Hours format="h:mm a" style={styles.input}
-                  onChange={(e) => setEndTime(e)} />
+                  onChange={(e) => setEndTime(e.toDate())}/>
                 </Form.Item>
               </div>
 
