@@ -75,7 +75,7 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 // @Param		email	query	string	true	"User email"
 // @Success		200
 // @Failure		401
-// @Route		/users [get]
+// @Router		/users [get]
 func getUser(w http.ResponseWriter, r *http.Request) {
 	email := r.URL.Query().Get("email")
 
