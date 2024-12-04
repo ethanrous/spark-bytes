@@ -9,7 +9,16 @@ import (
 )
 
 func (db Database) NewEvent(newEvent rest.NewEventParams) error {
-	_, err := db.Exec("INSERT INTO events (name, location, description, dietary_info, start_time, end_time, owner_id) VALUES ($1, $2, $3, $4, $5, $6, $7)", newEvent.Name, newEvent.Location, newEvent.Description, newEvent.DietaryInfo, newEvent.StartTime, newEvent.EndTime, newEvent.OwnerID)
+	_, err := db.Exec(
+		"INSERT INTO events (name, location, description, dietary_info, start_time, end_time, owner_id) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+		newEvent.Name,
+		newEvent.Location,
+		newEvent.Description,
+		newEvent.DietaryInfo,
+		newEvent.StartTime,
+		newEvent.EndTime,
+		newEvent.OwnerID,
+	)
 	if err != nil {
 		return err
 	}
@@ -42,9 +51,9 @@ func (db Database) GetLatestEvents() ([]models.Event, error) {
 	if err != nil {
 		return nil, err
 	}
-    defer rows.Close()
+	defer rows.Close()
 
-    var events []models.Event
+	var events []models.Event
 
 	for rows.Next() {
 		event := models.Event{}

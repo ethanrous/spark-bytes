@@ -1,12 +1,10 @@
 package routes
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/ethanrous/spark-bytes/models/rest"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 // CreateEvent godoc
@@ -27,35 +25,9 @@ func createEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db := databaseFromContext(r.Context())
+	user := userFromContext(r.Context())
 
-	cookie, err := r.Cookie("spark-bytes-session")
-	if err != nil {
-		// Cookie not found, unauthorized access
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
-	tokenString := cookie.Value
-
-	token, err := jwt.ParseWithClaims(tokenString, &WlClaims{}, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte("key"), nil
-	})
-
-	if err != nil || !token.Valid {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
-	claims, ok := token.Claims.(*WlClaims)
-	if !ok {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
-	newEvent.OwnerID = claims.ID
+	newEvent.OwnerID = user.ID
 
 	err = db.NewEvent(newEvent)
 	if err != nil {

@@ -4,18 +4,22 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 
 	"github.com/ethanrous/spark-bytes/database"
+	"github.com/ethanrous/spark-bytes/models"
 	"github.com/go-chi/render"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type ContextKey string
 
 const (
-	DBKey ContextKey = "database"
+	DBKey   ContextKey = "database"
+	UserKey ContextKey = "user"
 )
 
 func WithDb(db database.Database) func(http.Handler) http.Handler {
@@ -33,6 +37,59 @@ func databaseFromContext(ctx context.Context) database.Database {
 		panic("database not found in context")
 	}
 	return db
+}
+
+func WithUser(user models.User) func(http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			db := databaseFromContext(r.Context())
+
+			cookie, err := r.Cookie("spark-bytes-session")
+			if err != nil {
+				// Cookie not found, unauthorized access
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+
+			tokenString := cookie.Value
+
+			token, err := jwt.ParseWithClaims(tokenString, &WlClaims{}, func(token *jwt.Token) (interface{}, error) {
+				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+					return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+				}
+				return []byte("key"), nil
+			})
+
+			if err != nil || !token.Valid {
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+
+			claims, ok := token.Claims.(*WlClaims)
+			if !ok {
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+
+			user, err := db.GetUserByUserId(claims.ID)
+			if err != nil {
+				log.Println("Error getting user: ", err)
+				http.Error(w, "Unauthorized", http.StatusUnauthorized)
+				return
+			}
+
+			r = r.WithContext(context.WithValue(r.Context(), UserKey, user))
+			next.ServeHTTP(w, r)
+		})
+	}
+}
+
+func userFromContext(ctx context.Context) models.User {
+	user, ok := ctx.Value(UserKey).(models.User)
+	if !ok {
+		panic("database not found in context")
+	}
+	return user
 }
 
 func StatusErr(w http.ResponseWriter, r *http.Request, msg string, status int) {
