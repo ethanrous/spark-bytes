@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 `
 
-	var ErrUserNotFound = errors.New("User not found")
+var ErrUserNotFound = errors.New("User not found")
 
 func (db Database) NewUser(newUser models.User) error {
 	_, err := db.Exec("INSERT INTO users (first_name, last_name, email, password_hash, is_verified, joined_at) VALUES ($1, $2, $3, $4, $5, $6)", newUser.FirstName, newUser.LastName, newUser.Email, newUser.Password, newUser.IsVerified, time.Now())
@@ -32,6 +32,24 @@ func (db Database) NewUser(newUser models.User) error {
 
 func (db Database) GetUserByEmail(email string) (models.User, error) {
 	rows, err := db.Queryx("SELECT * FROM users WHERE email=$1 LIMIT 1", email)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	user := models.User{}
+	if !rows.Next() {
+		return models.User{}, ErrUserNotFound
+	}
+	err = rows.StructScan(&user)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
+}
+
+func (db Database) GetUserByUserId(userId int) (models.User, error) {
+	rows, err := db.Queryx("SELECT * FROM users WHERE id=$1 LIMIT 1", userId)
 	if err != nil {
 		return models.User{}, err
 	}

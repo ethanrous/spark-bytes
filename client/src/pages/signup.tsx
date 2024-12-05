@@ -1,10 +1,13 @@
 // pages/signup.tsx
 import React, { useState } from 'react';
-import { Divider } from "antd";
 import Brand from "../components/Brand";
 import { UserApi } from '@/api/userApi';
+import themeConfig from '../theme/themeConfig';
+import { useRouter } from 'next/router';
 
 const SignUpPage: React.FC = () => {
+  const router = useRouter();
+
   const [first_name, setFirstName] = useState('');
   const [last_name, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -22,14 +25,24 @@ const SignUpPage: React.FC = () => {
     setError('');
 
     try {
-      const res = await UserApi.createUser({ first_name, last_name, email, password })
-      if (res.status === 201) {
-        console.log('Sign Up successful');
-        setSuccessfulSignUp(true);
+      if (password != confirmPassword) {
+        console.log('Password fields do not match');
+        setError('Passwords do not match.')
+      } else if (password.length <= 6) {
+        console.log('Password too short');
+        setError('Password must be at least 7 characters.')
       } else {
-        setError(`Sign Up failed: ${res.status === 400 ? "Please use BU email address." : "An error has occurred while signing up."}`);
+        const res = await UserApi.createUser({ first_name, last_name, email, password })
+        if (res.status === 201) {
+          console.log('Sign Up successful');
+          setSuccessfulSignUp(true);
+          setTimeout(() => {
+            router.push('/view-events')
+          }, 2000);
+        } else {
+          setError(`Sign Up failed: ${res.status === 400 ? "Please use BU email address." : "An error has occurred while signing up."}`);
+        }
       }
-
     } catch (err) {
       console.error('Error signing up:', err);
       setError('An error occurred while trying to sign up.');
@@ -42,7 +55,6 @@ const SignUpPage: React.FC = () => {
     <div style={styles.container}>
       <Brand />
       <form onSubmit={handleSubmit} style={styles.form}>
-        {/* "Create an Account" text inside the white box */}
         <h1 style={styles.title}>Create an Account</h1>
         <input
           type="text"
@@ -60,7 +72,6 @@ const SignUpPage: React.FC = () => {
           style={styles.input}
           required
         />
-        <Divider style={styles.divider} />
         <input
           type="email"
           placeholder="BU email address"
@@ -89,13 +100,12 @@ const SignUpPage: React.FC = () => {
           {loading ? 'Signing up...' : 'Sign Up!'}
         </button>
         {error && <p style={styles.error}>{error}</p>}
-        {successfulSignUp && <p style={styles.success}>Account created successfully! <br /> Please check your inbox for verification.</p>}
+        {successfulSignUp && <p style={styles.success}>Account created successfully! <br/> Redirecting you to events page...</p>}
       </form>
     </div>
   );
 };
 
-// Explicitly type the styles object using React.CSSProperties
 const styles: { [key: string]: React.CSSProperties } = {
   container: {
     display: 'flex',
@@ -103,7 +113,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     alignItems: 'center',
     justifyContent: 'center',
     height: '100vh',
-    backgroundImage: 'url(/assets/crowded.jpg)',
+    backgroundImage: 'url(/assets/colorful-food.jpeg)',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     position: 'relative',
@@ -113,7 +123,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     flexDirection: 'column',
     width: '100%',
     maxWidth: '400px',
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
     padding: '20px',
     borderRadius: '8px',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
@@ -122,40 +132,41 @@ const styles: { [key: string]: React.CSSProperties } = {
   title: {
     fontSize: '2.5rem',
     fontWeight: 'bold',
-    color: '#333333',
+    color: themeConfig.colors.textPrimary,
     marginBottom: '20px',
+    fontFamily: themeConfig.typography.fontFamilySparkBytes,
   },
   input: {
     padding: '12px',
     margin: '10px 0',
     fontSize: '1rem',
     borderRadius: '5px',
-    border: '1px solid #ccc',
+    border: `1px solid ${themeConfig.colors.textPrimary}`,
     outline: 'none',
-  },
-  divider: {
-    backgroundColor: "black",
-    margin: "10px 0"
+    fontFamily: themeConfig.typography.fontFamily,
   },
   button: {
     padding: '12px',
-    backgroundColor: '#FF9100',
+    backgroundColor: themeConfig.colors.accent,
     color: '#fff',
     fontSize: '1rem',
     fontWeight: 'bold',
     borderRadius: '5px',
     border: 'none',
     cursor: 'pointer',
+    fontFamily: themeConfig.typography.fontFamily,
   },
   error: {
     color: 'red',
     fontSize: '0.9rem',
     marginTop: '10px',
+    fontFamily: themeConfig.typography.fontFamily,
   },
   success: {
     color: 'green',
     fontSize: '0.9rem',
     marginTop: '10px',
+    fontFamily: themeConfig.typography.fontFamily,
   },
 };
 

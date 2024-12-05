@@ -1,3 +1,3 @@
 import { UsersApiFactory } from "./swag";
 
-export const UserApi = UsersApiFactory()
+export const UserApi = UsersApiFactory();

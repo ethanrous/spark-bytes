@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
+	"sync"
 
 	"github.com/ethanrous/spark-bytes/database"
 	"github.com/go-chi/chi/v5"
@@ -26,6 +28,7 @@ type Server struct{ r *chi.Mux }
 func NewServer(db database.Database) *Server {
 
 	r := chi.NewRouter()
+
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(WithDb(db))
@@ -55,14 +58,63 @@ func NewServer(db database.Database) *Server {
 			r.Post("/", createUser)
 			r.Post("/login", loginUser)
 		})
+
+		r.Route("/events", func(r chi.Router) {
+			r.Get("/", getEvents)
+			r.Post("/", createEvent)
+		})
 	})
 
-	r.Route("/events", func(r chi.Router) {
-		r.Get("/", getEvents)
-		r.Post("/", createEvent)
-	})
+	r.Mount("/", UseUi())
 
 	return &Server{r: r}
+}
+
+func UseUi() *chi.Mux {
+	memFs := &InMemoryFS{routes: make(map[string]*memFileReal, 10), routesMu: sync.RWMutex{}, proxyAddress: "http://localhost:5001", baseDir: "../client/out"}
+	memFs.loadIndex()
+
+	r := chi.NewMux()
+	r.Route("/assets", func(r chi.Router) {
+		r.Use(func(next http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Cache-Control", "public, max-age=3600")
+				fmt.Printf("Serving asset %s\n", r.RequestURI)
+				next.ServeHTTP(w, r)
+			})
+		})
+		r.Handle("/*", http.FileServer(memFs))
+	})
+	r.Route("/_next", func(r chi.Router) {
+		r.Use(func(next http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				w.Header().Set("Cache-Control", "public, max-age=3600")
+				// w.Header().Set("Content-Encoding", "gzip")
+				next.ServeHTTP(w, r)
+			})
+		})
+		r.Handle("/*", http.FileServer(memFs))
+	})
+
+	r.NotFound(
+		func(w http.ResponseWriter, r *http.Request) {
+			if !strings.HasPrefix(r.RequestURI, "/api") {
+				fmt.Printf("Could not find route for %s, serving index\n", r.RequestURI)
+				_, err := w.Write(memFs.index.data)
+				if err != nil {
+					log.Println("Error writing response: ", err)
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+
+			} else {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+		},
+	)
+
+	return r
 }
 
 func (s *Server) Start(port int) error {
