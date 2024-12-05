@@ -116,7 +116,7 @@ func reserveEvent(w http.ResponseWriter, r *http.Request) {
     }
 
     // Generate random 4-digit code for user to present to event staff
-    code, err := db.GenerateReserveCode()
+    reserveCode, err := db.GenerateReserveCode(eventID)
     if err != nil {
         log.Println("Error generating unique code:", err)
         http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -124,7 +124,7 @@ func reserveEvent(w http.ResponseWriter, r *http.Request) {
     }
 
     // Insert the reservation record into the database
-    err = db.CreateReservation(claims.ID, eventID, code)
+    err = db.CreateReservation(claims.ID, eventID, reserveCode)
     if err != nil {
         log.Println("Error creating reservation:", err)
         http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -135,6 +135,64 @@ func reserveEvent(w http.ResponseWriter, r *http.Request) {
     w.WriteHeader(http.StatusCreated)
     writeJson(w, http.StatusCreated, map[string]string{
         "message": "Reservation created successfully",
-        "code":    code,
+        "userID": strconv.Itoa(claims.ID),
+        "eventID": eventIDStr,
+        "reserveCode": reserveCode,
+    })
+}
+
+func removeReservationFromCode(w http.ResponseWriter, r *http.Request) {
+    eventIDStr := chi.URLParam(r, "id")
+    eventID, err := strconv.Atoi(eventIDStr)
+    if err != nil {
+        http.Error(w, "Invalid event ID", http.StatusBadRequest)
+        return
+    }
+
+    reserveCode := chi.URLParam(r, "reserveCode")
+
+    db := databaseFromContext(r.Context())
+
+    cookie, err := r.Cookie("spark-bytes-session")
+    if err != nil {
+        // Cookie not found, unauthorized access
+        http.Error(w, "Unauthorized", http.StatusUnauthorized)
+        return
+    }
+
+    tokenString := cookie.Value
+
+    token, err := jwt.ParseWithClaims(tokenString, &WlClaims{}, func(token *jwt.Token) (interface{}, error) {
+        if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+            return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
+        }
+        return []byte("key"), nil
+    })
+
+    if err != nil || !token.Valid {
+        http.Error(w, "Unauthorized", http.StatusUnauthorized)
+        return
+    }
+
+    claims, ok := token.Claims.(*WlClaims)
+    if !ok {
+        http.Error(w, "Unauthorized", http.StatusUnauthorized)
+        return
+    }
+
+    // Insert the reservation record into the database
+    err = db.DeleteReservationFromCode(claims.ID, eventID, reserveCode)
+    if err != nil {
+        log.Println("Error creating reservation:", err)
+        http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+        return
+    }
+
+    // Return the code or a success message
+    w.WriteHeader(http.StatusCreated)
+    writeJson(w, http.StatusCreated, map[string]string{
+        "message": "Reservation cleared successfully",
+        "eventID": eventIDStr,
+        "reserveCode": reserveCode,
     })
 }

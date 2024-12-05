@@ -25,20 +25,20 @@ func (db Database) NewEvent(newEvent rest.NewEventParams) error {
 	return nil
 }
 
-func (db Database) reserveCodeExists(code string) (bool, error) {
+func (db Database) reserveCodeExists(eventID int, code string) (bool, error) {
     var count int
-    err := db.QueryRow("SELECT COUNT(*) FROM reservations WHERE reserve_code = $1", code).Scan(&count)
+    err := db.QueryRow("SELECT COUNT(*) FROM reservations WHERE event_id = $1 AND reserve_code = $2", eventID, code).Scan(&count)
     if err != nil {
         return false, err
     }
     return count > 0, nil
 }
 
-func (db Database) GenerateReserveCode() (string, error) {
+func (db Database) GenerateReserveCode(eventID int) (string, error) {
     maxAttempts := 10
     for i := 0; i < maxAttempts; i++ {
         code := fmt.Sprintf("%04d", rand.Intn(10000))
-        exists, err := db.reserveCodeExists(code)
+        exists, err := db.reserveCodeExists(eventID, code)
         if err != nil {
             return "", err
         }
@@ -49,8 +49,20 @@ func (db Database) GenerateReserveCode() (string, error) {
     return "", fmt.Errorf("could not generate a unique reservation code after %d attempts", maxAttempts)
 }
 
-func (db Database) CreateReservation(userID, eventID int, reserveCode string) error {
+func (db Database) CreateReservation(userID int, eventID int, reserveCode string) error {
     _, err := db.Exec("INSERT INTO reservations (user_id, event_id, reserve_code) VALUES ($1, $2, $3)", userID, eventID, reserveCode)
+    return err
+}
+
+func (db Database) DeleteReservationFromCode(ownerID int, eventID int, reserveCode string) error {
+	var count int
+    db.QueryRow("SELECT COUNT(*) FROM events WHERE owner_id = $1 AND id = $2", ownerID, eventID).Scan(&count)
+
+	if count != 1 {
+		return fmt.Errorf("owner %d does not own event %d", ownerID, eventID)
+	}
+
+    _, err := db.Exec("DELETE FROM reservation WHERE event_id = $1, AND reserve_code = $2", eventID, reserveCode)
     return err
 }
 
