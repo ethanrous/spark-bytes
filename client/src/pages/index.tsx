@@ -13,6 +13,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import themeConfig from '../theme/themeConfig';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Home: React.FC = () => {
 	const mainStyle: React.CSSProperties = {
@@ -194,7 +195,7 @@ const Home: React.FC = () => {
 						</p>
 					</div>
 					<div style={{ flex: 1 }}>
-						<img src="/assets/pizza.jpg" alt="pizza" style={imageStyle} />
+						<Image src="/assets/pizza.jpg" alt="pizza" style={imageStyle} />
 					</div>
 				</section>
 
@@ -221,7 +222,7 @@ const Home: React.FC = () => {
 				</section>
 
 				<section style={foodCollageSectionStyle}>
-					<img
+					<Image
 						src="/assets/food-collage.jpeg"
 						alt="Food Collage"
 						style={foodCollageImageStyle}
