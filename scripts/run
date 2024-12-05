@@ -8,13 +8,26 @@ if [[ $1 == "-s" ]]; then
 fi
 
 if ! $skipBuild; then
+	if ! npm install; then
+		echo "Failed to install client dependencies"
+		exit 1
+	fi
 	if ! npm run build; then
 		echo "Failed to build client"
 		exit 1
 	fi
 fi
 
-cd ../api || exit 1
+cd .. || exit 1
+
+echo "Checking for database docker container... (may prompt for password)"
+dockerDb=$(sudo docker ps | grep sparkbytes)
+if [[ -z $dockerDb ]]; then
+	echo "Starting database docker container..."
+	sudo docker compose up
+fi
+
+cd ./api || exit 1
 
 printf "\n#####################################################\n\n"
 

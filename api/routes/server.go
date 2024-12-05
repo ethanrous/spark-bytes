@@ -79,7 +79,7 @@ func UseUi() *chi.Mux {
 		r.Use(func(next http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Cache-Control", "public, max-age=3600")
-				// w.Header().Set("Content-Encoding", "gzip")
+				fmt.Printf("Serving asset %s\n", r.RequestURI)
 				next.ServeHTTP(w, r)
 			})
 		})
