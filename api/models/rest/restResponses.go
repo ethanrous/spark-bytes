@@ -7,29 +7,30 @@ import (
 )
 
 type UserInfo struct {
-	FirstName string    `json:"first_name"`
-	LastName  string    `json:"last_name"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
 	Email     string    `json:"email"`
 	Verified  bool      `json:"verified"`
-	JoinedAt  time.Time `json:"joined_at"`
+	JoinedAt  time.Time `json:"joinedAt"`
 } // @name UserInfo
 
 type OwnerInfo struct {
-	FirstName string    `json:"first_name"`
-	LastName  string    `json:"last_name"`
+	FirstName string    `json:"firstName"`
+	LastName  string    `json:"lastName"`
 	Email     string    `json:"email"`
-	JoinedAt  time.Time `json:"joined_at"`
+	JoinedAt  time.Time `json:"joinedAt"`
 } // @name OwnerInfo
 
 type EventInfo struct {
-	Name           string    `json:"name"`
-	Location       string    `json:"location"`
-	Description    string    `json:"description"`
-	DietaryInfo    string    `json:"dietary_info"`
-	StartTime      time.Time `json:"start_time"`
-	EndTime        time.Time `json:"end_time"`
-	Attendees      int       `json:"attendees"`
-	Owner          OwnerInfo `json:"owner"`
+	EventId     int       `json:"eventId"`
+	Name        string    `json:"name"`
+	Location    string    `json:"location"`
+	Description string    `json:"description"`
+	DietaryInfo string    `json:"dietaryInfo"`
+	StartTime   int64     `json:"startTime"`
+	EndTime     int64     `json:"endTime"`
+	Attendees   int       `json:"attendees"`
+	Owner       OwnerInfo `json:"owner"`
 } // @name EventInfo
 
 func NewUserInfo(u models.User) UserInfo {
@@ -47,18 +48,19 @@ func LatestEventsList(el []models.Event) []EventInfo {
 
 	for i, e := range el {
 		eventList[i] = EventInfo{
-			Name: e.Name,
-			Location: e.Location,
+			EventId:     e.ID,
+			Name:        e.Name,
+			Location:    e.Location,
 			Description: e.Description,
 			DietaryInfo: e.DietaryInfo,
-			StartTime: e.StartTime,
-			EndTime: e.EndTime,
-			Attendees: e.Attendees,
+			StartTime:   e.StartTime.UnixMilli(),
+			EndTime:     e.EndTime.UnixMilli(),
+			Attendees:   e.Attendees,
 			Owner: OwnerInfo{
 				FirstName: e.EventOwner.FirstName,
-				LastName: e.EventOwner.LastName,
-				Email: e.EventOwner.Email,
-				JoinedAt: e.EventOwner.JoinedAt,
+				LastName:  e.EventOwner.LastName,
+				Email:     e.EventOwner.Email,
+				JoinedAt:  e.EventOwner.JoinedAt,
 			},
 		}
 	}

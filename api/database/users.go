@@ -47,3 +47,21 @@ func (db Database) GetUserByEmail(email string) (models.User, error) {
 
 	return user, nil
 }
+
+func (db Database) GetUserByUserId(userId int) (models.User, error) {
+	rows, err := db.Queryx("SELECT * FROM users WHERE id=$1 LIMIT 1", userId)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	user := models.User{}
+	if !rows.Next() {
+		return models.User{}, ErrUserNotFound
+	}
+	err = rows.StructScan(&user)
+	if err != nil {
+		return models.User{}, err
+	}
+
+	return user, nil
+}

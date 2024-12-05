@@ -26,6 +26,67 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface EventInfo
+ */
+export interface EventInfo {
+    /**
+     * 
+     * @type {number}
+     * @memberof EventInfo
+     */
+    'attendees'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof EventInfo
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EventInfo
+     */
+    'dietaryInfo'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof EventInfo
+     */
+    'endTime'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof EventInfo
+     */
+    'eventId'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof EventInfo
+     */
+    'location'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EventInfo
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {OwnerInfo}
+     * @memberof EventInfo
+     */
+    'owner'?: OwnerInfo;
+    /**
+     * 
+     * @type {number}
+     * @memberof EventInfo
+     */
+    'startTime'?: number;
+}
+/**
+ * 
+ * @export
  * @interface LoginParams
  */
 export interface LoginParams {
@@ -41,6 +102,55 @@ export interface LoginParams {
      * @memberof LoginParams
      */
     'password': string;
+}
+/**
+ * 
+ * @export
+ * @interface NewEventParams
+ */
+export interface NewEventParams {
+    /**
+     * 
+     * @type {string}
+     * @memberof NewEventParams
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NewEventParams
+     */
+    'dietary_info'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof NewEventParams
+     */
+    'end_time'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof NewEventParams
+     */
+    'location'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof NewEventParams
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof NewEventParams
+     */
+    'owner_id'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof NewEventParams
+     */
+    'start_time'?: number;
 }
 /**
  * 
@@ -73,6 +183,209 @@ export interface NewUserParams {
      */
     'password'?: string;
 }
+/**
+ * 
+ * @export
+ * @interface OwnerInfo
+ */
+export interface OwnerInfo {
+    /**
+     * 
+     * @type {string}
+     * @memberof OwnerInfo
+     */
+    'email'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OwnerInfo
+     */
+    'firstName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OwnerInfo
+     */
+    'joinedAt'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OwnerInfo
+     */
+    'lastName'?: string;
+}
+
+/**
+ * EventsApi - axios parameter creator
+ * @export
+ */
+export const EventsApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @summary Create Event
+         * @param {NewEventParams} newEventParams New event params
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createEvent: async (newEventParams: NewEventParams, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'newEventParams' is not null or undefined
+            assertParamExists('createEvent', 'newEventParams', newEventParams)
+            const localVarPath = `/events`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(newEventParams, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get All Events
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEvents: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/events`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * EventsApi - functional programming interface
+ * @export
+ */
+export const EventsApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = EventsApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @summary Create Event
+         * @param {NewEventParams} newEventParams New event params
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createEvent(newEventParams: NewEventParams, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createEvent(newEventParams, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['EventsApi.createEvent']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @summary Get All Events
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getEvents(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<EventInfo>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getEvents(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['EventsApi.getEvents']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * EventsApi - factory interface
+ * @export
+ */
+export const EventsApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = EventsApiFp(configuration)
+    return {
+        /**
+         * 
+         * @summary Create Event
+         * @param {NewEventParams} newEventParams New event params
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createEvent(newEventParams: NewEventParams, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.createEvent(newEventParams, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @summary Get All Events
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getEvents(options?: RawAxiosRequestConfig): AxiosPromise<Array<EventInfo>> {
+            return localVarFp.getEvents(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * EventsApi - object-oriented interface
+ * @export
+ * @class EventsApi
+ * @extends {BaseAPI}
+ */
+export class EventsApi extends BaseAPI {
+    /**
+     * 
+     * @summary Create Event
+     * @param {NewEventParams} newEventParams New event params
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EventsApi
+     */
+    public createEvent(newEventParams: NewEventParams, options?: RawAxiosRequestConfig) {
+        return EventsApiFp(this.configuration).createEvent(newEventParams, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get All Events
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EventsApi
+     */
+    public getEvents(options?: RawAxiosRequestConfig) {
+        return EventsApiFp(this.configuration).getEvents(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
 
 /**
  * UsersApi - axios parameter creator
@@ -110,6 +423,43 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
             localVarRequestOptions.data = serializeDataIfNeeded(newUserParams, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @summary Get User
+         * @param {string} email User email
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUser: async (email: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'email' is not null or undefined
+            assertParamExists('getUser', 'email', email)
+            const localVarPath = `/users`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (email !== undefined) {
+                localVarQueryParameter['email'] = email;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -177,6 +527,19 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get User
+         * @param {string} email User email
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUser(email: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUser(email, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UsersApi.getUser']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Login User
          * @param {LoginParams} loginParams Login params
          * @param {*} [options] Override http request option.
@@ -210,6 +573,16 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
+         * @summary Get User
+         * @param {string} email User email
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUser(email: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.getUser(email, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Login User
          * @param {LoginParams} loginParams Login params
          * @param {*} [options] Override http request option.
@@ -238,6 +611,18 @@ export class UsersApi extends BaseAPI {
      */
     public createUser(newUserParams: NewUserParams, options?: RawAxiosRequestConfig) {
         return UsersApiFp(this.configuration).createUser(newUserParams, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get User
+     * @param {string} email User email
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public getUser(email: string, options?: RawAxiosRequestConfig) {
+        return UsersApiFp(this.configuration).getUser(email, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
