@@ -12,4 +12,7 @@ require (
 	golang.org/x/crypto v0.29.0
 )
 
-require github.com/ajg/form v1.5.1 // indirect
+require (
+	github.com/ajg/form v1.5.1 // indirect
+	github.com/go-chi/chi v1.5.5
+)

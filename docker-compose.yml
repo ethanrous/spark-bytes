@@ -14,5 +14,6 @@ services:
       - ./ddl.sql:/docker-entrypoint-initdb.d/ddl.sql
       - ./example_users.csv:/docker-entrypoint-initdb.d/example_users.csv
       - ./example_events.csv:/docker-entrypoint-initdb.d/example_events.csv
+      - ./example_reservations.csv:/docker-entrypoint-initdb.d/example_reservations.csv
 volumes:
   postgres-data:
