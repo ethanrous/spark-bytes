@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import themeConfig from "@/theme/themeConfig";
 import { Button, Form, Input, InputNumber, TimePicker } from "antd";
+import Image from "next/image";
 import React, { useState } from "react";
 
 const CreateEventPage: React.FC = () => {
@@ -131,7 +132,7 @@ const CreateEventPage: React.FC = () => {
 
 					{/* Right Side: Image */}
 					<div style={styles.imageSection}>
-						<img
+						<Image
 							src="/assets/IMG_990.jpeg"
 							alt="Event Illustration"
 							style={styles.image}
