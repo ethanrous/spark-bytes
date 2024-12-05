@@ -55,15 +55,15 @@ const ViewEvents = () => {
 				EventApi.getEvents()
 				.then(response => {
 					let data = response.data;
-						data = data.sort((a, b) => {
-							if (a.dietaryInfo && !b.dietaryInfo) {
-								return -1
-							}
-							if (!a.dietaryInfo && b.dietaryInfo) {
-								return 1
-							}
-							return 0;
-							});
+					data = data.sort((a, b) => {
+						if (a.dietaryInfo && !b.dietaryInfo) {
+							return -1
+						}
+						if (!a.dietaryInfo && b.dietaryInfo) {
+							return 1
+						}
+						return 0;
+					});
 					setEventsList(data);
 				});
 				setSortBy("Dietary Info First");
@@ -149,10 +149,10 @@ const ViewEvents = () => {
 				.then(response => {
 					let data = response.data;
 					data = data.sort((a, b) => {
-					if (!a.name || !b.name) {
-						throw new Error('Event name is missing');
-					}
-					return a.name.localeCompare(b.name);
+						if (!a.name || !b.name) {
+							throw new Error('Event name is missing');
+						}
+						return a.name.localeCompare(b.name);
 					});
 					setEventsList(data);
 				});
@@ -167,10 +167,10 @@ const ViewEvents = () => {
 				.then(response => {
 					let data = response.data;
 					data = data.sort((a, b) => {
-					if (!a.location || !b.location) {
-						throw new Error('Event name is missing');
-					}
-					return a.location.localeCompare(b.location);
+						if (!a.location || !b.location) {
+							throw new Error('Event location is missing');
+						}
+						return a.location.localeCompare(b.location);
 					});
 					setEventsList(data);
 				});
@@ -190,14 +190,8 @@ const ViewEvents = () => {
 					</Title>
 					<Dropdown menu={{ items }} trigger={['click']}>
 						<span onClick={(e) => e.preventDefault()} style={{ backgroundColor: "#ffffff", padding: "5px", borderRadius: "8px", outline: "2px solid #CCCCCC" }}
-							onMouseEnter={(e) => {
-								const target = e.target as HTMLSpanElement;
-								target.style.backgroundColor = "#f8f8f8";
-							}}
-							onMouseLeave={(e) => {
-								const target = e.target as HTMLSpanElement;
-								target.style.backgroundColor = "#ffffff";
-							}} >
+							onMouseEnter={(e) => {(e.target as HTMLSpanElement).style.backgroundColor = "#f8f8f8"}}
+							onMouseLeave={(e) => {(e.target as HTMLSpanElement).style.backgroundColor = "#ffffff"}} >
 							Sort by: {sortBy}
 							<DownOutlined style={{marginLeft:"5px"}}/>
 						</span>

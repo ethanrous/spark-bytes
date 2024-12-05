@@ -200,7 +200,7 @@ const Home: React.FC = () => {
 
 				<section style={signUpSectionStyle}>
 					<h2 style={signUpTitleStyle}>
-						Sign up for Spark Bytes notifications and turn campus leftovers into your next meal.
+						Sign up for Spark! Bytes notifications and turn campus leftovers into your next meal.
 					</h2>
 					<Link href="/signup">
 						<button
