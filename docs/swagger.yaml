@@ -1,5 +1,26 @@
 basePath: /api/
 definitions:
+  EventInfo:
+    properties:
+      attendees:
+        type: integer
+      description:
+        type: string
+      dietaryInfo:
+        type: string
+      endTime:
+        type: integer
+      eventId:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+      owner:
+        $ref: '#/definitions/OwnerInfo'
+      startTime:
+        type: integer
+    type: object
   LoginParams:
     properties:
       email:
@@ -17,7 +38,7 @@ definitions:
       dietary_info:
         type: string
       end_time:
-        type: string
+        type: integer
       location:
         type: string
       name:
@@ -25,7 +46,7 @@ definitions:
       owner_id:
         type: integer
       start_time:
-        type: string
+        type: integer
     type: object
   NewUserParams:
     properties:
@@ -36,6 +57,17 @@ definitions:
       last_name:
         type: string
       password:
+        type: string
+    type: object
+  OwnerInfo:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      joinedAt:
+        type: string
+      lastName:
         type: string
     type: object
 host: localhost:5001
@@ -53,6 +85,10 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            items:
+              $ref: '#/definitions/EventInfo'
+            type: array
         "401":
           description: Unauthorized
       summary: Get All Events
@@ -78,6 +114,24 @@ paths:
       tags:
       - Events
   /users:
+    get:
+      operationId: GetUser
+      parameters:
+      - description: User email
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+      summary: Get User
+      tags:
+      - Users
     post:
       operationId: CreateUser
       parameters:

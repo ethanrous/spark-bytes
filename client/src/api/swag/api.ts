@@ -26,6 +26,67 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface EventInfo
+ */
+export interface EventInfo {
+    /**
+     * 
+     * @type {number}
+     * @memberof EventInfo
+     */
+    'attendees'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof EventInfo
+     */
+    'description'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EventInfo
+     */
+    'dietaryInfo'?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof EventInfo
+     */
+    'endTime'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof EventInfo
+     */
+    'eventId'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof EventInfo
+     */
+    'location'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EventInfo
+     */
+    'name'?: string;
+    /**
+     * 
+     * @type {OwnerInfo}
+     * @memberof EventInfo
+     */
+    'owner'?: OwnerInfo;
+    /**
+     * 
+     * @type {number}
+     * @memberof EventInfo
+     */
+    'startTime'?: number;
+}
+/**
+ * 
+ * @export
  * @interface LoginParams
  */
 export interface LoginParams {
@@ -62,10 +123,10 @@ export interface NewEventParams {
     'dietary_info'?: string;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NewEventParams
      */
-    'end_time'?: string;
+    'end_time'?: number;
     /**
      * 
      * @type {string}
@@ -86,10 +147,10 @@ export interface NewEventParams {
     'owner_id'?: number;
     /**
      * 
-     * @type {string}
+     * @type {number}
      * @memberof NewEventParams
      */
-    'start_time'?: string;
+    'start_time'?: number;
 }
 /**
  * 
@@ -121,6 +182,37 @@ export interface NewUserParams {
      * @memberof NewUserParams
      */
     'password'?: string;
+}
+/**
+ * 
+ * @export
+ * @interface OwnerInfo
+ */
+export interface OwnerInfo {
+    /**
+     * 
+     * @type {string}
+     * @memberof OwnerInfo
+     */
+    'email'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OwnerInfo
+     */
+    'firstName'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OwnerInfo
+     */
+    'joinedAt'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof OwnerInfo
+     */
+    'lastName'?: string;
 }
 
 /**
@@ -224,7 +316,7 @@ export const EventsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getEvents(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async getEvents(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<EventInfo>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getEvents(options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EventsApi.getEvents']?.[localVarOperationServerIndex]?.url;
@@ -256,7 +348,7 @@ export const EventsApiFactory = function (configuration?: Configuration, basePat
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEvents(options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        getEvents(options?: RawAxiosRequestConfig): AxiosPromise<Array<EventInfo>> {
             return localVarFp.getEvents(options).then((request) => request(axios, basePath));
         },
     };
@@ -339,6 +431,43 @@ export const UsersApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
+         * @summary Get User
+         * @param {string} email User email
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUser: async (email: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'email' is not null or undefined
+            assertParamExists('getUser', 'email', email)
+            const localVarPath = `/users`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (email !== undefined) {
+                localVarQueryParameter['email'] = email;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Login User
          * @param {LoginParams} loginParams Login params
          * @param {*} [options] Override http request option.
@@ -398,6 +527,19 @@ export const UsersApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get User
+         * @param {string} email User email
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getUser(email: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getUser(email, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['UsersApi.getUser']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Login User
          * @param {LoginParams} loginParams Login params
          * @param {*} [options] Override http request option.
@@ -431,6 +573,16 @@ export const UsersApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
+         * @summary Get User
+         * @param {string} email User email
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getUser(email: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.getUser(email, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Login User
          * @param {LoginParams} loginParams Login params
          * @param {*} [options] Override http request option.
@@ -459,6 +611,18 @@ export class UsersApi extends BaseAPI {
      */
     public createUser(newUserParams: NewUserParams, options?: RawAxiosRequestConfig) {
         return UsersApiFp(this.configuration).createUser(newUserParams, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get User
+     * @param {string} email User email
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof UsersApi
+     */
+    public getUser(email: string, options?: RawAxiosRequestConfig) {
+        return UsersApiFp(this.configuration).getUser(email, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

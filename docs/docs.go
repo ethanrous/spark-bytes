@@ -27,7 +27,13 @@ const docTemplate = `{
                 "operationId": "GetEvents",
                 "responses": {
                     "200": {
-                        "description": "OK"
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/EventInfo"
+                            }
+                        }
                     },
                     "401": {
                         "description": "Unauthorized"
@@ -65,6 +71,33 @@ const docTemplate = `{
             }
         },
         "/users": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Get User",
+                "operationId": "GetUser",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "User email",
+                        "name": "email",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            },
             "post": {
                 "produces": [
                     "application/json"
@@ -128,6 +161,38 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "EventInfo": {
+            "type": "object",
+            "properties": {
+                "attendees": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "dietaryInfo": {
+                    "type": "string"
+                },
+                "endTime": {
+                    "type": "integer"
+                },
+                "eventId": {
+                    "type": "integer"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "owner": {
+                    "$ref": "#/definitions/OwnerInfo"
+                },
+                "startTime": {
+                    "type": "integer"
+                }
+            }
+        },
         "LoginParams": {
             "type": "object",
             "required": [
@@ -153,7 +218,7 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "end_time": {
-                    "type": "string"
+                    "type": "integer"
                 },
                 "location": {
                     "type": "string"
@@ -165,7 +230,7 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "start_time": {
-                    "type": "string"
+                    "type": "integer"
                 }
             }
         },
@@ -182,6 +247,23 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "OwnerInfo": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "firstName": {
+                    "type": "string"
+                },
+                "joinedAt": {
+                    "type": "string"
+                },
+                "lastName": {
                     "type": "string"
                 }
             }

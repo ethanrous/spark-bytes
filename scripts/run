@@ -1,0 +1,21 @@
+#!/bin/bash
+
+cd ./client || exit 1
+
+skipBuild=false
+if [[ $1 == "-s" ]]; then
+	skipBuild=true
+fi
+
+if ! $skipBuild; then
+	if ! npm run build; then
+		echo "Failed to build client"
+		exit 1
+	fi
+fi
+
+cd ../api || exit 1
+
+printf "\n#####################################################\n\n"
+
+go run main.go

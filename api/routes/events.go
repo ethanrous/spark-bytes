@@ -46,7 +46,7 @@ func createEvent(w http.ResponseWriter, r *http.Request) {
 // @Summary		Get All Events
 // @Tags		Events
 // @Produce		json
-// @Success		200
+// @Success		200 {array} rest.EventInfo
 // @Failure		401
 // @Router		/events [get]
 func getEvents(w http.ResponseWriter, r *http.Request) {
