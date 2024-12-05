@@ -31,7 +31,7 @@ const Brand: React.FC = () => {
 		>
 			<div style={{ display: 'flex', alignItems: 'center' }}>
 				<Image
-					src="/assets/spark_logo.png"
+					src="logo.png"
 					alt="Spark! Bytes Logo"
 					width={40}
 					height={40}

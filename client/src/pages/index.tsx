@@ -144,7 +144,8 @@ const Home: React.FC = () => {
 	};
 
 	const signUpButtonStyle: React.CSSProperties = {
-		padding: '40px 80px',
+		// padding: '40px 80px',
+		padding: '20px 60px',
 		backgroundColor: '#FF6347',
 		border: 'none',
 		color: themeConfig.colors.textSecondary,

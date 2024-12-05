@@ -44,8 +44,6 @@ func (db Database) GetLatestEvents() ([]models.Event, error) {
             users.joined_at
         FROM events
         INNER JOIN users ON users.id = events.owner_id
-        ORDER BY end_time DESC
-        LIMIT 10
     `
 	rows, err := db.Queryx(sqlQuery)
 	if err != nil {
