@@ -6,10 +6,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 
 	"github.com/ethanrous/spark-bytes/database"
+	"github.com/ethanrous/spark-bytes/internal/log"
 	"github.com/ethanrous/spark-bytes/models"
 	"github.com/go-chi/render"
 	"github.com/golang-jwt/jwt/v5"
@@ -46,7 +46,8 @@ func AuthCheck(next http.Handler) http.Handler {
 		cookie, err := r.Cookie("spark-bytes-session")
 		if err != nil {
 			// Cookie not found, unauthorized access
-			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			log.Error.Println("Did not get cookie: ", err)
+			next.ServeHTTP(w, r)
 			return
 		}
 
@@ -72,7 +73,7 @@ func AuthCheck(next http.Handler) http.Handler {
 
 		user, err := db.GetUserByUserId(claims.ID)
 		if err != nil {
-			log.Println("Error getting user: ", err)
+			log.Error.Println("Error getting user: ", err)
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
@@ -114,19 +115,19 @@ func writeJson(w http.ResponseWriter, status int, obj interface{}) {
 func readCtxBody[T any](w http.ResponseWriter, r *http.Request) (obj T, err error) {
 	if r.Method == "GET" {
 		err = errors.New("trying to get body of get request")
-		log.Println(err)
+		log.Error.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
 	jsonData, err := io.ReadAll(r.Body)
 	if err != nil {
-		log.Println(err)
+		log.Error.Println(err)
 		writeJson(w, http.StatusInternalServerError, map[string]any{"error": "Could not read request body"})
 		return
 	}
 	err = json.Unmarshal(jsonData, &obj)
 	if err != nil {
-		log.Println(err)
+		log.Error.Println(err)
 		writeJson(w, http.StatusBadRequest, map[string]any{"error": "Request body is not in expected JSON format"})
 		return
 	}

@@ -8,6 +8,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/ethanrous/spark-bytes/internal/log"
 )
 
 type InMemoryFS struct {
@@ -41,7 +43,7 @@ func (fs *InMemoryFS) Open(name string) (http.File, error) {
 		return nil, err
 	}
 
-	fmt.Println("MemFs Opening file", name)
+	log.Info.Println("MemFs Opening file", name)
 
 	fs.routesMu.RLock()
 	if f, ok = fs.routes[name]; ok && f.exists {
