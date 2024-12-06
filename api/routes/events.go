@@ -8,7 +8,6 @@ import (
 	"github.com/ethanrous/spark-bytes/internal/log"
 	"github.com/ethanrous/spark-bytes/models/rest"
 	"github.com/go-chi/chi"
-	"github.com/golang-jwt/jwt/v5"
 )
 
 // GetEvents godoc
@@ -76,33 +75,7 @@ func reserveEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db := databaseFromContext(r.Context())
-
-	cookie, err := r.Cookie("spark-bytes-session")
-	if err != nil {
-		// Cookie not found, unauthorized access
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
-	tokenString := cookie.Value
-
-	token, err := jwt.ParseWithClaims(tokenString, &WlClaims{}, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte("key"), nil
-	})
-
-	if err != nil || !token.Valid {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
-	claims, ok := token.Claims.(*WlClaims)
-	if !ok {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
+	user := userFromContext(r.Context())
 
 	// Generate random 4-digit code for user to present to event staff
 	reserveCode, err := db.GenerateReserveCode(eventID)
@@ -113,7 +86,8 @@ func reserveEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Insert the reservation record into the database
-	err = db.CreateReservation(claims.ID, eventID, reserveCode)
+
+	err = db.CreateReservation(user.ID, eventID, reserveCode)
 	if err != nil {
 		log.Error.Println("Error creating reservation:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
@@ -124,7 +98,7 @@ func reserveEvent(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusCreated)
 	writeJson(w, http.StatusCreated, map[string]string{
 		"message":     "Reservation created successfully",
-		"userID":      strconv.Itoa(claims.ID),
+		"userID":      strconv.Itoa(user.ID),
 		"eventID":     eventIDStr,
 		"reserveCode": reserveCode,
 	})
@@ -141,36 +115,10 @@ func removeReservationFromCode(w http.ResponseWriter, r *http.Request) {
 	reserveCode := chi.URLParam(r, "reserveCode")
 
 	db := databaseFromContext(r.Context())
-
-	cookie, err := r.Cookie("spark-bytes-session")
-	if err != nil {
-		// Cookie not found, unauthorized access
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
-	tokenString := cookie.Value
-
-	token, err := jwt.ParseWithClaims(tokenString, &WlClaims{}, func(token *jwt.Token) (interface{}, error) {
-		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-		}
-		return []byte("key"), nil
-	})
-
-	if err != nil || !token.Valid {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
-
-	claims, ok := token.Claims.(*WlClaims)
-	if !ok {
-		http.Error(w, "Unauthorized", http.StatusUnauthorized)
-		return
-	}
+	user := userFromContext(r.Context())
 
 	// Insert the reservation record into the database
-	err = db.DeleteReservationFromCode(claims.ID, eventID, reserveCode)
+	err = db.DeleteReservationFromCode(user.ID, eventID, reserveCode)
 	if err != nil {
 		log.Error.Println("Error creating reservation:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
