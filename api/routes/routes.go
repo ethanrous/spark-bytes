@@ -39,55 +39,53 @@ func databaseFromContext(ctx context.Context) database.Database {
 	return db
 }
 
-func WithUser(user models.User) func(http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			db := databaseFromContext(r.Context())
+func AuthCheck(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		db := databaseFromContext(r.Context())
 
-			cookie, err := r.Cookie("spark-bytes-session")
-			if err != nil {
-				// Cookie not found, unauthorized access
-				http.Error(w, "Unauthorized", http.StatusUnauthorized)
-				return
+		cookie, err := r.Cookie("spark-bytes-session")
+		if err != nil {
+			// Cookie not found, unauthorized access
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		tokenString := cookie.Value
+
+		token, err := jwt.ParseWithClaims(tokenString, &WlClaims{}, func(token *jwt.Token) (interface{}, error) {
+			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 			}
-
-			tokenString := cookie.Value
-
-			token, err := jwt.ParseWithClaims(tokenString, &WlClaims{}, func(token *jwt.Token) (interface{}, error) {
-				if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-					return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
-				}
-				return []byte("key"), nil
-			})
-
-			if err != nil || !token.Valid {
-				http.Error(w, "Unauthorized", http.StatusUnauthorized)
-				return
-			}
-
-			claims, ok := token.Claims.(*WlClaims)
-			if !ok {
-				http.Error(w, "Unauthorized", http.StatusUnauthorized)
-				return
-			}
-
-			user, err := db.GetUserByUserId(claims.ID)
-			if err != nil {
-				log.Println("Error getting user: ", err)
-				http.Error(w, "Unauthorized", http.StatusUnauthorized)
-				return
-			}
-
-			r = r.WithContext(context.WithValue(r.Context(), UserKey, user))
-			next.ServeHTTP(w, r)
+			return []byte("key"), nil
 		})
-	}
+
+		if err != nil || !token.Valid {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		claims, ok := token.Claims.(*WlClaims)
+		if !ok {
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		user, err := db.GetUserByUserId(claims.ID)
+		if err != nil {
+			log.Println("Error getting user: ", err)
+			http.Error(w, "Unauthorized", http.StatusUnauthorized)
+			return
+		}
+
+		r = r.WithContext(context.WithValue(r.Context(), UserKey, user))
+		next.ServeHTTP(w, r)
+	})
 }
 
 func userFromContext(ctx context.Context) models.User {
 	user, ok := ctx.Value(UserKey).(models.User)
 	if !ok {
-		panic("database not found in context")
+		panic("user not found in context")
 	}
 	return user
 }
