@@ -1,13 +1,13 @@
 package routes
 
 import (
-	"log"
+	"fmt"
 	"net/http"
 	"strconv"
 
+	"github.com/ethanrous/spark-bytes/internal/log"
 	"github.com/ethanrous/spark-bytes/models/rest"
 	"github.com/go-chi/chi"
-	// "github.com/golang-jwt/jwt/v5"
 )
 
 // GetEvents godoc
@@ -25,7 +25,7 @@ func getEvents(w http.ResponseWriter, r *http.Request) {
 
 	el, err := db.GetLatestEvents()
 	if err != nil {
-		log.Println("Error getting event: ", err)
+		log.Error.Println("Error getting event: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -58,7 +58,7 @@ func createEvent(w http.ResponseWriter, r *http.Request) {
 
 	err = db.NewEvent(newEvent)
 	if err != nil {
-		log.Println("Error creating event: ", err)
+		log.Error.Println("Error creating event: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
@@ -80,15 +80,16 @@ func reserveEvent(w http.ResponseWriter, r *http.Request) {
 	// Generate random 4-digit code for user to present to event staff
 	reserveCode, err := db.GenerateReserveCode(eventID)
 	if err != nil {
-		log.Println("Error generating unique code:", err)
+		log.Error.Println("Error generating unique code:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
 
 	// Insert the reservation record into the database
+
 	err = db.CreateReservation(user.ID, eventID, reserveCode)
 	if err != nil {
-		log.Println("Error creating reservation:", err)
+		log.Error.Println("Error creating reservation:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -119,7 +120,7 @@ func removeReservationFromCode(w http.ResponseWriter, r *http.Request) {
 	// Insert the reservation record into the database
 	err = db.DeleteReservationFromCode(user.ID, eventID, reserveCode)
 	if err != nil {
-		log.Println("Error creating reservation:", err)
+		log.Error.Println("Error creating reservation:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
@@ -132,4 +133,3 @@ func removeReservationFromCode(w http.ResponseWriter, r *http.Request) {
 		"reserveCode": reserveCode,
 	})
 }
-
