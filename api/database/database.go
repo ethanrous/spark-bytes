@@ -2,8 +2,8 @@ package database
 
 import (
 	"fmt"
-	"log"
 
+	"github.com/ethanrous/spark-bytes/internal/log"
 	"github.com/ethanrous/spark-bytes/models"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -21,10 +21,17 @@ func InitDB() (Database, error) {
 	if err != nil {
 		return Database{}, err
 	}
-	log.Println("DB Connected!")
+	log.Info.Println("DB Connected!")
 
 	_, err = postgresDB.Exec(usersTable)
 	if err != nil {
+		log.Error.Println("Error creating users table: ", err)
+		return Database{}, err
+	}
+
+	_, err = postgresDB.Exec(eventTable)
+	if err != nil {
+		log.Error.Println("Error creating events table: ", err)
 		return Database{}, err
 	}
 
