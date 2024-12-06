@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/ethanrous/spark-bytes/database"
+	"github.com/ethanrous/spark-bytes/internal/log"
 	"github.com/ethanrous/spark-bytes/routes"
 )
 
 func main() {
 	db, err := database.InitDB()
 	if err != nil {
-		log.Fatalln("Error initializing database: ", err)
+		log.Error.Fatalln("Error initializing database: ", err)
 	}
 
 	srv := routes.NewServer(db)
