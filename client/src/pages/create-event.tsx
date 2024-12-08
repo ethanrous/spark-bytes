@@ -6,38 +6,96 @@ import { Button, Form, Input, InputNumber, TimePicker } from "antd";
 import Image from "next/image";
 import React, { useState } from "react";
 
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+
+
 const CreateEventPage: React.FC = () => {
-	const [form] = Form.useForm();
-	const [loading, setLoading] = useState<boolean>(false);
-	const [name, setName] = useState<string>();
-	const [location, setLocation] = useState<string>();
-	const [description, setDescription] = useState<string>();
-	const [dietary_info, setDietaryInfo] = useState<string>();
-	const [start_time, setStartTime] = useState<Date>();
-	const [end_time, setEndTime] = useState<Date>();
-	const [attendeesCount, setAttendeesCount] = useState<number>(0);
+	const router = useRouter();
+	const getUser = () => {
+        if (typeof window !== "undefined") {
+            const user = localStorage.getItem("user");
+            return user ? JSON.parse(user) : null;
+        }
+        return null;
+    };
+
+    const [form] = Form.useForm();
+    const [editingEvent, setEditingEvent] = useState<EventInfo | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [name, setName] = useState<string>();
+    const [location, setLocation] = useState<string>();
+    const [description, setDescription] = useState<string>();
+    const [dietary_info, setDietaryInfo] = useState<string>();
+    const [start_time, setStartTime] = useState<Date>();
+    const [end_time, setEndTime] = useState<Date>();
+    const [attendeesCount, setAttendeesCount] = useState<number>(0);
+
+    useEffect(() => {
+        const user = getUser();
+        if (!user) {
+            router.push("/login?redirect=create-event");
+        }
+    }, [router]);
+
+    useEffect(() => {
+        if (router.query.editEventId) {
+            EventApi.getEvent(router.query.editEventId as string).then((response) => {
+                setEditingEvent(response.data);
+                form.setFieldsValue({
+                    ...response.data,
+                    start_time: new Date(response.data.start_time),
+                    end_time: new Date(response.data.end_time),
+                });
+            });
+        }
+    }, [router.query.editEventId]);
 
 	const handleSubmit = async () => {
-		console.log('Creating event with: ', name, location, description, dietary_info, start_time, end_time, attendeesCount);
+		console.log('Creating or updating event with:', name, location, description, dietary_info, start_time, end_time, attendeesCount);
 		setLoading(true);
-
+	
 		if (!start_time || !end_time) {
 			setLoading(false);
-			return
+			return;
 		}
-
+	
+		if (editingEvent) {
+			// Modify existing event
+			EventApi.modifyEvent(editingEvent.eventId, {
+				name,
+				location,
+				description,
+				dietary_info,
+				start_time: start_time.getTime(),
+				end_time: end_time.getTime(),
+				capacity: attendeesCount,
+			})
+				.then(() => {
+					setLoading(false);
+					router.push('/view-events'); // Redirect to view events page
+				})
+				.catch((err) => {
+					console.error('Error modifying event:', err);
+					setLoading(false);
+				});
+			return;
+		}
+	
 		EventApi.createEvent({
-			end_time: end_time.getTime(),
-			start_time: start_time.getTime(),
-			description: description,
-			dietary_info: dietary_info,
-			location: location,
-			name: name,
-		}).then(() => setLoading(false)).catch((err) => {
-			console.error('Error creating event: ', err);
-			setLoading(false);
+			end_time: end_time?.getTime(),
+			start_time: start_time?.getTime(),
+			description,
+			dietary_info,
+			location,
+			name,
 		})
-	}
+		.then(() => setLoading(false))
+		.catch((err) => {
+			console.error('Error creating event:', err);
+			setLoading(false);
+		});
+	};	
 
 	return (
 		<div style={{ ...styles.layout, backgroundColor: themeConfig.colors.background }}>

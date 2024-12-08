@@ -9,6 +9,11 @@ import Footer from '../components/Footer';
 import Header from '../components/Header';
 import themeConfig from '../theme/themeConfig';
 
+import { Button, Form, Input, InputNumber, TimePicker } from "antd";
+import { useRouter } from 'next/router';
+const router = useRouter();
+
+
 const { Title } = Typography;
 
 const formatDate = (date: Date) => {
@@ -29,15 +34,48 @@ const ViewEvents = () => {
 	const [eventsList, setEventsList] = useState<EventInfo[]>([]);
 	const [sortBy, setSortBy] = useState("Default");
 
+	const getUser = () => {
+		if (typeof window !== 'undefined') {
+			const user = localStorage.getItem('user');
+			return user ? JSON.parse(user) : null;
+		}
+		return null;
+	};
+	const user = getUser();
+
 	useEffect(() => {
 		EventApi.getEvents()
-		.then(response => 
-			{
+			.then((response) => {
 				setEventsList(response.data);
 				setDefaultSortList(response.data);
-			}
-		)
+			})
+			.catch((err) => console.error("Error fetching events:", err));
 	}, []);
+
+
+	const registerForEvent = async (eventId: string) => {
+		if (!user) {
+			alert('Please log in to register for events.');
+			return;
+		}
+
+		try {
+			await EventApi.registerForEvent(eventId);
+			const updatedEvents = eventsList.map((event) => {
+				if (event.eventId === eventId && event.attendees.length < event.capacity) {
+					return {
+						...event,
+						attendees: [...event.attendees, user.id],
+					};
+				}
+				return event;
+			});
+			setEventsList(updatedEvents);
+		} catch (err) {
+			console.error('Error registering for event:', err);
+		}
+	};
+
 
 	const items: MenuProps['items'] = [
 		{
@@ -179,6 +217,45 @@ const ViewEvents = () => {
 		},
 	];
 
+	const toggleReservation = async (eventId: number, isReserved: boolean) => {
+		if (!user) {
+			alert('Please log in to reserve/unreserve events.');
+			return;
+		}
+	
+		try {
+			if (isReserved) {
+				// Unreserve the event
+				await EventApi.unreserveForEvent(eventId);
+				const updatedEvents = eventsList.map((event) =>
+					event.eventId === eventId
+						? {
+							  ...event,
+							  attendees: event.attendees.filter((attendee) => attendee !== user.id),
+						  }
+						: event
+				);
+				setEventsList(updatedEvents);
+			} else {
+				// Reserve the event
+				await EventApi.reserveForEvent(eventId);
+				const updatedEvents = eventsList.map((event) =>
+					event.eventId === eventId
+						? {
+							  ...event,
+							  attendees: [...event.attendees, user.id],
+						  }
+						: event
+				);
+				setEventsList(updatedEvents);
+			}
+		} catch (err) {
+			console.error('Error toggling reservation:', err);
+		}
+	};
+	
+	
+
 	return (
 		<>
 			<Header />
@@ -239,6 +316,32 @@ const ViewEvents = () => {
 
 									<br/>
 									<p> {event.description} </p>
+									<div style={{ textAlign: "center", marginTop: "10px" }}>
+									<Button
+											type="primary"
+											disabled={event.attendees.length >= event.capacity}
+											onClick={() => registerForEvent(event.eventId)}
+										>
+											{event.attendees.length >= event.capacity ? 'Full' : 'Register'}
+										</Button>
+									</div>
+									<<div style={{ marginTop: "10px", textAlign: "center" }}>
+										<p>
+											<strong>Attendees:</strong> {event.attendees.length} / {event.capacity}
+										</p>
+									</div>
+										<Button
+											type="primary"
+											onClick={() =>
+												toggleReservation(
+													event.eventId,
+													event.attendees.includes(user.id) // Check if the user has already reserved
+												)
+											}
+										>
+											{event.attendees.includes(user.id) ? 'Unreserve' : 'Reserve'}
+										</Button>
+									</div>
 								</Card>
 							</Col>
 						))

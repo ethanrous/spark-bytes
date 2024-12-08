@@ -4,7 +4,19 @@ import Brand from "../components/Brand";
 import { UserApi } from '@/api/userApi';
 import themeConfig from '../theme/themeConfig';
 
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+
 const LoginPage: React.FC = () => {
+  const router = useRouter();
+  const { query } = router;
+
+  useEffect(() => {
+    if (query.redirect) {
+      setError('Log in before you can create an event.');
+    }
+  }, [query]);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,19 +25,24 @@ const LoginPage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Logging in with', email, password);
-    setSuccessfulLogin(false);
-
     setLoading(true);
     setError('');
 
     try {
       const response = await UserApi.loginUser({ email, password });
       if (response.status === 200) {
-        console.log('Login successful');
+        // Save user state in localStorage
+        localStorage.setItem('user', JSON.stringify({ email }));
         setSuccessfulLogin(true);
+        router.push('/view-events'); // Redirect after login
       } else {
-        setError(`Login failed: ${response.status === 401 ? "Incorrect email or password." : "An error has occurred while logging in."}`);
+        setError(
+          `Login failed: ${
+            response.status === 401
+              ? 'Incorrect email or password.'
+              : 'An error occurred while logging in.'
+          }`
+        );
       }
     } catch (err) {
       console.error('Error logging in:', err);
@@ -38,7 +55,7 @@ const LoginPage: React.FC = () => {
   return (
     <div style={styles.container}>
       <Brand />
-      <form onSubmit={(e) => { handleSubmit(e).catch((err) => console.error(err)) }} style={styles.form}>
+      <form onSubmit={(e) => handleSubmit(e)} style={styles.form}>
         <h1 style={styles.title}>Log In</h1>
         <input
           type="email"

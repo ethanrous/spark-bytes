@@ -9,8 +9,25 @@ import { useRouter } from 'next/router';
 import Brand from './Brand';
 import themeConfig from '@/theme/themeConfig';
 
+
 const Header: React.FC = () => {
   const router = useRouter();
+
+  const getUser = () => {
+    if (typeof window !== 'undefined') {
+      const user = localStorage.getItem('user');
+      return user ? JSON.parse(user) : null;
+    }
+    return null;
+  };
+
+  const user = getUser(); // Correctly define the `user` variable here
+  
+  const handleLogout = () => {
+    // Clear user session
+    localStorage.removeItem('user');
+    router.push('/login'); // Redirect to login page
+  };
 
   const headerStyle = {
     display: 'flex',
@@ -42,6 +59,7 @@ const Header: React.FC = () => {
     fontWeight: 'bold',
   };
 
+
   return (
     <header style={headerStyle}>
       <Brand />
@@ -54,12 +72,36 @@ const Header: React.FC = () => {
         <Link href="/create-event" style={router.pathname === '/create-event' ? activeLinkStyle : linkStyle}>
           Create Event
         </Link>
+        {user && (
+          <Link href="/my-events" style={router.pathname === '/my-events' ? activeLinkStyle : linkStyle}>
+            My Events
+          </Link>
+        )}
         <Link href="/signup" style={router.pathname === '/signup' ? activeLinkStyle : linkStyle}>
           Sign Up
         </Link>
-        <Link href="/login" style={router.pathname === '/login' ? activeLinkStyle : linkStyle}>
-          Log In
-        </Link>
+        {!user ? (
+          <Link href="/login" style={router.pathname === '/login' ? activeLinkStyle : linkStyle}>
+            Log In
+          </Link>
+        ) : (
+          <button
+            onClick={handleLogout}
+            style={{
+              marginLeft: 'auto',
+              padding: '10px 20px',
+              cursor: 'pointer',
+              backgroundColor: '#ff4d4f',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              fontFamily: themeConfig.typography.fontFamily,
+              fontWeight: 'bold',
+            }}
+          >
+            Log Out
+          </button>
+        )}
       </nav>
     </header>
   );
