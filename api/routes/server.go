@@ -2,12 +2,12 @@ package routes
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 	"sync"
 
 	"github.com/ethanrous/spark-bytes/database"
+	"github.com/ethanrous/spark-bytes/internal/log"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
@@ -47,7 +47,7 @@ func NewServer(db database.Database) *Server {
 		r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 			_, err := w.Write([]byte("pong"))
 			if err != nil {
-				log.Println("Error writing response: ", err)
+				log.Error.Println("Error writing response: ", err)
 				w.WriteHeader(http.StatusInternalServerError)
 				return
 			}
@@ -56,8 +56,11 @@ func NewServer(db database.Database) *Server {
 
 		r.Route("/users", func(r chi.Router) {
 			r.Get("/", getUser)
+			r.Get("/me", getLoggedInUser)
 			r.Post("/", createUser)
 			r.Post("/login", loginUser)
+			r.Post("/logout", logoutUser)
+			r.Post("/{userId}/verify", verifyUser)
 		})
 
 		r.Route("/events", func(r chi.Router) {
@@ -103,12 +106,37 @@ func UseUi() *chi.Mux {
 	})
 
 	r.NotFound(
-		func(w http.ResponseWriter, r *http.Request) {
-			if !strings.HasPrefix(r.RequestURI, "/api") {
-				fmt.Printf("Could not find route for %s, serving index\n", r.RequestURI)
+		func(w http.ResponseWriter, req *http.Request) {
+			if !strings.HasPrefix(req.RequestURI, "/api") {
+
+				htmlCheck := req.RequestURI
+				if questionIndex := strings.Index(htmlCheck, "?"); questionIndex != -1 {
+					htmlCheck = htmlCheck[:questionIndex]
+				}
+				htmlCheck += ".html"
+				log.Info.Println("Checking for:", htmlCheck)
+				if memFs.Exists(htmlCheck) {
+					fData, err := memFs.ReadFile(htmlCheck)
+					if err != nil {
+						log.Error.Println("Error writing response: ", err)
+						w.WriteHeader(http.StatusInternalServerError)
+						return
+					}
+
+					_, err = w.Write(fData)
+					if err != nil {
+						log.Error.Println("Error writing response: ", err)
+						w.WriteHeader(http.StatusInternalServerError)
+						return
+					}
+
+					return
+				}
+
+				log.Error.Printf("Could not find route for %s, serving index\n", req.RequestURI)
 				_, err := w.Write(memFs.index.data)
 				if err != nil {
-					log.Println("Error writing response: ", err)
+					log.Error.Println("Error writing response: ", err)
 					w.WriteHeader(http.StatusInternalServerError)
 					return
 				}
@@ -125,6 +153,6 @@ func UseUi() *chi.Mux {
 
 func (s *Server) Start(port int) error {
 	portStr := fmt.Sprintf("0.0.0.0:%d", port)
-	log.Println("Server is starting on ", portStr)
+	log.Info.Println("Server is starting on ", portStr)
 	return http.ListenAndServe(portStr, s.r)
 }

@@ -13,6 +13,11 @@ require (
 )
 
 require (
+	github.com/wneessen/go-mail v0.5.2 // indirect
+	golang.org/x/text v0.20.0 // indirect
+)
+
+require (
 	github.com/ajg/form v1.5.1 // indirect
 	github.com/go-chi/chi v1.5.5
 )

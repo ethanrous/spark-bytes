@@ -46,7 +46,7 @@ func AuthCheck(next http.Handler) http.Handler {
 		cookie, err := r.Cookie("spark-bytes-session")
 		if err != nil {
 			// Cookie not found, unauthorized access
-			log.Error.Println("Did not get cookie: ", err)
+			// log.Error.Println("Did not get cookie: ", err)
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -74,6 +74,8 @@ func AuthCheck(next http.Handler) http.Handler {
 		user, err := db.GetUserByUserId(claims.ID)
 		if err != nil {
 			log.Error.Println("Error getting user: ", err)
+			cookie := fmt.Sprintf("%s=;Path=/;Expires=Thu, 01 Jan 1970 00:00:00 GMT;HttpOnly", "spark-bytes-session")
+			w.Header().Set("Set-Cookie", cookie)
 			http.Error(w, "Unauthorized", http.StatusUnauthorized)
 			return
 		}
@@ -83,12 +85,12 @@ func AuthCheck(next http.Handler) http.Handler {
 	})
 }
 
-func userFromContext(ctx context.Context) models.User {
+func userFromContext(ctx context.Context) (models.User, error) {
 	user, ok := ctx.Value(UserKey).(models.User)
 	if !ok {
-		panic("user not found in context")
+		return models.User{}, errors.New("user not found in context")
 	}
-	return user
+	return user, nil
 }
 
 func StatusErr(w http.ResponseWriter, r *http.Request, msg string, status int) {

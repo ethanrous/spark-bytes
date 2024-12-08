@@ -65,3 +65,12 @@ func (db Database) GetUserByUserId(userId int) (models.User, error) {
 
 	return user, nil
 }
+
+func (db Database) VerifyUser(userId int) error {
+	_, err := db.Exec("UPDATE users SET is_verified = $1 WHERE id=$2", true, userId)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

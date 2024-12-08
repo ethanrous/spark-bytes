@@ -2,14 +2,12 @@ package routes
 
 import (
 	"fmt"
+	"io"
 	"net/http"
 	"os"
 	"path/filepath"
-	"strings"
 	"sync"
 	"time"
-
-	"github.com/ethanrous/spark-bytes/internal/log"
 )
 
 type InMemoryFS struct {
@@ -43,8 +41,6 @@ func (fs *InMemoryFS) Open(name string) (http.File, error) {
 		return nil, err
 	}
 
-	log.Info.Println("MemFs Opening file", name)
-
 	fs.routesMu.RLock()
 	if f, ok = fs.routes[name]; ok && f.exists {
 		fs.routesMu.RUnlock()
@@ -75,14 +71,31 @@ func newWrapFile(real *memFileReal) *MemFileWrap {
 	}
 }
 
-func (fs *InMemoryFS) Exists(prefix string, path string) bool {
+func (fs *InMemoryFS) Exists(path string) bool {
 	if path == "/" || path == "//" {
 		return false
 	} else if path == "/index" {
 		return true
 	}
+
+	path = filepath.Join(fs.baseDir, path)
 	_, err := fs.Open(path)
 	return err == nil
+}
+
+func (fs *InMemoryFS) ReadFile(path string) ([]byte, error) {
+	if path == "/" || path == "//" {
+		return nil, fmt.Errorf("Invalid path")
+	} else if path == "/index" {
+		return fs.index.data, nil
+	}
+
+	f, err := fs.Open(path)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	return io.ReadAll(f)
 }
 
 type MemFileWrap struct {
@@ -106,27 +119,8 @@ func (mf *memFileReal) Copy() *memFileReal {
 	}
 }
 
-func addIndexTag(tagName, toAdd, content string) string {
-	subStr := fmt.Sprintf("og:%s\" content=\"", tagName)
-	index := strings.Index(content, subStr)
-	if index == -1 {
-		fmt.Println("Failed to find tag", tagName)
-		return content
-	}
-	index += len(subStr)
-	return content[:index] + toAdd + content[index:]
-}
-
 func (fs *InMemoryFS) Index(loc string) *MemFileWrap {
 	index := newWrapFile(fs.index.Copy())
-	locIndex := strings.Index(loc, fs.baseDir)
-	if locIndex != -1 {
-		loc = loc[locIndex+len(fs.baseDir):]
-	}
-
-	data := addIndexTag("url", fmt.Sprintf("%s/%s", fs.proxyAddress, loc), string(index.realFile.data))
-	index.realFile.data = []byte(data)
-
 	return index
 }
 
@@ -161,6 +155,14 @@ func (f *MemFileWrap) Readdir(count int) ([]os.FileInfo, error) {
 	return res, nil
 }
 func (f *MemFileWrap) Read(b []byte) (int, error) {
+	if f.at >= int64(len(f.realFile.data)) {
+		return 0, io.EOF
+	}
+	if f.at+int64(len(b)) > int64(len(f.realFile.data)) {
+		n := copy(b, f.realFile.data[f.at:])
+		f.at += int64(n)
+		return n, nil
+	}
 	n := copy(b, f.realFile.data[f.at:f.at+int64(len(b))])
 	f.at += int64(len(b))
 	return n, nil

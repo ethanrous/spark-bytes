@@ -1,25 +1,53 @@
 import type { AppProps } from 'next/app';
 import themeConfig from '../theme/themeConfig';
+import { useEffect } from 'react';
+import { UserApi } from '@/api/userApi';
+import { User, useSessionStore } from '@/state/session';
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return (
-    <div
-      style={{
-        fontFamily: themeConfig.typography.fontFamily,
-        backgroundColor: themeConfig.colors.background,
-        color: themeConfig.colors.textPrimary,
-        width: '100vw',
-        height: '100vh',
-        margin: 0,
-        padding: 0,
-        boxSizing: 'border-box',
-        display: 'flex',
-        flexDirection: 'column',
-        overflowX: 'hidden',
-      }}
-    >
-      {/* Reset styles */}
-      <style global jsx>{`
+	const user = useSessionStore(state => state.user)
+	const setUser = useSessionStore(state => state.setUser)
+
+	useEffect(() => {
+		UserApi.getLoggedInUser().then((userRes) => {
+			if (userRes.status !== 200) {
+				console.error('Error getting logged in user: ', userRes)
+				const user = new User()
+				setUser(user)
+			}
+			else {
+				const user = new User(userRes.data)
+				setUser(user)
+			}
+		}).catch((err) => {
+			console.error('Error getting logged in user: ', err)
+			const user = new User()
+			setUser(user)
+		})
+	}, [setUser])
+
+	if (user === null) {
+		return null
+	}
+
+	return (
+		<div
+			style={{
+				fontFamily: themeConfig.typography.fontFamily,
+				backgroundColor: themeConfig.colors.background,
+				color: themeConfig.colors.textPrimary,
+				width: '100vw',
+				height: '100vh',
+				margin: 0,
+				padding: 0,
+				boxSizing: 'border-box',
+				display: 'flex',
+				flexDirection: 'column',
+				overflowX: 'hidden',
+			}}
+		>
+			{/* Reset styles */}
+			<style global jsx>{`
         * {
           margin: 0;
           padding: 0;
@@ -34,10 +62,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           overflow: hidden; /* Prevent extra scrollbars */
         }
       `}</style>
-
-      <Component {...pageProps} />
-    </div>
-  );
+			<Component {...pageProps} />
+		</div>
+	);
 }
 
 export default MyApp;

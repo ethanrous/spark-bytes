@@ -51,7 +51,12 @@ func createEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db := databaseFromContext(r.Context())
-	user := userFromContext(r.Context())
+	user, err := userFromContext(r.Context())
+	if err != nil {
+		log.Error.Println("Error getting user from context: ", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	newEvent.OwnerID = user.ID
 
@@ -74,7 +79,12 @@ func reserveEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db := databaseFromContext(r.Context())
-	user := userFromContext(r.Context())
+	user, err := userFromContext(r.Context())
+	if err != nil {
+		log.Error.Println("Error getting user from context: ", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	// Generate random 4-digit code for user to present to event staff
 	reserveCode, err := db.GenerateReserveCode(eventID)
@@ -114,7 +124,12 @@ func removeReservationFromCode(w http.ResponseWriter, r *http.Request) {
 	reserveCode := chi.URLParam(r, "reserveCode")
 
 	db := databaseFromContext(r.Context())
-	user := userFromContext(r.Context())
+	user, err := userFromContext(r.Context())
+	if err != nil {
+		log.Error.Println("Error getting user from context: ", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	// Insert the reservation record into the database
 	err = db.DeleteReservationFromCode(user.ID, eventID, reserveCode)
