@@ -51,6 +51,36 @@ func (db Database) NewEvent(newEvent rest.NewEventParams) error {
 	return nil
 }
 
+func (db Database) ModifyEvent(eventID int, newEvent rest.NewEventParams) error {
+	_, err := db.Exec(
+		`UPDATE events
+		 SET
+			name = $1
+			location = $2
+			description = $3
+			dietary_info = $4
+			start_time = $5
+			end_time = $6
+			owner_id = $7
+			attendees = $8
+		WHERE id = $9`,
+		newEvent.Name,
+		newEvent.Location,
+		newEvent.Description,
+		newEvent.DietaryInfo,
+		time.UnixMilli(newEvent.StartTime),
+		time.UnixMilli(newEvent.EndTime),
+		newEvent.OwnerID,
+		newEvent.Attendees,
+		eventID,
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (db Database) reserveCodeExists(eventID int, code string) (bool, error) {
 	var count int
 	err := db.QueryRow("SELECT COUNT(*) FROM reservations WHERE event_id = $1 AND reserve_code = $2", eventID, code).Scan(&count)
@@ -155,4 +185,52 @@ func (db Database) GetLatestEvents() ([]models.Event, error) {
 		events = append(events, event)
 	}
 	return events, nil
+}
+
+func (db Database) GetEventsByOwner(ownerID int) ([]models.Event, error) {
+	sqlQuery := `
+        SELECT
+            events.id,
+            events.name,
+            events.location,
+            events.description,
+            events.dietary_info,
+            events.owner_id,
+            events.start_time,
+            events.end_time,
+            events.attendees,
+            users.email,
+            users.first_name,
+            users.last_name,
+            users.joined_at
+        FROM events
+        INNER JOIN users ON users.id = events.owner_id
+		WHERE events.owner_id = $1
+    `
+	rows, err := db.Queryx(sqlQuery, ownerID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var events []models.Event
+
+	for rows.Next() {
+		event := models.Event{}
+		err = rows.StructScan(&event)
+		if err != nil {
+			return nil, err
+		}
+		events = append(events, event)
+	}
+	return events, nil
+}
+
+func (db Database) ReservationExists(userID, eventID int) (bool, error) {
+    var count int
+    err := db.QueryRow("SELECT COUNT(*) FROM reservations WHERE user_id = $1 AND event_id = $2", userID, eventID).Scan(&count)
+    if err != nil {
+        return false, err
+    }
+    return count > 0, nil
 }
