@@ -3,13 +3,19 @@ import React, { useState } from 'react';
 import Brand from "../components/Brand";
 import { UserApi } from '@/api/userApi';
 import themeConfig from '../theme/themeConfig';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const LoginPage: React.FC = () => {
+  const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [successfulLogin, setSuccessfulLogin] = useState(false);
+  const rerouteTime = 3;
+  const [rerouteCountdown, setRerouteCountdown] = useState(rerouteTime);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +30,14 @@ const LoginPage: React.FC = () => {
       if (response.status === 200) {
         console.log('Login successful');
         setSuccessfulLogin(true);
+        for (let i = (rerouteTime - 1); i > 0; i--) {
+          setTimeout(() => {
+            setRerouteCountdown(i);
+          }, (rerouteTime - i) * 1000);
+        }
+        setTimeout(() => {
+          router.push('/view-events');
+        }, rerouteTime * 1000);
       } else {
         setError(`Login failed: ${response.status === 401 ? "Incorrect email or password." : "An error has occurred while logging in."}`);
       }
@@ -60,7 +74,7 @@ const LoginPage: React.FC = () => {
           {loading ? 'Logging in...' : 'Log in'}
         </button>
         {error && <p style={styles.error}>{error}</p>}
-        {successfulLogin && <p style={styles.success}>Welcome {email}!</p>}
+        {successfulLogin && <p style={styles.success}>Welcome {email}!<br/><i>Redirecting to the <Link href="/view-events">events page</Link> in {rerouteCountdown}...</i></p>}
       </form>
     </div>
   );

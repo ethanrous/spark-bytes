@@ -5,8 +5,12 @@ import themeConfig from "@/theme/themeConfig";
 import { Button, Form, Input, InputNumber, TimePicker } from "antd";
 import Image from "next/image";
 import React, { useState } from "react";
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const CreateEventPage: React.FC = () => {
+	const router = useRouter();
+	
 	const [form] = Form.useForm();
 	const [loading, setLoading] = useState<boolean>(false);
 	const [name, setName] = useState<string>();
@@ -16,6 +20,9 @@ const CreateEventPage: React.FC = () => {
 	const [start_time, setStartTime] = useState<Date>();
 	const [end_time, setEndTime] = useState<Date>();
 	const [attendeesCount, setAttendeesCount] = useState<number>(0);
+	const [successfulPost, setSuccessfulPost] = useState(false);
+	const rerouteTime = 5;
+	const [rerouteCountdown, setRerouteCountdown] = useState(rerouteTime);
 
 	const handleSubmit = async () => {
 		console.log('Creating event with: ', name, location, description, dietary_info, start_time, end_time, attendeesCount);
@@ -33,7 +40,18 @@ const CreateEventPage: React.FC = () => {
 			dietary_info: dietary_info,
 			location: location,
 			name: name,
-		}).then(() => setLoading(false)).catch((err) => {
+		}).then(() => {
+			setSuccessfulPost(true);
+			setLoading(false);
+			for (let i = (rerouteTime - 1); i > 0; i--) {
+			setTimeout(() => {
+				setRerouteCountdown(i);
+			}, (rerouteTime - i) * 1000);
+			}
+			setTimeout(() => {
+			router.push('/view-events');
+			}, rerouteTime * 1000);
+		}).catch((err) => {
 			console.error('Error creating event: ', err);
 			setLoading(false);
 		})
@@ -128,6 +146,7 @@ const CreateEventPage: React.FC = () => {
 								</Button>
 							</Form.Item>
 						</Form>
+						{successfulPost && <p style={styles.success}>Event created successfully!<br/><i>Redirecting to the <Link href="view-events">events page</Link> in {rerouteCountdown}...</i></p>}
 					</div>
 
 					{/* Right Side: Image */}
@@ -244,6 +263,12 @@ const styles: { [key: string]: React.CSSProperties } = {
 		height: "auto",
 		objectFit: "cover",
 		borderRadius: "8px",
+	},
+	success: {
+		color: 'green',
+		fontSize: '0.9rem',
+		marginTop: '10px',
+		fontFamily: themeConfig.typography.fontFamily,
 	},
 };
 

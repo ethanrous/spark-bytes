@@ -4,6 +4,7 @@ import Brand from "../components/Brand";
 import { UserApi } from '@/api/userApi';
 import themeConfig from '../theme/themeConfig';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const SignUpPage: React.FC = () => {
   const router = useRouter();
@@ -16,6 +17,8 @@ const SignUpPage: React.FC = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [successfulSignUp, setSuccessfulSignUp] = useState(false);
+  const rerouteTime = 5;
+  const [rerouteCountdown, setRerouteCountdown] = useState(rerouteTime);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,9 +39,14 @@ const SignUpPage: React.FC = () => {
         if (res.status === 201) {
           console.log('Sign Up successful');
           setSuccessfulSignUp(true);
+          for (let i = (rerouteTime - 1); i > 0; i--) {
+            setTimeout(() => {
+              setRerouteCountdown(i);
+            }, (rerouteTime - i) * 1000);
+          }
           setTimeout(() => {
-            router.push('/view-events')
-          }, 2000);
+            router.push('/login');
+          }, rerouteTime * 1000);
         } else {
           setError(`Sign Up failed: ${res.status === 400 ? "Please use BU email address." : "An error has occurred while signing up."}`);
         }
@@ -100,7 +108,7 @@ const SignUpPage: React.FC = () => {
           {loading ? 'Signing up...' : 'Sign Up!'}
         </button>
         {error && <p style={styles.error}>{error}</p>}
-        {successfulSignUp && <p style={styles.success}>Account created successfully! <br/> Redirecting you to events page...</p>}
+        {successfulSignUp && <p style={styles.success}>Account created successfully! Please <Link href="/login">log in</Link>.<br/><i>Redirecting to the login page in {rerouteCountdown}...</i></p>}
       </form>
     </div>
   );
