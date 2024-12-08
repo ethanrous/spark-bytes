@@ -69,7 +69,9 @@ func NewServer(db database.Database) *Server {
 	r.Route("/events", func(r chi.Router) {
 		r.Get("/", getEvents)
 		r.Post("/", createEvent)
-		r.Post("/{id}/reserve", reserveEvent)
+		r.Post("/{id}/reservations", reserveEvent)
+		r.Patch("/{id}/reservations", removeReservationFromCode)
+		r.Delete("/{id}/reservations", removeReservationFromUser)
 	})
 	r.Mount("/", UseUi())
 

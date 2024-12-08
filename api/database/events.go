@@ -80,16 +80,43 @@ func (db Database) CreateReservation(userID int, eventID int, reserveCode string
 	return err
 }
 
-func (db Database) DeleteReservationFromCode(ownerID int, eventID int, reserveCode string) error {
-	var count int
-	db.QueryRow("SELECT COUNT(*) FROM events WHERE owner_id = $1 AND id = $2", ownerID, eventID).Scan(&count)
+func (db Database) GetEventOwnerID(eventID int) (int, error) {
+    var ownerID int
+    err := db.QueryRow("SELECT owner_id FROM events WHERE id = $1", eventID).Scan(&ownerID)
+    if err != nil {
+        return 0, err
+    }
+    return ownerID, nil
+}
 
-	if count != 1 {
-		return fmt.Errorf("owner %d does not own event %d", ownerID, eventID)
-	}
+func (db Database) DeleteReservationFromCode(eventID int, reserveCode string) (int64, error) {
+	res, err := db.Exec("DELETE FROM reservations WHERE event_id = $1, AND reserve_code = $2", eventID, reserveCode)
+	if err != nil {
+        return 0, err
+    }
+    rowsAffected, err := res.RowsAffected()
+    if err != nil {
+        return 0, err
+    }
+    return rowsAffected, nil
+}
 
-	_, err := db.Exec("DELETE FROM reservation WHERE event_id = $1, AND reserve_code = $2", eventID, reserveCode)
-	return err
+func (db Database) DeleteReservationFromUser(eventID int, userID int) (error) {
+	_, err := db.Exec("DELETE FROM reservations WHERE event_id = $1, AND user_id = $2", eventID, userID)
+	if err != nil {
+        return err
+    }
+    return nil
+}
+
+func (db Database) IncrementAttendeeCount(eventID int) error {
+    _, err := db.Exec("UPDATE events SET attendees = attendees + 1 WHERE id = $1", eventID)
+    return err
+}
+
+func (db Database) DecrementAttendeeCount(eventID int) error {
+    _, err := db.Exec("UPDATE events SET attendees = attendees - 1 WHERE id = $1", eventID)
+    return err
 }
 
 func (db Database) GetLatestEvents() ([]models.Event, error) {
