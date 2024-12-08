@@ -21,10 +21,10 @@ fi
 cd .. || exit 1
 
 echo "Checking for database docker container... (may prompt for password)"
-dockerDb=$(sudo docker ps | grep sparkbytes)
+dockerDb=$(docker ps | grep sparkbytes)
 if [[ -z $dockerDb ]]; then
 	echo "Starting database docker container..."
-	sudo docker compose up
+	sudo docker compose up -d
 fi
 
 cd ./api || exit 1

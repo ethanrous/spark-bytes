@@ -1,10 +1,12 @@
 import { EventApi } from "@/api/eventApi";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { useSessionStore } from "@/state/session";
 import themeConfig from "@/theme/themeConfig";
 import { Button, Form, Input, InputNumber, TimePicker } from "antd";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 const CreateEventPage: React.FC = () => {
 	const [form] = Form.useForm();
@@ -16,6 +18,9 @@ const CreateEventPage: React.FC = () => {
 	const [start_time, setStartTime] = useState<Date>();
 	const [end_time, setEndTime] = useState<Date>();
 	const [attendeesCount, setAttendeesCount] = useState<number>(0);
+
+	const router = useRouter();
+	const user = useSessionStore(state => state.user)
 
 	const handleSubmit = async () => {
 		console.log('Creating event with: ', name, location, description, dietary_info, start_time, end_time, attendeesCount);
@@ -37,6 +42,19 @@ const CreateEventPage: React.FC = () => {
 			console.error('Error creating event: ', err);
 			setLoading(false);
 		})
+	}
+
+	useEffect(() => {
+		if (!user) {
+			return
+		}
+		if (!user.loggedIn) {
+			router.push('/login')
+		}
+	}, [user, router]);
+
+	if (!user || !user.loggedIn) {
+		return null
 	}
 
 	return (
