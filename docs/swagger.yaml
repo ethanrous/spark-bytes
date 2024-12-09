@@ -33,6 +33,8 @@ definitions:
     type: object
   NewEventParams:
     properties:
+      attendees:
+        type: integer
       description:
         type: string
       dietary_info:
@@ -69,6 +71,19 @@ definitions:
         type: string
       lastName:
         type: string
+    type: object
+  UserInfo:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      joinedAt:
+        type: string
+      lastName:
+        type: string
+      verified:
+        type: boolean
     type: object
 host: localhost:5001
 info:
@@ -127,6 +142,8 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/UserInfo'
         "401":
           description: Unauthorized
       summary: Get User
@@ -151,6 +168,25 @@ paths:
       summary: Create User
       tags:
       - Users
+  /users/{userId}/verify:
+    post:
+      operationId: VerifyUser
+      parameters:
+      - description: UserId to verify
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Verify a user
+      tags:
+      - Users
   /users/login:
     post:
       operationId: LoginUser
@@ -166,9 +202,35 @@ paths:
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/UserInfo'
         "401":
           description: Unauthorized
       summary: Login User
+      tags:
+      - Users
+  /users/logout:
+    post:
+      operationId: LogoutUser
+      responses:
+        "200":
+          description: OK
+      summary: Logout User
+      tags:
+      - Users
+  /users/me:
+    get:
+      operationId: GetLoggedInUser
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/UserInfo'
+        "401":
+          description: Unauthorized
+      summary: Get Logged in user
       tags:
       - Users
 schemes:

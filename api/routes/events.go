@@ -93,7 +93,12 @@ func createEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db := databaseFromContext(r.Context())
-	user := userFromContext(r.Context())
+	user, err := userFromContext(r.Context())
+	if err != nil {
+		log.Error.Println("Error getting user from context: ", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	newEvent.OwnerID = user.ID
 
@@ -184,7 +189,12 @@ func reserveEvent(w http.ResponseWriter, r *http.Request) {
 	}
 
 	db := databaseFromContext(r.Context())
-	user := userFromContext(r.Context())
+	user, err := userFromContext(r.Context())
+	if err != nil {
+		log.Error.Println("Error getting user from context: ", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	// Check if reservation already exists
     exists, err := db.ReservationExists(user.ID, eventID)
@@ -264,7 +274,12 @@ func removeReservationFromCode(w http.ResponseWriter, r *http.Request) {
     }
 
 	db := databaseFromContext(r.Context())
-	user := userFromContext(r.Context())
+	user, err := userFromContext(r.Context())
+	if err != nil {
+		log.Error.Println("Error getting user from context: ", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 
 	// Check if the user owns the event
     ownerID, err := db.GetEventOwnerID(eventID)

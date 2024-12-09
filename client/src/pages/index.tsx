@@ -1,14 +1,3 @@
-{/*
-  TODO:
-    -fix so placement of everything is consistent with all window sizes  
-        -make button hoverable
-    -place in all photos, ensure correct scaling
-          -placement in bottom right or smth similar
-          -same thing with location consistency accross window sizes
-          -consider making this a component
-  */}
-
-// src/pages/index.tsx
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import themeConfig from '../theme/themeConfig';

@@ -1,10 +1,12 @@
 import { EventApi } from "@/api/eventApi";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { useSessionStore } from "@/state/session";
 import themeConfig from "@/theme/themeConfig";
 import { Button, Form, Input, InputNumber, TimePicker } from "antd";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
@@ -51,6 +53,9 @@ const CreateEventPage: React.FC = () => {
         }
     }, [router.query.editEventId]);
 
+	const router = useRouter();
+	const user = useSessionStore(state => state.user)
+
 	const handleSubmit = async () => {
 		console.log('Creating or updating event with:', name, location, description, dietary_info, start_time, end_time, attendeesCount);
 		setLoading(true);
@@ -96,6 +101,19 @@ const CreateEventPage: React.FC = () => {
 			setLoading(false);
 		});
 	};	
+
+	useEffect(() => {
+		if (!user) {
+			return
+		}
+		if (!user.loggedIn) {
+			router.push('/login')
+		}
+	}, [user, router]);
+
+	if (!user || !user.loggedIn) {
+		return null
+	}
 
 	return (
 		<div style={{ ...styles.layout, backgroundColor: themeConfig.colors.background }}>
