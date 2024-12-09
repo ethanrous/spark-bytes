@@ -11,6 +11,7 @@ import themeConfig from '@/theme/themeConfig';
 import { User, useSessionStore } from '@/state/session';
 import { UserApi } from '@/api/userApi';
 
+
 const Header: React.FC = () => {
 	const router = useRouter();
 	const user = useSessionStore(state => state.user)
