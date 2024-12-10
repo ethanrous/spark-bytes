@@ -6,9 +6,6 @@ import themeConfig from '../theme/themeConfig';
 import { useRouter } from 'next/navigation';
 import { User, useSessionStore } from '@/state/session';
 
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-
 const LoginPage: React.FC = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');

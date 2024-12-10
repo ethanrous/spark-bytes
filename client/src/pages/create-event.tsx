@@ -1,70 +1,59 @@
 import { EventApi } from "@/api/eventApi";
+import { EventInfo } from "@/api/swag";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { useSessionStore } from "@/state/session";
 import themeConfig from "@/theme/themeConfig";
 import { Button, Form, Input, InputNumber, TimePicker } from "antd";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, FC } from "react";
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-
-
-const CreateEventPage: React.FC = () => {
-	const router = useRouter();
-	const getUser = () => {
-        if (typeof window !== "undefined") {
-            const user = localStorage.getItem("user");
-            return user ? JSON.parse(user) : null;
-        }
-        return null;
-    };
-
-    const [form] = Form.useForm();
-    const [editingEvent, setEditingEvent] = useState<EventInfo | null>(null);
-    const [loading, setLoading] = useState<boolean>(false);
-    const [name, setName] = useState<string>();
-    const [location, setLocation] = useState<string>();
-    const [description, setDescription] = useState<string>();
-    const [dietary_info, setDietaryInfo] = useState<string>();
-    const [start_time, setStartTime] = useState<Date>();
-    const [end_time, setEndTime] = useState<Date>();
-    const [attendeesCount, setAttendeesCount] = useState<number>(0);
-
-    useEffect(() => {
-        const user = getUser();
-        if (!user) {
-            router.push("/login?redirect=create-event");
-        }
-    }, [router]);
-
-    useEffect(() => {
-        if (router.query.editEventId) {
-            EventApi.getEvent(router.query.editEventId as string).then((response) => {
-                setEditingEvent(response.data);
-                form.setFieldsValue({
-                    ...response.data,
-                    start_time: new Date(response.data.start_time),
-                    end_time: new Date(response.data.end_time),
-                });
-            });
-        }
-    }, [router.query.editEventId]);
-
+const CreateEventPage: FC = () => {
 	const router = useRouter();
 	const user = useSessionStore(state => state.user)
+	const params = useSearchParams();
+
+	const [form] = Form.useForm();
+	const [editingEvent, setEditingEvent] = useState<EventInfo | null>(null);
+	const [loading, setLoading] = useState<boolean>(false);
+	const [name, setName] = useState<string>();
+	const [location, setLocation] = useState<string>();
+	const [description, setDescription] = useState<string>();
+	const [dietary_info, setDietaryInfo] = useState<string>();
+	const [start_time, setStartTime] = useState<Date>();
+	const [end_time, setEndTime] = useState<Date>();
+	const [capacity, setCapacity] = useState<number>(0);
+
+	useEffect(() => {
+		if (!user) {
+			router.push("/login?redirect=create-event");
+		}
+	}, [router]);
+
+	useEffect(() => {
+		const eventId = params.get("editEventId")
+		if (eventId) {
+			EventApi.getEvent(Number(eventId)).then((response) => {
+				setEditingEvent(response.data);
+				form.setFieldsValue({
+					...response.data,
+					start_time: new Date(response.data.startTime ?? 0),
+					end_time: new Date(response.data.endTime ?? 0),
+				});
+			});
+		}
+	}, [params.get("editEventId")]);
 
 	const handleSubmit = async () => {
-		console.log('Creating or updating event with:', name, location, description, dietary_info, start_time, end_time, attendeesCount);
+		console.log('Creating or updating event with:', name, location, description, dietary_info, start_time, end_time, capacity);
 		setLoading(true);
-	
+
 		if (!start_time || !end_time) {
 			setLoading(false);
 			return;
 		}
-	
+
 		if (editingEvent) {
 			// Modify existing event
 			EventApi.modifyEvent(editingEvent.eventId, {
@@ -74,19 +63,19 @@ const CreateEventPage: React.FC = () => {
 				dietary_info,
 				start_time: start_time.getTime(),
 				end_time: end_time.getTime(),
-				capacity: attendeesCount,
+				capacity: capacity,
 			})
 				.then(() => {
 					setLoading(false);
 					router.push('/view-events'); // Redirect to view events page
 				})
-				.catch((err) => {
+				.catch((err: Error) => {
 					console.error('Error modifying event:', err);
 					setLoading(false);
 				});
 			return;
 		}
-	
+
 		EventApi.createEvent({
 			end_time: end_time?.getTime(),
 			start_time: start_time?.getTime(),
@@ -95,12 +84,12 @@ const CreateEventPage: React.FC = () => {
 			location,
 			name,
 		})
-		.then(() => setLoading(false))
-		.catch((err) => {
-			console.error('Error creating event:', err);
-			setLoading(false);
-		});
-	};	
+			.then(() => setLoading(false))
+			.catch((err) => {
+				console.error('Error creating event:', err);
+				setLoading(false);
+			});
+	};
 
 	useEffect(() => {
 		if (!user) {
@@ -192,7 +181,7 @@ const CreateEventPage: React.FC = () => {
 								<InputNumber min={1} style={styles.input}
 									onChange={(e) => {
 										if (e) {
-											setAttendeesCount(e)
+											setCapacity(e)
 										}
 									}}
 								/>

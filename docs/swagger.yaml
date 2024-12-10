@@ -2,7 +2,7 @@ basePath: /api/
 definitions:
   EventInfo:
     properties:
-      attendees:
+      capacity:
         type: integer
       description:
         type: string
@@ -17,9 +17,27 @@ definitions:
       name:
         type: string
       owner:
-        $ref: '#/definitions/OwnerInfo'
+        type: integer
+      registeredCount:
+        type: integer
+      reservationIds:
+        items:
+          type: integer
+        type: array
       startTime:
         type: integer
+    required:
+    - capacity
+    - description
+    - dietaryInfo
+    - endTime
+    - eventId
+    - location
+    - name
+    - owner
+    - registeredCount
+    - reservationIds
+    - startTime
     type: object
   LoginParams:
     properties:
@@ -33,7 +51,7 @@ definitions:
     type: object
   NewEventParams:
     properties:
-      attendees:
+      capacity:
         type: integer
       description:
         type: string
@@ -61,23 +79,14 @@ definitions:
       password:
         type: string
     type: object
-  OwnerInfo:
-    properties:
-      email:
-        type: string
-      firstName:
-        type: string
-      joinedAt:
-        type: string
-      lastName:
-        type: string
-    type: object
   UserInfo:
     properties:
       email:
         type: string
       firstName:
         type: string
+      id:
+        type: integer
       joinedAt:
         type: string
       lastName:
@@ -110,11 +119,64 @@ paths:
       tags:
       - Events
     post:
+      consumes:
+      - application/json
       operationId: CreateEvent
       parameters:
-      - description: New event params
+      - description: Event params
         in: body
-        name: newEventParams
+        name: eventParams
+        required: true
+        schema:
+          $ref: '#/definitions/NewEventParams'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Create a New Event
+      tags:
+      - Events
+  /events/{id}:
+    get:
+      operationId: GetEvent
+      parameters:
+      - description: ID of Event
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EventInfo'
+        "401":
+          description: Unauthorized
+      summary: Get an Event
+      tags:
+      - Events
+    put:
+      consumes:
+      - application/json
+      operationId: ModifyEvent
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated event details
+        in: body
+        name: event
         required: true
         schema:
           $ref: '#/definitions/NewEventParams'
@@ -122,10 +184,157 @@ paths:
       - application/json
       responses:
         "200":
-          description: OK
+          description: Event modified successfully
+        "400":
+          description: Invalid Event ID or Bad request
         "401":
           description: Unauthorized
-      summary: Create Event
+        "403":
+          description: Forbidden - Not the event owner
+        "500":
+          description: Internal Server Error
+      summary: Modify an Existing Event
+      tags:
+      - Events
+  /events/{id}/reservations:
+    delete:
+      operationId: RemoveReservationFromUser
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Reservation cleared successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid Event ID
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Remove the Authenticated User's Reservation
+      tags:
+      - Events
+    get:
+      operationId: GetEventReservations
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/UserInfo'
+            type: array
+        "400":
+          description: Invalid Event ID
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Fetch the list of users who are reserved for an event
+      tags:
+      - Events
+    patch:
+      operationId: RemoveReservationFromCode
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Reservation code
+        in: query
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Reservation cleared successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid request or missing code
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - Not the event owner
+        "404":
+          description: Reservation not found
+        "500":
+          description: Internal Server Error
+      summary: Remove a Reservation by Code
+      tags:
+      - Events
+    post:
+      operationId: ReserveEvent
+      parameters:
+      - description: Event ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Reservation created successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid Event ID
+        "401":
+          description: Unauthorized
+        "409":
+          description: You already have a reservation for this event
+        "500":
+          description: Internal Server Error
+      summary: Reserve a Spot in an Event
+      tags:
+      - Events
+  /events/owner:
+    get:
+      operationId: GetEventsByOwner
+      parameters:
+      - description: ID of Event Owner
+        in: query
+        name: owner_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/EventInfo'
+            type: array
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+      summary: Get Events By Owner
       tags:
       - Events
   /users:
