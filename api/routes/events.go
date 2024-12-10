@@ -79,7 +79,7 @@ func getEvent(w http.ResponseWriter, r *http.Request) {
 //	@Summary	Get Events By Owner
 //	@Tags		Events
 //	@Produce	json
-//	@Param		owner_id	query	string	true	"ID of Event Owner"
+//	@Param		owner_id	query	string	false	"ID of Event Owner"
 //	@Success	200			{array}	rest.EventInfo
 //	@Failure	400
 //	@Failure	401
