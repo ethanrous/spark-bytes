@@ -23,9 +23,9 @@ const MyEvents = () => {
 		}
 
 		// Fetch created events
-		EventApi.getEventsByOwner(String(user.id))
-			.then((response) => setCreatedEvents(response.data))
-			.catch((err) => console.error('Error fetching created events:', err));
+		EventApi.getOwnEvent()
+      .then((response) => setCreatedEvents(response.data))
+      .catch((err) => console.error("Error fetching created events:", err));
 	}, [router]);
 
 

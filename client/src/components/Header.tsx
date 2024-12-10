@@ -60,6 +60,9 @@ const Header: React.FC = () => {
 				<Link href="/create-event" style={router.pathname === '/create-event' ? activeLinkStyle : linkStyle}>
 					Create Event
 				</Link>
+        <Link href="/my-events" style={router.pathname === '/my-events' ? activeLinkStyle : linkStyle}>
+					My Events
+				</Link>
 				{!user?.loggedIn && (
 					<>
 						<Link href="/signup" style={router.pathname === '/signup' ? activeLinkStyle : linkStyle}>

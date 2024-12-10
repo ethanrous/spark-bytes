@@ -83,7 +83,7 @@ const CreateEventPage: FC = () => {
 			dietary_info,
 			location,
 			name,
-			capacity,
+			capacity
 		})
 			.then(() => setLoading(false))
 			.catch((err) => {

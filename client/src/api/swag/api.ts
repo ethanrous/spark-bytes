@@ -424,6 +424,36 @@ export const EventsApiAxiosParamCreator = function (configuration?: Configuratio
         },
         /**
          * 
+         * @summary Get Event of Session Cookie Holder
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getOwnEvent: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/events/myEvent`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Modify an Existing Event
          * @param {number} id Event ID
          * @param {NewEventParams} event Updated event details
@@ -647,6 +677,18 @@ export const EventsApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
+         * @summary Get Event of Session Cookie Holder
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getOwnEvent(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<EventInfo>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getOwnEvent(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['EventsApi.getOwnEvent']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Modify an Existing Event
          * @param {number} id Event ID
          * @param {NewEventParams} event Updated event details
@@ -760,6 +802,15 @@ export const EventsApiFactory = function (configuration?: Configuration, basePat
         },
         /**
          * 
+         * @summary Get Event of Session Cookie Holder
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getOwnEvent(options?: RawAxiosRequestConfig): AxiosPromise<Array<EventInfo>> {
+            return localVarFp.getOwnEvent(options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Modify an Existing Event
          * @param {number} id Event ID
          * @param {NewEventParams} event Updated event details
@@ -867,6 +918,17 @@ export class EventsApi extends BaseAPI {
      */
     public getEventsByOwner(ownerId: string, options?: RawAxiosRequestConfig) {
         return EventsApiFp(this.configuration).getEventsByOwner(ownerId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @summary Get Event of Session Cookie Holder
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EventsApi
+     */
+    public getOwnEvent(options?: RawAxiosRequestConfig) {
+        return EventsApiFp(this.configuration).getOwnEvent(options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

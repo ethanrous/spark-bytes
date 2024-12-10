@@ -312,6 +312,25 @@ paths:
       summary: Reserve a Spot in an Event
       tags:
       - Events
+  /events/myEvent:
+    get:
+      operationId: GetOwnEvent
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/EventInfo'
+            type: array
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+      summary: Get Event of Session Cookie Holder
+      tags:
+      - Events
   /events/owner:
     get:
       operationId: GetEventsByOwner
