@@ -94,8 +94,7 @@ const docTemplate = `{
                         "type": "string",
                         "description": "ID of Event Owner",
                         "name": "owner_id",
-                        "in": "query",
-                        "required": true
+                        "in": "query"
                     }
                 ],
                 "responses": {

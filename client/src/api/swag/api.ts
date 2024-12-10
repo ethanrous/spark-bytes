@@ -388,13 +388,11 @@ export const EventsApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Get Events By Owner
-         * @param {string} ownerId ID of Event Owner
+         * @param {string} [ownerId] ID of Event Owner
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEventsByOwner: async (ownerId: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'ownerId' is not null or undefined
-            assertParamExists('getEventsByOwner', 'ownerId', ownerId)
+        getEventsByOwner: async (ownerId?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/events/owner`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -635,11 +633,11 @@ export const EventsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Get Events By Owner
-         * @param {string} ownerId ID of Event Owner
+         * @param {string} [ownerId] ID of Event Owner
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getEventsByOwner(ownerId: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<EventInfo>>> {
+        async getEventsByOwner(ownerId?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<EventInfo>>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.getEventsByOwner(ownerId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EventsApi.getEventsByOwner']?.[localVarOperationServerIndex]?.url;
@@ -751,11 +749,11 @@ export const EventsApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @summary Get Events By Owner
-         * @param {string} ownerId ID of Event Owner
+         * @param {string} [ownerId] ID of Event Owner
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEventsByOwner(ownerId: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<EventInfo>> {
+        getEventsByOwner(ownerId?: string, options?: RawAxiosRequestConfig): AxiosPromise<Array<EventInfo>> {
             return localVarFp.getEventsByOwner(ownerId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -860,12 +858,12 @@ export class EventsApi extends BaseAPI {
     /**
      * 
      * @summary Get Events By Owner
-     * @param {string} ownerId ID of Event Owner
+     * @param {string} [ownerId] ID of Event Owner
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EventsApi
      */
-    public getEventsByOwner(ownerId: string, options?: RawAxiosRequestConfig) {
+    public getEventsByOwner(ownerId?: string, options?: RawAxiosRequestConfig) {
         return EventsApiFp(this.configuration).getEventsByOwner(ownerId, options).then((request) => request(this.axios, this.basePath));
     }
 
