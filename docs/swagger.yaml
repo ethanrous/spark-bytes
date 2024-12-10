@@ -315,11 +315,6 @@ paths:
   /events/owner:
     get:
       operationId: GetEventsByOwner
-      parameters:
-      - description: ID of Event Owner
-        in: query
-        name: owner_id
-        type: string
       produces:
       - application/json
       responses:
@@ -333,7 +328,7 @@ paths:
           description: Bad Request
         "401":
           description: Unauthorized
-      summary: Get Events By Owner
+      summary: Get Event of Session Cookie Holder
       tags:
       - Events
   /users:

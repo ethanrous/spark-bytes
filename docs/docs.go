@@ -87,16 +87,8 @@ const docTemplate = `{
                 "tags": [
                     "Events"
                 ],
-                "summary": "Get Events By Owner",
+                "summary": "Get Event of Session Cookie Holder",
                 "operationId": "GetEventsByOwner",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "ID of Event Owner",
-                        "name": "owner_id",
-                        "in": "query"
-                    }
-                ],
                 "responses": {
                     "200": {
                         "description": "OK",
