@@ -120,7 +120,7 @@ func getEventsByOwner(w http.ResponseWriter, r *http.Request) {
 
 // GetOwnEvent godoc
 //
-//	@ID			GetEventsByOwner
+//	@ID			GetOwnEvent
 //
 //	@Summary	Get Event of Session Cookie Holder
 //	@Tags		Events
@@ -128,7 +128,7 @@ func getEventsByOwner(w http.ResponseWriter, r *http.Request) {
 //	@Success	200			{array}	rest.EventInfo
 //	@Failure	400
 //	@Failure	401
-//	@Router		/events/owner [get]
+//	@Router		/events/myEvent [get]
 func getOwnEvent(w http.ResponseWriter, r *http.Request) {
 	db := databaseFromContext(r.Context())
 
