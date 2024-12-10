@@ -94,7 +94,7 @@ definitions:
       verified:
         type: boolean
     type: object
-host: localhost:5001
+host: localhost:3000
 info:
   contact: {}
   description: Access to the SparkBytes server

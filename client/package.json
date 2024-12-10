@@ -11,8 +11,10 @@
 	},
 	"dependencies": {
 		"@ant-design/cssinjs": "^1.17.2",
+		"@types/http-proxy": "^1.17.15",
 		"antd": "^5.10.1",
 		"axios": "^1.7.7",
+		"http-proxy": "^1.18.1",
 		"next": "13.5.5",
 		"react": "^18",
 		"react-dom": "^18",

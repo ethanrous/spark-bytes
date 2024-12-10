@@ -18,7 +18,7 @@ type Server struct{ r *chi.Mux }
 // @title						SparkBytes API
 // @version					1.0
 // @description				Access to the SparkBytes server
-// @host						localhost:5001
+// @host						localhost:3000
 // @schemes					http https
 // @BasePath					/api/
 //
@@ -34,13 +34,11 @@ func NewServer(db database.Database) *Server {
 	r.Use(WithDb(db))
 	r.Use(AuthCheck)
 	r.Use(cors.Handler(cors.Options{
-		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
-		AllowedOrigins: []string{"https://*", "http://*"},
-		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
+		AllowedOrigins:   []string{"https://*", "http://*"},
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowedHeaders:   []string{"Content-Type", "Content-Length", "Accept-Encoding", "X-CSRF-Token", "Authorization", "accept", "origin", "Cache-Control", "X-Requested-With", "Content-Range", "Cookie"},
 		ExposedHeaders:   []string{"Link"},
-		AllowCredentials: false,
+		AllowCredentials: true,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
 	r.Route("/api", func(r chi.Router) {

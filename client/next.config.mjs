@@ -3,12 +3,12 @@ const nextConfig = {
 	images: {
 		unoptimized: true,
 	},
-	output: 'export',
+	// output: 'export',
 	reactStrictMode: true,
 	// async redirects() {
 	// 	return [{
 	// 		source: '/api/:path*',
-	// 		destination: 'http://localhost:5000/api/:path*',
+	// 		destination: 'http://localhost:5001/api/:path*',
 	// 		permanent: false
 	// 	}]
 	// },

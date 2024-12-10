@@ -77,17 +77,13 @@ const Home: React.FC = () => {
 	};
 
 	const foodCollageSectionStyle: React.CSSProperties = {
+		position: 'relative',
+		maxHeight: '1%',
 		width: '100%',
 		height: 'auto',
 		display: 'flex',
 		justifyContent: 'center',
 		alignItems: 'center',
-		// backgroundColor: '#F4F4F4',
-	};
-
-	const foodCollageImageStyle: React.CSSProperties = {
-		width: '100%',
-		height: 'auto',
 	};
 
 	const whatIsSparkBytesSectionStyle: React.CSSProperties = {
@@ -115,7 +111,6 @@ const Home: React.FC = () => {
 
 	const imageStyle: React.CSSProperties = {
 		maxWidth: '100%',
-		height: 'auto',
 		borderRadius: '8px',
 	};
 
@@ -183,8 +178,8 @@ const Home: React.FC = () => {
 							{"Ready to never miss a free bite again?"}
 						</p>
 					</div>
-					<div style={{ flex: 1 }}>
-						<Image src="/assets/pizza.jpg" alt="pizza" style={imageStyle} />
+					<div style={{ flex: 1, position: 'relative' }}>
+						<Image src="/assets/pizza.jpg" alt="pizza" style={imageStyle} fill={true} />
 					</div>
 				</section>
 
@@ -214,7 +209,7 @@ const Home: React.FC = () => {
 					<Image
 						src="/assets/food-collage.jpeg"
 						alt="Food Collage"
-						style={foodCollageImageStyle}
+						fill={true}
 					/>
 				</section>
 
