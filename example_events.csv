@@ -1,4 +1,4 @@
-name, location, description, dietary_info, owner_id, start_time, end_time, attendees
+name, location, description, dietary_info, owner_id, start_time, end_time, capacity
 Food Event 1,CDS 2nd Floor,Come get food,"Gluten-Free, Vegan, Vegetarian",1,2019-11-19 00:00:00,2019-11-19 23:00:00,50
 Food Event 2,610 Beacon St Basement,Lorem ipsum dolor sit amet consectetur adipiscing elit Sed auctor sapien sit amet diam aliquet sed tincidunt metus convallis Integer vel quam quis felis facilisis dictum sit amet ut leo,"dunce",1,2024-05-19 00:00:00,2024-05-21 23:00:00,1
 Food Event 3,CAS 318,Maecenas suscipit eu lectus eget volutpat Nam bibendum enim vel orci varius vitae tincidunt felis lobortis Donec feugiat erat non ex malesuada ut convallis lectus tincidunt,"Gluten-Free, Vegetarian",1,2023-01-01 00:00:00,2023-01-02 23:00:00,500

@@ -39,7 +39,7 @@ func (db Database) NewEvent(newEvent models.Event) error {
 		newEvent.DietaryInfo,
 		newEvent.StartTime,
 		newEvent.EndTime,
-		newEvent.ID,
+		newEvent.OwnerId,
 		newEvent.Capacity,
 	)
 	if err != nil {
@@ -205,7 +205,18 @@ func (db Database) ReservationExists(userID, eventID int) (bool, error) {
 }
 
 func (db Database) GetReservationsByEventId(eventID int) ([]models.User, error) {
-	rows, err := db.Queryx("SELECT * FROM users WHERE reservations.event_id = $1 AND users.user_id == reservations.user_id", eventID)
+	sqlQuery := `
+		SELECT
+			users.id,
+            users.email,
+            users.first_name,
+            users.last_name,
+            users.joined_at
+        FROM users
+        INNER JOIN reservations ON users.id = reservations.user_id
+		WHERE reservations.event_id = $1
+	`
+	rows, err := db.Queryx(sqlQuery, eventID)
 	if err != nil {
 		return nil, err
 	}

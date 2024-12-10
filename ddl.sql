@@ -22,9 +22,9 @@ CREATE TABLE events (
     owner_id INT REFERENCES users(id),
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP NOT NULL,
-    attendees INT
+    capacity INT
 );
-COPY events(name, location, description, dietary_info, owner_id, start_time, end_time, attendees)
+COPY events(name, location, description, dietary_info, owner_id, start_time, end_time, capacity)
 FROM '/docker-entrypoint-initdb.d/example_events.csv' DELIMITER ',' CSV HEADER;
 
 CREATE TABLE reservations (
