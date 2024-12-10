@@ -159,22 +159,9 @@ func (db Database) GetLatestEvents() ([]models.Event, error) {
 func (db Database) GetEventsByOwner(ownerID int) ([]models.Event, error) {
 	sqlQuery := `
         SELECT
-            events.id,
-            events.name,
-            events.location,
-            events.description,
-            events.dietary_info,
-            events.owner_id,
-            events.start_time,
-            events.end_time,
-            events.capacity,
-            users.email,
-            users.first_name,
-            users.last_name,
-            users.joined_at
+            *
         FROM events
-        INNER JOIN users ON users.id = events.owner_id
-		WHERE events.owner_id = $1
+		WHERE owner_id = $1
     `
 	rows, err := db.Queryx(sqlQuery, ownerID)
 	if err != nil {
