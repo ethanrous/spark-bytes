@@ -67,6 +67,7 @@ func NewServer(db database.Database) *Server {
 			r.Get("/", getEvents)
 			r.Get("/{id}", getEvent)
 			r.Get("/owner", getEventsByOwner)
+			r.Get("/myEvent", getOwnEvent)
 			r.Post("/", createEvent)
 			r.Put("/{id}", modifyEvent)
 			r.Get("/{id}/reservations", getEventReservations)

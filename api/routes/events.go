@@ -79,7 +79,7 @@ func getEvent(w http.ResponseWriter, r *http.Request) {
 //	@Summary	Get Events By Owner
 //	@Tags		Events
 //	@Produce	json
-//	@Param		owner_id	query	string	false	"ID of Event Owner"
+//	@Param		owner_id	query	string	true	"ID of Event Owner"
 //	@Success	200			{array}	rest.EventInfo
 //	@Failure	400
 //	@Failure	401
@@ -108,6 +108,38 @@ func getEventsByOwner(w http.ResponseWriter, r *http.Request) {
 	}
 
 	el, err := db.GetEventsByOwner(ownerID)
+	if err != nil {
+		log.Error.Println("Error getting events by owner: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	eInfoList := rest.LatestEventsList(el, db)
+	writeJson(w, http.StatusOK, eInfoList)
+}
+
+// GetOwnEvent godoc
+//
+//	@ID			GetEventsByOwner
+//
+//	@Summary	Get Event of Session Cookie Holder
+//	@Tags		Events
+//	@Produce	json
+//	@Success	200			{array}	rest.EventInfo
+//	@Failure	400
+//	@Failure	401
+//	@Router		/events/owner [get]
+func getOwnEvent(w http.ResponseWriter, r *http.Request) {
+	db := databaseFromContext(r.Context())
+
+	user, err := userFromContext(r.Context())
+	if err != nil {
+		log.Error.Println("Error getting user from context: ", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	el, err := db.GetEventsByOwner(user.ID)
 	if err != nil {
 		log.Error.Println("Error getting events by owner: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
