@@ -78,3 +78,22 @@ func (db Database) VerifyUser(userId int) error {
 
 	return nil
 }
+
+func (db Database) GetAllUsers() ([]models.User, error) {
+	rows, err := db.Queryx("SELECT * FROM users")
+	if err != nil {
+		return nil, err
+	}
+
+	users := []models.User{}
+	for rows.Next() {
+		user := models.User{}
+		err = rows.StructScan(&user)
+		if err != nil {
+			return nil, err
+		}
+		users = append(users, user)
+	}
+
+	return users, nil
+}
