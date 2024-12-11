@@ -4,7 +4,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { useSessionStore } from "@/state/session";
 import themeConfig from "@/theme/themeConfig";
-import { Button, Form, Input, InputNumber, TimePicker } from "antd";
+import { Button, Form, Input, InputNumber, TimePicker, Checkbox, Row, Col } from "antd";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, FC } from "react";
@@ -20,10 +20,14 @@ const CreateEventPage: FC = () => {
 	const [name, setName] = useState<string>();
 	const [location, setLocation] = useState<string>();
 	const [description, setDescription] = useState<string>();
-	const [dietary_info, setDietaryInfo] = useState<string>();
 	const [start_time, setStartTime] = useState<Date>();
 	const [end_time, setEndTime] = useState<Date>();
 	const [capacity, setCapacity] = useState<number>(0);
+	const [vegetarian, setVegetarian] = useState<boolean>(false);
+	const [vegan, setVegan] = useState<boolean>(false);
+	const [gluten_free, setGlutenFree] = useState<boolean>(false);
+	const [halal, setHalal] = useState<boolean>(false);
+	const [kosher, setKosher] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (!user?.loggedIn) {
@@ -46,7 +50,29 @@ const CreateEventPage: FC = () => {
 		}
 	}, [editEventId, form]);
 
+	const generateDietaryString = () => {
+		let dietary = [];
+		if (vegetarian) {
+			dietary.push("Vegetarian");
+		}
+		if (vegan) {
+			dietary.push("Vegan");
+		}
+		if (gluten_free) {
+			dietary.push("Gluten-Free");
+		}
+		if (halal) {
+			dietary.push("Halal");
+		}
+		if (kosher) {
+			dietary.push("Kosher");
+		}
+		return dietary.join(", ")
+	}
+
 	const handleSubmit = async () => {
+		const dietary_info = generateDietaryString()
+		// alert(dietary_info)
 		console.log('Creating or updating event with:', name, location, description, dietary_info, start_time, end_time, capacity);
 		setLoading(true);
 
@@ -86,7 +112,10 @@ const CreateEventPage: FC = () => {
 			name,
 			capacity
 		})
-			.then(() => setLoading(false))
+			.then(() => {
+				setLoading(false);
+				router.push('/view-events');
+			})
 			.catch((err) => {
 				console.error('Error creating event:', err);
 				setLoading(false);
@@ -145,10 +174,34 @@ const CreateEventPage: FC = () => {
 							<Form.Item
 								label="Dietary Info"
 								name="dietary_info">
-								{/* rules={[{ required: true, message: "Dietary information is required" }]}> */}
-								<Input placeholder="Vegetarian, Gluten-Free, Vegan, etc." style={styles.input}
-									onChange={(e) => setDietaryInfo(e.target.value)}
-								/>
+								<Row>
+									<Col>
+										<Checkbox value="Vegetarian" onChange={(e) => setVegetarian(b => !b)}>
+											Vegetarian
+										</Checkbox>
+									</Col>
+									<Col>
+									<Checkbox value="Vegan" onChange={(e) => setVegan(b => !b)}>
+											Vegan
+											</Checkbox>
+									</Col>
+									
+									<Col>
+									<Checkbox value="Gluten-Free" onChange={(e) => setGlutenFree(b => !b)}>
+											Gluen-Free
+										</Checkbox>
+									</Col>
+									<Col>
+										<Checkbox value="Halal" onChange={(e) => setHalal(b => !b)}>
+											Halal
+										</Checkbox>
+									</Col>
+									<Col>
+										<Checkbox checked={kosher} onChange={(e) => setKosher(b => !b)}>
+											Kosher
+										</Checkbox>
+									</Col>
+								</Row>
 							</Form.Item>
 
 							{/* <Form.Item
@@ -177,7 +230,7 @@ const CreateEventPage: FC = () => {
 							</div>
 
 							<Form.Item
-								label="Number of Attendees"
+								label="Capacity"
 								name="capacity"
 								rules={[{ required: true, message: "Capacity is required" }]}>
 								<InputNumber min={1} style={styles.input}
