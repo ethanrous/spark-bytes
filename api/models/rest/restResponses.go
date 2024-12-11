@@ -36,6 +36,7 @@ type EventInfo struct {
 	OwnerId         int    `json:"owner" validate:"required"`
 	RegisteredCount int    `json:"registeredCount" validate:"required"`
 	Reservations    []int  `json:"reservationIds" validate:"required"`
+	IsClosed        bool   `json:"isClosed" validate:"required"`
 } // @name EventInfo
 
 func NewUserInfo(u models.User) UserInfo {
