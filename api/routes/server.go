@@ -7,10 +7,12 @@ import (
 	"sync"
 
 	"github.com/ethanrous/spark-bytes/database"
+	_ "github.com/ethanrous/spark-bytes/docs"
 	"github.com/ethanrous/spark-bytes/internal/log"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/cors"
+	httpSwagger "github.com/swaggo/http-swagger/v2"
 )
 
 type Server struct{ r *chi.Mux }
@@ -41,6 +43,7 @@ func NewServer(db database.Database) *Server {
 		AllowCredentials: true,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
+	r.Mount("/docs", httpSwagger.WrapHandler)
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/ping", func(w http.ResponseWriter, r *http.Request) {
 			_, err := w.Write([]byte("pong"))
