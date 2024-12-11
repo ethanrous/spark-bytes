@@ -331,6 +331,13 @@ func closeEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go func() {
+		err := mail.SendEventCancelledEmail(event, db)
+		if err != nil {
+			log.Error.Println("Error sending event cancellation email: ", err)
+		}
+	}()
+
 	w.WriteHeader(http.StatusOK)
 }
 

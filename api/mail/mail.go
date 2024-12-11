@@ -53,9 +53,9 @@ func SendEventCreationEmail(event models.Event, db database.Database) error {
 	}
 
 	for _, user := range users {
-		// if user.ID == event.OwnerId {
-		// 	continue
-		// }
+		if user.ID == event.OwnerId {
+			continue
+		}
 		err = SendMail("New Event Near You", fmt.Sprintf("Hi %s, A new event, '%s' has been created. It starts at %s and goes until %s:\n%s", user.FirstName, event.Name, event.StartTime.Format("January 2, 2006 at 15:04"), event.EndTime.Format("January 2, 2006 at 15:04"), event.Description), user.Email)
 		if err != nil {
 			return err
