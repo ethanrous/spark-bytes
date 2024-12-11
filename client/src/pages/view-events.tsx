@@ -11,6 +11,8 @@ import themeConfig from '../theme/themeConfig';
 
 import { Button } from "antd";
 import { useRouter } from 'next/navigation';
+import { useSessionStore } from '@/state/session';
+import { useQuery } from '@tanstack/react-query';
 
 const { Title } = Typography;
 
@@ -29,9 +31,17 @@ const formatDate = (date: Date) => {
 
 function getSortedEvents(events: EventInfo[], sortBy: string, direction: number): EventInfo[] {
 	switch (sortBy) {
-		case "start-date":
+		case SortByT.START_DATE:
 			return events.sort((a, b) => {
 				return (a.startTime - b.startTime) * direction;
+			});
+		case SortByT.END_DATE:
+			return events.sort((a, b) => {
+				return (a.endTime - b.endTime) * direction;
+			});
+		case SortByT.NAME:
+			return events.sort((a, b) => {
+				return a.name.localeCompare(b.name) * direction;
 			});
 
 		default:
@@ -49,56 +59,57 @@ enum SortByT {
 
 const ViewEvents = () => {
 	const router = useRouter();
-	const [eventsMap, setEventsMap] = useState<Map<number, EventInfo>>(new Map());
 	const [sortBy, setSortBy] = useState<SortByT>(SortByT.NAME);
 	const [sortDirection, setSortDirection] = useState(1);
+	const user = useSessionStore(state => state.user);
 
-	const getUser = () => {
-		if (typeof window !== 'undefined') {
-			const user = localStorage.getItem('user');
-			return user ? JSON.parse(user) : null;
-		}
-		return null;
-	};
-	const user = getUser();
-
-	useEffect(() => {
-		EventApi.getEvents()
-			.then((response) => {
-				const events = new Map<number, EventInfo>();
-				console.log('Events:', response.data);
-				for (const e of response.data) {
-					if (!e.eventId) {
-						console.error('Event ID is missing');
-						continue;
+	const { data: eventsMap, refetch } = useQuery<Map<number, EventInfo>>({
+		queryKey: ['remotes'],
+		initialData: new Map(),
+		queryFn: async () => {
+			return EventApi.getEvents()
+				.then((response) => {
+					const events = new Map<number, EventInfo>();
+					for (const e of response.data) {
+						if (!e.eventId) {
+							console.error('Event ID is missing');
+							continue;
+						}
+						events.set(e.eventId, e);
 					}
-					events.set(e.eventId, e);
-				}
-				setEventsMap(events);
-			})
-			.catch((err) => console.error("Error fetching events:", err));
-	}, []);
-
+					return events;
+				})
+		},
+	})
 
 	const registerForEvent = async (eventId: number) => {
-		if (!user) {
-			alert('Please log in to register for events.');
+		console.log('Registering for event as user:', user);
+		if (!user?.loggedIn || user?.id === undefined) {
+			console.error('User is not logged in');
+			router.push('/login');
+			return;
+		}
+
+		refetch();
+		try {
+			await EventApi.reserveEvent(eventId);
+			refetch();
+		} catch (err) {
+			console.error('Error registering for event:', err);
+		}
+	};
+
+	const unregisterForEvent = async (eventId: number) => {
+		console.log('Unregistering for event as user:', user);
+		if (!user?.loggedIn || user?.id === undefined) {
+			console.error('User is not logged in');
+			router.push('/login');
 			return;
 		}
 
 		try {
-			await EventApi.reserveEvent(eventId);
-			const event = eventsMap.get(eventId);
-			if (!event) {
-				console.error('Event not found');
-				return
-			}
-			event.registeredCount++
-			event.reservationIds.push(user.id);
-			eventsMap.set(eventId, event);
-
-			setEventsMap(new Map(eventsMap));
-
+			await EventApi.removeReservationFromUser(eventId);
+			refetch();
 		} catch (err) {
 			console.error('Error registering for event:', err);
 		}
@@ -112,27 +123,6 @@ const ViewEvents = () => {
 				setSortBy(SortByT.NAME);
 			}
 		},
-		// {
-		// 	label: "Dietary Info First",
-		// 	key: "dietary-info-first",
-		// 	onClick: () => {
-		// 		EventApi.getEvents()
-		// 			.then(response => {
-		// 				let data = response.data;
-		// 				data = data.sort((a, b) => {
-		// 					if (a.dietaryInfo && !b.dietaryInfo) {
-		// 						return -1
-		// 					}
-		// 					if (!a.dietaryInfo && b.dietaryInfo) {
-		// 						return 1
-		// 					}
-		// 					return 0;
-		// 				});
-		// 				setEventsMap(data);
-		// 			});
-		// 		setSortBy("Dietary Info First");
-		// 	}
-		// },
 		{
 			label: SortByT.START_DATE,
 			key: SortByT.START_DATE,
@@ -156,48 +146,24 @@ const ViewEvents = () => {
 		},
 	];
 
-	const toggleReservation = async (eventId: number, isReserved: boolean) => {
-		if (!user.loggedIn) {
-			router.push('/login');
-			return;
-		}
-
-		try {
-			if (isReserved) {
-				// Unreserve the event
-				await EventApi.removeReservationFromUser(eventId);
-				const event = eventsMap.get(eventId);
-				if (!event) {
-					console.error('Event not found');
-					return
-				}
-				event.registeredCount--
-				event.reservationIds = event.reservationIds.filter(id => id !== user.id);
-				eventsMap.set(eventId, event);
-
-				setEventsMap(new Map(eventsMap));
-			} else {
-				registerForEvent(eventId);
-			}
-		} catch (err) {
-			console.error('Error toggling reservation:', err);
-		}
-	};
-
 	const eventsList = useMemo(() => {
 		if (!eventsMap) {
 			return [];
 		}
 		const eventsList = Array.from(eventsMap.values())
 		return getSortedEvents(eventsList, sortBy, sortDirection)
-	}, [eventsMap])
+	}, [eventsMap, sortBy, sortDirection])
 
+	if (!user || user.id === undefined) {
+		console.error('User ID is missing');
+		return null
+	}
 
 	return (
 		<>
 			<Header />
 
-			<div style={{ padding: '20px 40px' }}>
+			<div style={{ padding: '20px 40px', height: "100%" }}>
 				<div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
 					<Title level={1} style={{ fontFamily: themeConfig.typography.fontFamily, color: themeConfig.colors.textPrimary, display: 'inline' }}>
 						View Events
@@ -220,6 +186,22 @@ const ViewEvents = () => {
 							if (!event || event.registeredCount === undefined || event.capacity === undefined || event.eventId === undefined) {
 								console.error('Event is missing or malformed');
 								return null;
+							}
+
+							if (user.id === undefined) {
+								return null
+							}
+
+							let reserveButtonText = 'Reserve';
+							let registered = false;
+							let eventFull = false;
+							if (event.reservationIds?.includes(user.id)) {
+								registered = true;
+								reserveButtonText = 'Unreserve';
+							}
+							if (event.registeredCount >= event.capacity && !registered) {
+								eventFull = true;
+								reserveButtonText = 'Full';
 							}
 
 							return (
@@ -264,10 +246,10 @@ const ViewEvents = () => {
 										<div style={{ textAlign: "center", marginTop: "10px" }}>
 											<Button
 												type="primary"
-												disabled={event.registeredCount >= event.capacity}
-												onClick={() => registerForEvent(event.eventId)}
+												disabled={eventFull}
+												onClick={() => { if (registered) { unregisterForEvent(event.eventId) } else { registerForEvent(event.eventId) } }}
 											>
-												{event.registeredCount >= event.capacity ? 'Full' : 'Register'}
+												{reserveButtonText}
 											</Button>
 										</div>
 										<div style={{ marginTop: "10px", textAlign: "center" }}>
@@ -275,23 +257,6 @@ const ViewEvents = () => {
 												<strong>Attendees:</strong> {event.registeredCount} / {event.capacity}
 											</p>
 										</div>
-										<Button
-											type="primary"
-											onClick={() => {
-												if (!event.eventId) {
-													console.error('Event ID is missing');
-													return
-												}
-
-												toggleReservation(
-													event.eventId,
-													event.reservationIds.includes(user.id) // Check if the user has already reserved
-												)
-											}
-											}
-										>
-											{event.reservationIds.includes(user.id) ? 'Unreserve' : 'Reserve'}
-										</Button>
 									</Card>
 								</Col>
 							)

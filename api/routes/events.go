@@ -8,7 +8,7 @@ import (
 	"github.com/ethanrous/spark-bytes/internal/log"
 	"github.com/ethanrous/spark-bytes/models"
 	"github.com/ethanrous/spark-bytes/models/rest"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 )
 
 // GetEvents godoc
@@ -45,11 +45,11 @@ func getEvents(w http.ResponseWriter, r *http.Request) {
 //	@Param		id	path	int	true	"ID of Event"
 //	@Success	200	{object}	rest.EventInfo
 //	@Failure	401
-//	@Router		/events/{id} [get]
+//	@Router		/events/{eventId} [get]
 func getEvent(w http.ResponseWriter, r *http.Request) {
 	db := databaseFromContext(r.Context())
 
-	eventIDStr := chi.URLParam(r, "id")
+	eventIDStr := chi.URLParam(r, "eventId")
 	if eventIDStr == "" {
 		http.Error(w, "Invalid event ID", http.StatusBadRequest)
 		return
@@ -214,14 +214,14 @@ func createEvent(w http.ResponseWriter, r *http.Request) {
 //	@Failure	401		"Unauthorized"
 //	@Failure	403		"Forbidden - Not the event owner"
 //	@Failure	500		"Internal Server Error"
-//	@Router		/events/{id} [put]
+//	@Router		/events/{eventId} [put]
 func modifyEvent(w http.ResponseWriter, r *http.Request) {
 	newEventParams, err := readCtxBody[rest.NewEventParams](w, r)
 	if err != nil {
 		return
 	}
 
-	eventIDStr := chi.URLParam(r, "id")
+	eventIDStr := chi.URLParam(r, "eventId")
 	eventID, err := strconv.Atoi(eventIDStr)
 	if err != nil {
 		http.Error(w, "Invalid event ID", http.StatusBadRequest)
@@ -283,11 +283,18 @@ func modifyEvent(w http.ResponseWriter, r *http.Request) {
 //	@Failure	401	"Unauthorized"
 //	@Failure	409	"You already have a reservation for this event"
 //	@Failure	500	"Internal Server Error"
-//	@Router		/events/{id}/reservations [post]
+//	@Router		/events/{eventId}/reservations [post]
 func reserveEvent(w http.ResponseWriter, r *http.Request) {
-	eventIDStr := chi.URLParam(r, "id")
+	eventIDStr := chi.URLParam(r, "eventId")
+	if eventIDStr == "" {
+		log.Error.Println("No event ID")
+		http.Error(w, "Invalid event ID", http.StatusBadRequest)
+		return
+	}
+
 	eventID, err := strconv.Atoi(eventIDStr)
 	if err != nil {
+		log.Error.Println("Error converting event ID to int: ", err)
 		http.Error(w, "Invalid event ID", http.StatusBadRequest)
 		return
 	}
@@ -351,9 +358,9 @@ func reserveEvent(w http.ResponseWriter, r *http.Request) {
 //	@Failure	400	"Invalid Event ID"
 //	@Failure	401	"Unauthorized"
 //	@Failure	500	"Internal Server Error"
-//	@Router		/events/{id}/reservations [get]
+//	@Router		/events/{eventId}/reservations [get]
 func getEventReservations(w http.ResponseWriter, r *http.Request) {
-	eventIDStr := chi.URLParam(r, "id")
+	eventIDStr := chi.URLParam(r, "eventId")
 	eventID, err := strconv.Atoi(eventIDStr)
 	if err != nil {
 		http.Error(w, "Invalid event ID", http.StatusBadRequest)
@@ -392,9 +399,9 @@ func getEventReservations(w http.ResponseWriter, r *http.Request) {
 //	@Failure	403		"Forbidden - Not the event owner"
 //	@Failure	404		"Reservation not found"
 //	@Failure	500		"Internal Server Error"
-//	@Router		/events/{id}/reservations [patch]
+//	@Router		/events/{eventId}/reservations [patch]
 func removeReservationFromCode(w http.ResponseWriter, r *http.Request) {
-	eventIDStr := chi.URLParam(r, "id")
+	eventIDStr := chi.URLParam(r, "eventId")
 	eventID, err := strconv.Atoi(eventIDStr)
 	if err != nil {
 		http.Error(w, "Invalid event ID", http.StatusBadRequest)
@@ -463,9 +470,9 @@ func removeReservationFromCode(w http.ResponseWriter, r *http.Request) {
 //	@Failure	400	"Invalid Event ID"
 //	@Failure	401	"Unauthorized"
 //	@Failure	500	"Internal Server Error"
-//	@Router		/events/{id}/reservations [delete]
+//	@Router		/events/{eventId}/reservations [delete]
 func removeReservationFromUser(w http.ResponseWriter, r *http.Request) {
-	eventIDStr := chi.URLParam(r, "id")
+	eventIDStr := chi.URLParam(r, "eventId")
 	eventID, err := strconv.Atoi(eventIDStr)
 	if err != nil {
 		http.Error(w, "Invalid event ID", http.StatusBadRequest)

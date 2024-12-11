@@ -40,6 +40,7 @@ type EventInfo struct {
 
 func NewUserInfo(u models.User) UserInfo {
 	return UserInfo{
+		ID:        u.ID,
 		FirstName: u.FirstName,
 		LastName:  u.LastName,
 		Email:     u.Email,

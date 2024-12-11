@@ -21,6 +21,15 @@ CREATE TABLE IF NOT EXISTS events (
 );
 `
 
+const reservationsTable = `
+CREATE TABLE IF NOT EXISTS reservations (
+	id SERIAL UNIQUE,
+	user_id INT NOT NULL,
+	event_id INT NOT NULL,
+	reserve_code TEXT NOT NULL
+);
+`
+
 func (db Database) NewEvent(newEvent models.Event) error {
 	_, err := db.Exec(
 		`INSERT INTO events (
@@ -128,7 +137,7 @@ func (db Database) DeleteReservationFromCode(eventID int, reserveCode string) (i
 }
 
 func (db Database) DeleteReservationFromUser(eventID int, userID int) error {
-	_, err := db.Exec("DELETE FROM reservations WHERE event_id = $1, AND user_id = $2", eventID, userID)
+	_, err := db.Exec("DELETE FROM reservations WHERE event_id = $1 AND user_id = $2", eventID, userID)
 	if err != nil {
 		return err
 	}

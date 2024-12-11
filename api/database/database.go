@@ -35,6 +35,12 @@ func InitDB() (Database, error) {
 		return Database{}, err
 	}
 
+	_, err = postgresDB.Exec(reservationsTable)
+	if err != nil {
+		log.Error.Println("Error creating reservations table: ", err)
+		return Database{}, err
+	}
+
 	return Database{postgresDB}, nil
 }
 

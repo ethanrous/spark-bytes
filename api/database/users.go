@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS users (
 `
 
 var ErrUserNotFound = errors.New("user not found")
+var ErrBadUser = errors.New("user returned from the database is not the user requested")
 
 func (db Database) NewUser(newUser models.User) error {
 	_, err := db.Exec("INSERT INTO users (first_name, last_name, email, password_hash, is_verified, joined_at) VALUES ($1, $2, $3, $4, $5, $6)", newUser.FirstName, newUser.LastName, newUser.Email, newUser.Password, newUser.IsVerified, time.Now())
@@ -61,6 +62,9 @@ func (db Database) GetUserByUserId(userId int) (models.User, error) {
 	err = rows.StructScan(&user)
 	if err != nil {
 		return models.User{}, err
+	}
+	if user.ID != userId {
+		return models.User{}, ErrUserNotFound
 	}
 
 	return user, nil

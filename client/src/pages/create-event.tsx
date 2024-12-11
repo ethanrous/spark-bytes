@@ -200,7 +200,8 @@ const CreateEventPage: FC = () => {
 					<div style={styles.imageSection}>
 						<Image
 							src="/assets/IMG_990.jpeg"
-							alt="Event Illustration"
+							alt={"Event Illustration"}
+							fill={true}
 							style={styles.image}
 						/>
 					</div>
@@ -307,7 +308,6 @@ const styles: { [key: string]: React.CSSProperties } = {
 	},
 	image: {
 		width: "100%",
-		height: "auto",
 		objectFit: "cover",
 		borderRadius: "8px",
 	},

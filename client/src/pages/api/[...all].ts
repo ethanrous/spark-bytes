@@ -14,7 +14,6 @@ export const config = {
 
 export default (req, res) => {
 	return new Promise((resolve, reject) => {
-		console.log('Proxying request', req, API_URL)
 		proxy.web(req, res, { target: API_URL, changeOrigin: true }, (err: Error) => {
 			if (err) {
 				return reject(err)

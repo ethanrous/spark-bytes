@@ -3,6 +3,7 @@ import themeConfig from '../theme/themeConfig';
 import { useEffect } from 'react';
 import { UserApi } from '@/api/userApi';
 import { User, useSessionStore } from '@/state/session';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 function MyApp({ Component, pageProps }: AppProps) {
 	const user = useSessionStore(state => state.user)
@@ -30,24 +31,27 @@ function MyApp({ Component, pageProps }: AppProps) {
 		return null
 	}
 
+	const queryClient = new QueryClient()
+
 	return (
-		<div
-			style={{
-				fontFamily: themeConfig.typography.fontFamily,
-				backgroundColor: themeConfig.colors.background,
-				color: themeConfig.colors.textPrimary,
-				width: '100vw',
-				height: '100vh',
-				margin: 0,
-				padding: 0,
-				boxSizing: 'border-box',
-				display: 'flex',
-				flexDirection: 'column',
-				overflowX: 'hidden',
-			}}
-		>
-			{/* Reset styles */}
-			<style global jsx>{`
+		<QueryClientProvider client={queryClient}>
+			<div
+				style={{
+					fontFamily: themeConfig.typography.fontFamily,
+					backgroundColor: themeConfig.colors.background,
+					color: themeConfig.colors.textPrimary,
+					width: '100vw',
+					height: '100vh',
+					margin: 0,
+					padding: 0,
+					boxSizing: 'border-box',
+					display: 'flex',
+					flexDirection: 'column',
+					overflowX: 'hidden',
+				}}
+			>
+				{/* Reset styles */}
+				<style global jsx>{`
         * {
           margin: 0;
           padding: 0;
@@ -62,8 +66,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           overflow: hidden; /* Prevent extra scrollbars */
         }
       `}</style>
-			<Component {...pageProps} />
-		</div>
+				<Component {...pageProps} />
+			</div>
+		</QueryClientProvider>
 	);
 }
 
