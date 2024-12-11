@@ -1,0 +1,501 @@
+basePath: /api/
+definitions:
+  EventInfo:
+    properties:
+      capacity:
+        type: integer
+      description:
+        type: string
+      dietaryInfo:
+        type: string
+      endTime:
+        type: integer
+      eventId:
+        type: integer
+      isClosed:
+        type: boolean
+      location:
+        type: string
+      name:
+        type: string
+      owner:
+        type: integer
+      registeredCount:
+        type: integer
+      reservationIds:
+        items:
+          type: integer
+        type: array
+      startTime:
+        type: integer
+    required:
+    - capacity
+    - description
+    - dietaryInfo
+    - endTime
+    - eventId
+    - isClosed
+    - location
+    - name
+    - owner
+    - registeredCount
+    - reservationIds
+    - startTime
+    type: object
+  LoginParams:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  NewEventParams:
+    properties:
+      capacity:
+        type: integer
+      description:
+        type: string
+      dietary_info:
+        type: string
+      end_time:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+      owner_id:
+        type: integer
+      start_time:
+        type: integer
+    type: object
+  NewUserParams:
+    properties:
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password:
+        type: string
+    type: object
+  UserInfo:
+    properties:
+      email:
+        type: string
+      firstName:
+        type: string
+      id:
+        type: integer
+      joinedAt:
+        type: string
+      lastName:
+        type: string
+      verified:
+        type: boolean
+    type: object
+host: localhost:5001
+info:
+  contact: {}
+  description: Access to the SparkBytes server
+  title: SparkBytes API
+  version: "1.0"
+paths:
+  /events:
+    get:
+      operationId: GetEvents
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/EventInfo'
+            type: array
+        "401":
+          description: Unauthorized
+      summary: Get All Events
+      tags:
+      - Events
+    post:
+      consumes:
+      - application/json
+      operationId: CreateEvent
+      parameters:
+      - description: Event params
+        in: body
+        name: eventParams
+        required: true
+        schema:
+          $ref: '#/definitions/NewEventParams'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Create a New Event
+      tags:
+      - Events
+  /events/{eventId}:
+    get:
+      operationId: GetEvent
+      parameters:
+      - description: ID of Event
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/EventInfo'
+        "401":
+          description: Unauthorized
+      summary: Get an Event
+      tags:
+      - Events
+    patch:
+      consumes:
+      - application/json
+      operationId: CloseEvent
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event closed successfully
+        "400":
+          description: Invalid Event ID or Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - Not the event owner
+        "500":
+          description: Internal Server Error
+      summary: Close an Existing Event
+      tags:
+      - Events
+    put:
+      consumes:
+      - application/json
+      operationId: ModifyEvent
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      - description: Updated event details
+        in: body
+        name: event
+        required: true
+        schema:
+          $ref: '#/definitions/NewEventParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event modified successfully
+        "400":
+          description: Invalid Event ID or Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - Not the event owner
+        "500":
+          description: Internal Server Error
+      summary: Modify an Existing Event
+      tags:
+      - Events
+  /events/{eventId}/reservations:
+    delete:
+      operationId: RemoveReservationFromUser
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Reservation cleared successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid Event ID
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Remove the Authenticated User's Reservation
+      tags:
+      - Events
+    get:
+      operationId: GetEventReservations
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/UserInfo'
+            type: array
+        "400":
+          description: Invalid Event ID
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal Server Error
+      summary: Fetch the list of users who are reserved for an event
+      tags:
+      - Events
+    patch:
+      operationId: RemoveReservationFromCode
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      - description: Reservation code
+        in: query
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Reservation cleared successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid request or missing code
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - Not the event owner
+        "404":
+          description: Reservation not found
+        "500":
+          description: Internal Server Error
+      summary: Remove a Reservation by Code
+      tags:
+      - Events
+    post:
+      operationId: ReserveEvent
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Reservation created successfully
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Invalid Event ID
+        "401":
+          description: Unauthorized
+        "409":
+          description: You already have a reservation for this event
+        "500":
+          description: Internal Server Error
+      summary: Reserve a Spot in an Event
+      tags:
+      - Events
+  /events/myEvent:
+    get:
+      operationId: GetOwnEvent
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/EventInfo'
+            type: array
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+      summary: Get Event of Session Cookie Holder
+      tags:
+      - Events
+  /events/owner:
+    get:
+      operationId: GetEventsByOwner
+      parameters:
+      - description: ID of Event Owner
+        in: query
+        name: owner_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/EventInfo'
+            type: array
+        "400":
+          description: Bad Request
+        "401":
+          description: Unauthorized
+      summary: Get Events By Owner
+      tags:
+      - Events
+  /users:
+    get:
+      operationId: GetUser
+      parameters:
+      - description: User email
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/UserInfo'
+        "401":
+          description: Unauthorized
+      summary: Get User
+      tags:
+      - Users
+    post:
+      operationId: CreateUser
+      parameters:
+      - description: New user params
+        in: body
+        name: newUserParams
+        required: true
+        schema:
+          $ref: '#/definitions/NewUserParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+      summary: Create User
+      tags:
+      - Users
+  /users/{userId}/verify:
+    post:
+      operationId: VerifyUser
+      parameters:
+      - description: UserId to verify
+        in: path
+        name: userId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "404":
+          description: Not Found
+      summary: Verify a user
+      tags:
+      - Users
+  /users/login:
+    post:
+      operationId: LoginUser
+      parameters:
+      - description: Login params
+        in: body
+        name: loginParams
+        required: true
+        schema:
+          $ref: '#/definitions/LoginParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/UserInfo'
+        "401":
+          description: Unauthorized
+      summary: Login User
+      tags:
+      - Users
+  /users/logout:
+    post:
+      operationId: LogoutUser
+      responses:
+        "200":
+          description: OK
+      summary: Logout User
+      tags:
+      - Users
+  /users/me:
+    get:
+      operationId: GetLoggedInUser
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/UserInfo'
+        "401":
+          description: Unauthorized
+      summary: Get Logged in user
+      tags:
+      - Users
+schemes:
+- http
+- https
+securityDefinitions:
+  SessionAuth:
+    in: cookie
+    name: spark-bytes-session
+    type: apiKey
+swagger: "2.0"
