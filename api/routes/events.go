@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/ethanrous/spark-bytes/internal/log"
+	"github.com/ethanrous/spark-bytes/mail"
 	"github.com/ethanrous/spark-bytes/models"
 	"github.com/ethanrous/spark-bytes/models/rest"
 	"github.com/go-chi/chi/v5"
@@ -197,6 +198,13 @@ func createEvent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	go func() {
+		err := mail.SendEventCreationEmail(newEvent, db)
+		if err != nil {
+			log.Error.Println("Error sending event creation email: ", err)
+		}
+	}()
+
 	w.WriteHeader(http.StatusCreated)
 }
 
@@ -335,6 +343,22 @@ func reserveEvent(w http.ResponseWriter, r *http.Request) {
 		log.Error.Println("Error creating reservation:", err)
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
+	}
+
+	event, err := db.GetEventById(eventID)
+	if err != nil {
+		log.Error.Println("Error getting event:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	if time.Until(event.StartTime) < 10*time.Minute {
+		err = mail.SendEventStartingSoonToUser(event, user)
+		if err != nil {
+			log.Error.Println("Error sending event starting soon email to user: ", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
 	}
 
 	// Return the code or a success message
