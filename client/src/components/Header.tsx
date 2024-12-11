@@ -1,3 +1,10 @@
+{/* 
+  client\src\components\Header.tsx
+
+  Purpose: 
+    Renders the header of the Spark! Bytes website, including the 
+	brand logo, navigation links, and user authentication options.
+  */}
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Brand from './Brand';

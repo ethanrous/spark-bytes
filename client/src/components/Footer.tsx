@@ -1,4 +1,10 @@
-// src/components/Footer.tsx
+{/* 
+  client\src\components\Footer.tsx
+
+  Purpose: 
+    Renders the footer for the Spark! Bytes website, displaying 
+    social media icons and copyright information.
+  */}
 import { InstagramOutlined, FacebookOutlined, TwitterOutlined } from '@ant-design/icons';
 
 const Footer: React.FC = () => {

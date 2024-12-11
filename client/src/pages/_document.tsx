@@ -1,4 +1,11 @@
-// src/pages/_document.tsx
+{/* 
+  client\src\pages\_document.tsx
+
+  Purpose: 
+    This file customizes the default HTML document structure for a Next.js application by 
+    extending the Document class from next/document. It serves as a template for the 
+    initial HTML document that wraps around the application's content.
+  */}
 import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document';
 
 class MyDocument extends Document {

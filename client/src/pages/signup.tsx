@@ -1,4 +1,11 @@
-// pages/signup.tsx
+{/* 
+  client\src\pages\signup.tsx
+
+  Purpose: 
+    To create a sign-up page where users can register an account on the platform. 
+	The page collects user details such as first name, last name, BU email address, 
+	and password, then validates the inputs before sending the data to the backend API for user creation.
+  */}
 import React, { useState } from 'react';
 import Brand from "../components/Brand";
 import { UserApi } from '@/api/userApi';

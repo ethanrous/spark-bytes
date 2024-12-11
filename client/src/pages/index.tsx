@@ -1,3 +1,11 @@
+{/* 
+  client\src\pages\index.tsx
+
+  Purpose: 
+    Serves as the main landing page for the "Spark! Bytes" platform. The primary purpose 
+	of this file is to present key information about the platform and encourage user 
+	engagement through various sections on the page. 
+  */}
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import themeConfig from '../theme/themeConfig';

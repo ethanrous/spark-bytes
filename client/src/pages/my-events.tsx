@@ -1,3 +1,11 @@
+{/* 
+  client\src\pages\my-events.tsx
+
+  Purpose: 
+    To create a dynamic page where users can view, manage, and modify events that 
+    they have created on the platform. This page serves as an event management 
+    dashboard tailored to the individual user, giving them full control over their own events
+  */}
 import React, { useEffect, useState } from 'react';
 import { EventApi } from '@/api/eventApi';
 import { EventInfo } from '@/api/swag';

@@ -1,4 +1,10 @@
-// pages/login.tsx
+{/* 
+  client\src\pages\login.tsx
+
+  Purpose: 
+    This file is a React component for a login page, used in a web application. 
+	It provides a form where users can enter their email and password to log in. 
+  */}
 import React, { useState } from 'react';
 import Brand from "../components/Brand";
 import { UserApi } from '@/api/userApi';

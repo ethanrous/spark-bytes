@@ -1,3 +1,11 @@
+{/* 
+  client/src/pages/view-events.tsx
+
+  Purpose: 
+    This file is a React component in a Next.js application responsible for displaying 
+	a list of events, allowing users to interact with event reservations, and applying 
+	various filters and sorting options to the events list.
+  */}
 import { EventApi } from "@/api/eventApi";
 import { EventInfo } from "@/api/swag";
 import { Card, Col, Row, Typography, Dropdown, Checkbox, Button } from "antd";
