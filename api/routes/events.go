@@ -279,6 +279,60 @@ func modifyEvent(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
+// CloseEvent godoc
+//
+//	@ID			CloseEvent
+//	@Summary	Close an Existing Event
+//	@Tags		Events
+//	@Accept		json
+//	@Produce	json
+//	@Param		id		path	int					true	"Event ID"
+//	@Success	200		"Event closed successfully"
+//	@Failure	400		"Invalid Event ID or Bad request"
+//	@Failure	401		"Unauthorized"
+//	@Failure	403		"Forbidden - Not the event owner"
+//	@Failure	500		"Internal Server Error"
+//	@Router		/events/{eventId} [patch]
+func closeEvent(w http.ResponseWriter, r *http.Request) {
+	eventIDStr := chi.URLParam(r, "eventId")
+	eventID, err := strconv.Atoi(eventIDStr)
+	if err != nil {
+		http.Error(w, "Invalid event ID", http.StatusBadRequest)
+		return
+	}
+
+	db := databaseFromContext(r.Context())
+	user, err := userFromContext(r.Context())
+	if err != nil {
+		log.Error.Println("Error getting user from context: ", err)
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	// Check if the user owns the event
+	event, err := db.GetEventById(eventID)
+	if err != nil {
+		log.Error.Println("Error getting event owner:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	if user.ID != event.OwnerId {
+		// The user does not own this event
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
+
+	err = db.CloseEvent(eventID)
+	if err != nil {
+		log.Error.Println("Error closing event: ", err)
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+}
+
 // ReserveEvent godoc
 //
 //	@ID			ReserveEvent

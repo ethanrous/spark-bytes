@@ -20,4 +20,5 @@ type Event struct {
 	EndTime     time.Time `db:"end_time"`
 	Capacity    int       `db:"capacity"`
 	OwnerId     int       `db:"owner_id"`
+	IsClosed    bool      `db:"is_closed"`
 }

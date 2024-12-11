@@ -88,6 +88,21 @@ func (db Database) ModifyEvent(eventID int, newEvent models.Event) error {
 	return nil
 }
 
+func (db Database) CloseEvent(eventID int) error {
+	_, err := db.Exec(
+		`UPDATE events
+		 SET
+			is_closed = true
+		WHERE id = $1`,
+		eventID,
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func (db Database) reserveCodeExists(eventID int, code string) (bool, error) {
 	var count int
 	err := db.QueryRow("SELECT COUNT(*) FROM reservations WHERE event_id = $1 AND reserve_code = $2", eventID, code).Scan(&count)
