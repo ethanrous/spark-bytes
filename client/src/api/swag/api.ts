@@ -61,6 +61,12 @@ export interface EventInfo {
     'eventId': number;
     /**
      * 
+     * @type {boolean}
+     * @memberof EventInfo
+     */
+    'isClosed': boolean;
+    /**
+     * 
      * @type {string}
      * @memberof EventInfo
      */
@@ -253,6 +259,40 @@ export const EventsApiAxiosParamCreator = function (configuration?: Configuratio
     return {
         /**
          * 
+         * @summary Close an Existing Event
+         * @param {number} eventId Event ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        closeEvent: async (eventId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'eventId' is not null or undefined
+            assertParamExists('closeEvent', 'eventId', eventId)
+            const localVarPath = `/events/{eventId}`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PATCH', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
          * @summary Create a New Event
          * @param {NewEventParams} eventParams Event params
          * @param {*} [options] Override http request option.
@@ -290,15 +330,15 @@ export const EventsApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Get an Event
-         * @param {number} id ID of Event
+         * @param {number} eventId ID of Event
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEvent: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getEvent', 'id', id)
-            const localVarPath = `/events/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        getEvent: async (eventId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'eventId' is not null or undefined
+            assertParamExists('getEvent', 'eventId', eventId)
+            const localVarPath = `/events/{eventId}`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -324,15 +364,15 @@ export const EventsApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Fetch the list of users who are reserved for an event
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEventReservations: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('getEventReservations', 'id', id)
-            const localVarPath = `/events/{id}/reservations`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        getEventReservations: async (eventId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'eventId' is not null or undefined
+            assertParamExists('getEventReservations', 'eventId', eventId)
+            const localVarPath = `/events/{eventId}/reservations`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -455,18 +495,18 @@ export const EventsApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Modify an Existing Event
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {NewEventParams} event Updated event details
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        modifyEvent: async (id: number, event: NewEventParams, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('modifyEvent', 'id', id)
+        modifyEvent: async (eventId: number, event: NewEventParams, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'eventId' is not null or undefined
+            assertParamExists('modifyEvent', 'eventId', eventId)
             // verify required parameter 'event' is not null or undefined
             assertParamExists('modifyEvent', 'event', event)
-            const localVarPath = `/events/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            const localVarPath = `/events/{eventId}`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -495,18 +535,18 @@ export const EventsApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Remove a Reservation by Code
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {string} code Reservation code
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        removeReservationFromCode: async (id: number, code: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('removeReservationFromCode', 'id', id)
+        removeReservationFromCode: async (eventId: number, code: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'eventId' is not null or undefined
+            assertParamExists('removeReservationFromCode', 'eventId', eventId)
             // verify required parameter 'code' is not null or undefined
             assertParamExists('removeReservationFromCode', 'code', code)
-            const localVarPath = `/events/{id}/reservations`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            const localVarPath = `/events/{eventId}/reservations`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -536,15 +576,15 @@ export const EventsApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Remove the Authenticated User\'s Reservation
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        removeReservationFromUser: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('removeReservationFromUser', 'id', id)
-            const localVarPath = `/events/{id}/reservations`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        removeReservationFromUser: async (eventId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'eventId' is not null or undefined
+            assertParamExists('removeReservationFromUser', 'eventId', eventId)
+            const localVarPath = `/events/{eventId}/reservations`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -570,15 +610,15 @@ export const EventsApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @summary Reserve a Spot in an Event
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        reserveEvent: async (id: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('reserveEvent', 'id', id)
-            const localVarPath = `/events/{id}/reservations`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        reserveEvent: async (eventId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'eventId' is not null or undefined
+            assertParamExists('reserveEvent', 'eventId', eventId)
+            const localVarPath = `/events/{eventId}/reservations`
+                .replace(`{${"eventId"}}`, encodeURIComponent(String(eventId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -613,6 +653,19 @@ export const EventsApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
+         * @summary Close an Existing Event
+         * @param {number} eventId Event ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async closeEvent(eventId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.closeEvent(eventId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['EventsApi.closeEvent']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
          * @summary Create a New Event
          * @param {NewEventParams} eventParams Event params
          * @param {*} [options] Override http request option.
@@ -627,12 +680,12 @@ export const EventsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Get an Event
-         * @param {number} id ID of Event
+         * @param {number} eventId ID of Event
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getEvent(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EventInfo>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getEvent(id, options);
+        async getEvent(eventId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<EventInfo>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getEvent(eventId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EventsApi.getEvent']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -640,12 +693,12 @@ export const EventsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Fetch the list of users who are reserved for an event
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getEventReservations(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserInfo>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.getEventReservations(id, options);
+        async getEventReservations(eventId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<UserInfo>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getEventReservations(eventId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EventsApi.getEventReservations']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -690,13 +743,13 @@ export const EventsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Modify an Existing Event
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {NewEventParams} event Updated event details
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async modifyEvent(id: number, event: NewEventParams, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.modifyEvent(id, event, options);
+        async modifyEvent(eventId: number, event: NewEventParams, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.modifyEvent(eventId, event, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EventsApi.modifyEvent']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -704,13 +757,13 @@ export const EventsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Remove a Reservation by Code
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {string} code Reservation code
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async removeReservationFromCode(id: number, code: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.removeReservationFromCode(id, code, options);
+        async removeReservationFromCode(eventId: number, code: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.removeReservationFromCode(eventId, code, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EventsApi.removeReservationFromCode']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -718,12 +771,12 @@ export const EventsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Remove the Authenticated User\'s Reservation
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async removeReservationFromUser(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.removeReservationFromUser(id, options);
+        async removeReservationFromUser(eventId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.removeReservationFromUser(eventId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EventsApi.removeReservationFromUser']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -731,12 +784,12 @@ export const EventsApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @summary Reserve a Spot in an Event
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async reserveEvent(id: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.reserveEvent(id, options);
+        async reserveEvent(eventId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<{ [key: string]: string; }>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.reserveEvent(eventId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['EventsApi.reserveEvent']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -753,6 +806,16 @@ export const EventsApiFactory = function (configuration?: Configuration, basePat
     return {
         /**
          * 
+         * @summary Close an Existing Event
+         * @param {number} eventId Event ID
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        closeEvent(eventId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.closeEvent(eventId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
          * @summary Create a New Event
          * @param {NewEventParams} eventParams Event params
          * @param {*} [options] Override http request option.
@@ -764,22 +827,22 @@ export const EventsApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @summary Get an Event
-         * @param {number} id ID of Event
+         * @param {number} eventId ID of Event
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEvent(id: number, options?: RawAxiosRequestConfig): AxiosPromise<EventInfo> {
-            return localVarFp.getEvent(id, options).then((request) => request(axios, basePath));
+        getEvent(eventId: number, options?: RawAxiosRequestConfig): AxiosPromise<EventInfo> {
+            return localVarFp.getEvent(eventId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Fetch the list of users who are reserved for an event
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getEventReservations(id: number, options?: RawAxiosRequestConfig): AxiosPromise<Array<UserInfo>> {
-            return localVarFp.getEventReservations(id, options).then((request) => request(axios, basePath));
+        getEventReservations(eventId: number, options?: RawAxiosRequestConfig): AxiosPromise<Array<UserInfo>> {
+            return localVarFp.getEventReservations(eventId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -812,44 +875,44 @@ export const EventsApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @summary Modify an Existing Event
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {NewEventParams} event Updated event details
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        modifyEvent(id: number, event: NewEventParams, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.modifyEvent(id, event, options).then((request) => request(axios, basePath));
+        modifyEvent(eventId: number, event: NewEventParams, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.modifyEvent(eventId, event, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Remove a Reservation by Code
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {string} code Reservation code
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        removeReservationFromCode(id: number, code: string, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: string; }> {
-            return localVarFp.removeReservationFromCode(id, code, options).then((request) => request(axios, basePath));
+        removeReservationFromCode(eventId: number, code: string, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: string; }> {
+            return localVarFp.removeReservationFromCode(eventId, code, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Remove the Authenticated User\'s Reservation
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        removeReservationFromUser(id: number, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: string; }> {
-            return localVarFp.removeReservationFromUser(id, options).then((request) => request(axios, basePath));
+        removeReservationFromUser(eventId: number, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: string; }> {
+            return localVarFp.removeReservationFromUser(eventId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
          * @summary Reserve a Spot in an Event
-         * @param {number} id Event ID
+         * @param {number} eventId Event ID
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        reserveEvent(id: number, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: string; }> {
-            return localVarFp.reserveEvent(id, options).then((request) => request(axios, basePath));
+        reserveEvent(eventId: number, options?: RawAxiosRequestConfig): AxiosPromise<{ [key: string]: string; }> {
+            return localVarFp.reserveEvent(eventId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -861,6 +924,18 @@ export const EventsApiFactory = function (configuration?: Configuration, basePat
  * @extends {BaseAPI}
  */
 export class EventsApi extends BaseAPI {
+    /**
+     * 
+     * @summary Close an Existing Event
+     * @param {number} eventId Event ID
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof EventsApi
+     */
+    public closeEvent(eventId: number, options?: RawAxiosRequestConfig) {
+        return EventsApiFp(this.configuration).closeEvent(eventId, options).then((request) => request(this.axios, this.basePath));
+    }
+
     /**
      * 
      * @summary Create a New Event
@@ -876,25 +951,25 @@ export class EventsApi extends BaseAPI {
     /**
      * 
      * @summary Get an Event
-     * @param {number} id ID of Event
+     * @param {number} eventId ID of Event
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EventsApi
      */
-    public getEvent(id: number, options?: RawAxiosRequestConfig) {
-        return EventsApiFp(this.configuration).getEvent(id, options).then((request) => request(this.axios, this.basePath));
+    public getEvent(eventId: number, options?: RawAxiosRequestConfig) {
+        return EventsApiFp(this.configuration).getEvent(eventId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Fetch the list of users who are reserved for an event
-     * @param {number} id Event ID
+     * @param {number} eventId Event ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EventsApi
      */
-    public getEventReservations(id: number, options?: RawAxiosRequestConfig) {
-        return EventsApiFp(this.configuration).getEventReservations(id, options).then((request) => request(this.axios, this.basePath));
+    public getEventReservations(eventId: number, options?: RawAxiosRequestConfig) {
+        return EventsApiFp(this.configuration).getEventReservations(eventId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
@@ -934,51 +1009,51 @@ export class EventsApi extends BaseAPI {
     /**
      * 
      * @summary Modify an Existing Event
-     * @param {number} id Event ID
+     * @param {number} eventId Event ID
      * @param {NewEventParams} event Updated event details
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EventsApi
      */
-    public modifyEvent(id: number, event: NewEventParams, options?: RawAxiosRequestConfig) {
-        return EventsApiFp(this.configuration).modifyEvent(id, event, options).then((request) => request(this.axios, this.basePath));
+    public modifyEvent(eventId: number, event: NewEventParams, options?: RawAxiosRequestConfig) {
+        return EventsApiFp(this.configuration).modifyEvent(eventId, event, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Remove a Reservation by Code
-     * @param {number} id Event ID
+     * @param {number} eventId Event ID
      * @param {string} code Reservation code
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EventsApi
      */
-    public removeReservationFromCode(id: number, code: string, options?: RawAxiosRequestConfig) {
-        return EventsApiFp(this.configuration).removeReservationFromCode(id, code, options).then((request) => request(this.axios, this.basePath));
+    public removeReservationFromCode(eventId: number, code: string, options?: RawAxiosRequestConfig) {
+        return EventsApiFp(this.configuration).removeReservationFromCode(eventId, code, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Remove the Authenticated User\'s Reservation
-     * @param {number} id Event ID
+     * @param {number} eventId Event ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EventsApi
      */
-    public removeReservationFromUser(id: number, options?: RawAxiosRequestConfig) {
-        return EventsApiFp(this.configuration).removeReservationFromUser(id, options).then((request) => request(this.axios, this.basePath));
+    public removeReservationFromUser(eventId: number, options?: RawAxiosRequestConfig) {
+        return EventsApiFp(this.configuration).removeReservationFromUser(eventId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
      * @summary Reserve a Spot in an Event
-     * @param {number} id Event ID
+     * @param {number} eventId Event ID
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof EventsApi
      */
-    public reserveEvent(id: number, options?: RawAxiosRequestConfig) {
-        return EventsApiFp(this.configuration).reserveEvent(id, options).then((request) => request(this.axios, this.basePath));
+    public reserveEvent(eventId: number, options?: RawAxiosRequestConfig) {
+        return EventsApiFp(this.configuration).reserveEvent(eventId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

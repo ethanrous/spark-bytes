@@ -43,8 +43,8 @@ func getEvents(w http.ResponseWriter, r *http.Request) {
 //	@Summary	Get an Event
 //	@Tags		Events
 //	@Produce	json
-//	@Param		id	path	int	true	"ID of Event"
-//	@Success	200	{object}	rest.EventInfo
+//	@Param		eventId	path		int	true	"ID of Event"
+//	@Success	200		{object}	rest.EventInfo
 //	@Failure	401
 //	@Router		/events/{eventId} [get]
 func getEvent(w http.ResponseWriter, r *http.Request) {
@@ -126,7 +126,7 @@ func getEventsByOwner(w http.ResponseWriter, r *http.Request) {
 //	@Summary	Get Event of Session Cookie Holder
 //	@Tags		Events
 //	@Produce	json
-//	@Success	200			{array}	rest.EventInfo
+//	@Success	200	{array}	rest.EventInfo
 //	@Failure	400
 //	@Failure	401
 //	@Router		/events/myEvent [get]
@@ -215,7 +215,7 @@ func createEvent(w http.ResponseWriter, r *http.Request) {
 //	@Tags		Events
 //	@Accept		json
 //	@Produce	json
-//	@Param		id		path	int					true	"Event ID"
+//	@Param		eventId	path	int					true	"Event ID"
 //	@Param		event	body	rest.NewEventParams	true	"Updated event details"
 //	@Success	200		"Event modified successfully"
 //	@Failure	400		"Invalid Event ID or Bad request"
@@ -287,7 +287,7 @@ func modifyEvent(w http.ResponseWriter, r *http.Request) {
 //	@Tags		Events
 //	@Accept		json
 //	@Produce	json
-//	@Param		id		path	int					true	"Event ID"
+//	@Param		eventId	path	int	true	"Event ID"
 //	@Success	200		"Event closed successfully"
 //	@Failure	400		"Invalid Event ID or Bad request"
 //	@Failure	401		"Unauthorized"
@@ -340,12 +340,12 @@ func closeEvent(w http.ResponseWriter, r *http.Request) {
 //	@Summary	Reserve a Spot in an Event
 //	@Tags		Events
 //	@Produce	json
-//	@Param		id	path		int					true	"Event ID"
-//	@Success	201	{object}	map[string]string	"Reservation created successfully"
-//	@Failure	400	"Invalid Event ID"
-//	@Failure	401	"Unauthorized"
-//	@Failure	409	"You already have a reservation for this event"
-//	@Failure	500	"Internal Server Error"
+//	@Param		eventId	path		int					true	"Event ID"
+//	@Success	201		{object}	map[string]string	"Reservation created successfully"
+//	@Failure	400		"Invalid Event ID"
+//	@Failure	401		"Unauthorized"
+//	@Failure	409		"You already have a reservation for this event"
+//	@Failure	500		"Internal Server Error"
 //	@Router		/events/{eventId}/reservations [post]
 func reserveEvent(w http.ResponseWriter, r *http.Request) {
 	eventIDStr := chi.URLParam(r, "eventId")
@@ -432,11 +432,11 @@ func reserveEvent(w http.ResponseWriter, r *http.Request) {
 //	@Summary	Fetch the list of users who are reserved for an event
 //	@Tags		Events
 //	@Produce	json
-//	@Param		id	path	int	true	"Event ID"
-//	@Success	201	{array}	rest.UserInfo
-//	@Failure	400	"Invalid Event ID"
-//	@Failure	401	"Unauthorized"
-//	@Failure	500	"Internal Server Error"
+//	@Param		eventId	path	int	true	"Event ID"
+//	@Success	201		{array}	rest.UserInfo
+//	@Failure	400		"Invalid Event ID"
+//	@Failure	401		"Unauthorized"
+//	@Failure	500		"Internal Server Error"
 //	@Router		/events/{eventId}/reservations [get]
 func getEventReservations(w http.ResponseWriter, r *http.Request) {
 	eventIDStr := chi.URLParam(r, "eventId")
@@ -470,7 +470,7 @@ func getEventReservations(w http.ResponseWriter, r *http.Request) {
 //	@Summary	Remove a Reservation by Code
 //	@Tags		Events
 //	@Produce	json
-//	@Param		id		path		int					true	"Event ID"
+//	@Param		eventId	path		int					true	"Event ID"
 //	@Param		code	query		string				true	"Reservation code"
 //	@Success	200		{object}	map[string]string	"Reservation cleared successfully"
 //	@Failure	400		"Invalid request or missing code"
@@ -544,11 +544,11 @@ func removeReservationFromCode(w http.ResponseWriter, r *http.Request) {
 //	@Summary	Remove the Authenticated User's Reservation
 //	@Tags		Events
 //	@Produce	json
-//	@Param		id	path		int					true	"Event ID"
-//	@Success	200	{object}	map[string]string	"Reservation cleared successfully"
-//	@Failure	400	"Invalid Event ID"
-//	@Failure	401	"Unauthorized"
-//	@Failure	500	"Internal Server Error"
+//	@Param		eventId	path		int					true	"Event ID"
+//	@Success	200		{object}	map[string]string	"Reservation cleared successfully"
+//	@Failure	400		"Invalid Event ID"
+//	@Failure	401		"Unauthorized"
+//	@Failure	500		"Internal Server Error"
 //	@Router		/events/{eventId}/reservations [delete]
 func removeReservationFromUser(w http.ResponseWriter, r *http.Request) {
 	eventIDStr := chi.URLParam(r, "eventId")

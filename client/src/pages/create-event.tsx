@@ -30,15 +30,16 @@ const CreateEventPage: FC = () => {
 	const [kosher, setKosher] = useState<boolean>(false);
 
 	useEffect(() => {
-		if (!user) {
+		if (!user?.loggedIn) {
 			router.push("/login?redirect=create-event");
 		}
-	}, [router]);
+	}, [router, user]);
+
+	const editEventId = Number(params.get("editEventId"));
 
 	useEffect(() => {
-		const eventId = params.get("editEventId")
-		if (eventId) {
-			EventApi.getEvent(Number(eventId)).then((response) => {
+		if (editEventId) {
+			EventApi.getEvent(editEventId).then((response) => {
 				setEditingEvent(response.data);
 				form.setFieldsValue({
 					...response.data,
@@ -47,7 +48,7 @@ const CreateEventPage: FC = () => {
 				});
 			});
 		}
-	}, [params.get("editEventId")]);
+	}, [editEventId, form]);
 
 	const generateDietaryString = () => {
 		let dietary = [];

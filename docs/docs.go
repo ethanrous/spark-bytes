@@ -146,7 +146,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/events/{id}": {
+        "/events/{eventId}": {
             "get": {
                 "produces": [
                     "application/json"
@@ -160,7 +160,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "ID of Event",
-                        "name": "id",
+                        "name": "eventId",
                         "in": "path",
                         "required": true
                     }
@@ -193,7 +193,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Event ID",
-                        "name": "id",
+                        "name": "eventId",
                         "in": "path",
                         "required": true
                     },
@@ -224,9 +224,48 @@ const docTemplate = `{
                         "description": "Internal Server Error"
                     }
                 }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Close an Existing Event",
+                "operationId": "CloseEvent",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "eventId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event closed successfully"
+                    },
+                    "400": {
+                        "description": "Invalid Event ID or Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Not the event owner"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
         },
-        "/events/{id}/reservations": {
+        "/events/{eventId}/reservations": {
             "get": {
                 "produces": [
                     "application/json"
@@ -240,7 +279,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Event ID",
-                        "name": "id",
+                        "name": "eventId",
                         "in": "path",
                         "required": true
                     }
@@ -279,7 +318,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Event ID",
-                        "name": "id",
+                        "name": "eventId",
                         "in": "path",
                         "required": true
                     }
@@ -321,7 +360,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Event ID",
-                        "name": "id",
+                        "name": "eventId",
                         "in": "path",
                         "required": true
                     }
@@ -360,7 +399,7 @@ const docTemplate = `{
                     {
                         "type": "integer",
                         "description": "Event ID",
-                        "name": "id",
+                        "name": "eventId",
                         "in": "path",
                         "required": true
                     },
@@ -571,6 +610,7 @@ const docTemplate = `{
                 "dietaryInfo",
                 "endTime",
                 "eventId",
+                "isClosed",
                 "location",
                 "name",
                 "owner",
@@ -593,6 +633,9 @@ const docTemplate = `{
                 },
                 "eventId": {
                     "type": "integer"
+                },
+                "isClosed": {
+                    "type": "boolean"
                 },
                 "location": {
                     "type": "string"
@@ -714,7 +757,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:3000",
+	Host:             "localhost:5001",
 	BasePath:         "/api/",
 	Schemes:          []string{"http", "https"},
 	Title:            "SparkBytes API",

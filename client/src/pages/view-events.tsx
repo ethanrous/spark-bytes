@@ -31,13 +31,24 @@ function getSortedEvents(
 ): EventInfo[] {
   switch (sortBy) {
     case SortByT.START_DATE:
-      return events.sort((a, b) => (a.startTime - b.startTime) * direction);
+      return events.sort((a, b) => {
+        return (a.startTime - b.startTime) * direction;
+      });
     case SortByT.END_DATE:
-      return events.sort((a, b) => (a.endTime - b.endTime) * direction);
+      return events.sort((a, b) => {
+        return (a.endTime - b.endTime) * direction;
+      });
     case SortByT.NAME:
-      return events.sort((a, b) => a.name.localeCompare(b.name) * direction);
+      return events.sort((a, b) => {
+        return a.name.localeCompare(b.name) * direction;
+      });
+    case SortByT.EVENT_LOCATION:
+      return events.sort((a, b) => {
+        return a.location.localeCompare(b.location) * direction;
+      });
+
     default:
-      console.error("Invalid sort type:", sortBy);
+      console.error("Invalid sort type:", sortBy, SortByT.NAME === sortBy);
       return events;
   }
 }

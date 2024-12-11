@@ -12,6 +12,8 @@ definitions:
         type: integer
       eventId:
         type: integer
+      isClosed:
+        type: boolean
       location:
         type: string
       name:
@@ -32,6 +34,7 @@ definitions:
     - dietaryInfo
     - endTime
     - eventId
+    - isClosed
     - location
     - name
     - owner
@@ -94,7 +97,7 @@ definitions:
       verified:
         type: boolean
     type: object
-host: localhost:3000
+host: localhost:5001
 info:
   contact: {}
   description: Access to the SparkBytes server
@@ -143,13 +146,13 @@ paths:
       summary: Create a New Event
       tags:
       - Events
-  /events/{id}:
+  /events/{eventId}:
     get:
       operationId: GetEvent
       parameters:
       - description: ID of Event
         in: path
-        name: id
+        name: eventId
         required: true
         type: integer
       produces:
@@ -164,6 +167,32 @@ paths:
       summary: Get an Event
       tags:
       - Events
+    patch:
+      consumes:
+      - application/json
+      operationId: CloseEvent
+      parameters:
+      - description: Event ID
+        in: path
+        name: eventId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Event closed successfully
+        "400":
+          description: Invalid Event ID or Bad request
+        "401":
+          description: Unauthorized
+        "403":
+          description: Forbidden - Not the event owner
+        "500":
+          description: Internal Server Error
+      summary: Close an Existing Event
+      tags:
+      - Events
     put:
       consumes:
       - application/json
@@ -171,7 +200,7 @@ paths:
       parameters:
       - description: Event ID
         in: path
-        name: id
+        name: eventId
         required: true
         type: integer
       - description: Updated event details
@@ -196,13 +225,13 @@ paths:
       summary: Modify an Existing Event
       tags:
       - Events
-  /events/{id}/reservations:
+  /events/{eventId}/reservations:
     delete:
       operationId: RemoveReservationFromUser
       parameters:
       - description: Event ID
         in: path
-        name: id
+        name: eventId
         required: true
         type: integer
       produces:
@@ -228,7 +257,7 @@ paths:
       parameters:
       - description: Event ID
         in: path
-        name: id
+        name: eventId
         required: true
         type: integer
       produces:
@@ -254,7 +283,7 @@ paths:
       parameters:
       - description: Event ID
         in: path
-        name: id
+        name: eventId
         required: true
         type: integer
       - description: Reservation code
@@ -289,7 +318,7 @@ paths:
       parameters:
       - description: Event ID
         in: path
-        name: id
+        name: eventId
         required: true
         type: integer
       produces:
