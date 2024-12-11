@@ -1,3 +1,4 @@
+import { IncomingMessage, ServerResponse } from 'http'
 import httpProxy from 'http-proxy'
 
 // const API_URL = process.env.API_URL 
@@ -12,7 +13,7 @@ export const config = {
 	},
 }
 
-export default (req, res) => {
+const proxyFunc = (req: IncomingMessage, res: ServerResponse) => {
 	return new Promise((resolve, reject) => {
 		proxy.web(req, res, { target: API_URL, changeOrigin: true }, (err: Error) => {
 			if (err) {
@@ -22,3 +23,6 @@ export default (req, res) => {
 		})
 	})
 }
+
+export default proxyFunc
+

@@ -1,9 +1,3 @@
-{/*
-  TODO:
-    -implement Brand component if you use the latter header, since its a navigation button
-  */}
-
-// src/components/Header.tsx
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Brand from './Brand';
@@ -60,7 +54,7 @@ const Header: React.FC = () => {
 				<Link href="/create-event" style={router.pathname === '/create-event' ? activeLinkStyle : linkStyle}>
 					Create Event
 				</Link>
-        <Link href="/my-events" style={router.pathname === '/my-events' ? activeLinkStyle : linkStyle}>
+				<Link href="/my-events" style={router.pathname === '/my-events' ? activeLinkStyle : linkStyle}>
 					My Events
 				</Link>
 				{!user?.loggedIn && (

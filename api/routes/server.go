@@ -18,7 +18,7 @@ type Server struct{ r *chi.Mux }
 // @title						SparkBytes API
 // @version					1.0
 // @description				Access to the SparkBytes server
-// @host						localhost:3000
+// @host						localhost:5001
 // @schemes					http https
 // @BasePath					/api/
 //

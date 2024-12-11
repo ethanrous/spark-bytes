@@ -43,9 +43,13 @@ function getSortedEvents(events: EventInfo[], sortBy: string, direction: number)
 			return events.sort((a, b) => {
 				return a.name.localeCompare(b.name) * direction;
 			});
+		case SortByT.EVENT_LOCATION:
+			return events.sort((a, b) => {
+				return a.location.localeCompare(b.location) * direction;
+			});
 
 		default:
-			console.error('Invalid sort type:', sortBy);
+			console.error('Invalid sort type:', sortBy, SortByT.NAME === sortBy);
 			return events;
 	}
 }

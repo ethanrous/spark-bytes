@@ -10,7 +10,7 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:3000",
+    "host": "localhost:5001",
     "basePath": "/api/",
     "paths": {
         "/events": {
@@ -144,7 +144,7 @@
                 }
             }
         },
-        "/events/{id}": {
+        "/events/{eventId}": {
             "get": {
                 "produces": [
                     "application/json"
@@ -158,7 +158,7 @@
                     {
                         "type": "integer",
                         "description": "ID of Event",
-                        "name": "id",
+                        "name": "eventId",
                         "in": "path",
                         "required": true
                     }
@@ -191,7 +191,7 @@
                     {
                         "type": "integer",
                         "description": "Event ID",
-                        "name": "id",
+                        "name": "eventId",
                         "in": "path",
                         "required": true
                     },
@@ -222,9 +222,48 @@
                         "description": "Internal Server Error"
                     }
                 }
+            },
+            "patch": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Events"
+                ],
+                "summary": "Close an Existing Event",
+                "operationId": "CloseEvent",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Event ID",
+                        "name": "eventId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Event closed successfully"
+                    },
+                    "400": {
+                        "description": "Invalid Event ID or Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden - Not the event owner"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
             }
         },
-        "/events/{id}/reservations": {
+        "/events/{eventId}/reservations": {
             "get": {
                 "produces": [
                     "application/json"
@@ -238,7 +277,7 @@
                     {
                         "type": "integer",
                         "description": "Event ID",
-                        "name": "id",
+                        "name": "eventId",
                         "in": "path",
                         "required": true
                     }
@@ -277,7 +316,7 @@
                     {
                         "type": "integer",
                         "description": "Event ID",
-                        "name": "id",
+                        "name": "eventId",
                         "in": "path",
                         "required": true
                     }
@@ -319,7 +358,7 @@
                     {
                         "type": "integer",
                         "description": "Event ID",
-                        "name": "id",
+                        "name": "eventId",
                         "in": "path",
                         "required": true
                     }
@@ -358,7 +397,7 @@
                     {
                         "type": "integer",
                         "description": "Event ID",
-                        "name": "id",
+                        "name": "eventId",
                         "in": "path",
                         "required": true
                     },
@@ -569,6 +608,7 @@
                 "dietaryInfo",
                 "endTime",
                 "eventId",
+                "isClosed",
                 "location",
                 "name",
                 "owner",
@@ -591,6 +631,9 @@
                 },
                 "eventId": {
                     "type": "integer"
+                },
+                "isClosed": {
+                    "type": "boolean"
                 },
                 "location": {
                     "type": "string"

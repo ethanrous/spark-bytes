@@ -26,15 +26,16 @@ const CreateEventPage: FC = () => {
 	const [capacity, setCapacity] = useState<number>(0);
 
 	useEffect(() => {
-		if (!user) {
+		if (!user?.loggedIn) {
 			router.push("/login?redirect=create-event");
 		}
-	}, [router]);
+	}, [router, user]);
+
+	const editEventId = Number(params.get("editEventId"));
 
 	useEffect(() => {
-		const eventId = params.get("editEventId")
-		if (eventId) {
-			EventApi.getEvent(Number(eventId)).then((response) => {
+		if (editEventId) {
+			EventApi.getEvent(editEventId).then((response) => {
 				setEditingEvent(response.data);
 				form.setFieldsValue({
 					...response.data,
@@ -43,7 +44,7 @@ const CreateEventPage: FC = () => {
 				});
 			});
 		}
-	}, [params.get("editEventId")]);
+	}, [editEventId, form]);
 
 	const handleSubmit = async () => {
 		console.log('Creating or updating event with:', name, location, description, dietary_info, start_time, end_time, capacity);
