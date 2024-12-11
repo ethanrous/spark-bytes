@@ -20,5 +20,5 @@ type NewEventParams struct {
 	StartTime   int64  `json:"start_time"`
 	EndTime     int64  `json:"end_time"`
 	OwnerID     int    `json:"owner_id"`
-	Attendees   int    `json:"attendees"`
+	Capacity    int    `json:"capacity"`
 } // @name NewEventParams

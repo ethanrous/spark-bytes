@@ -67,7 +67,8 @@ async def get_product_by_id(q : str = "", page : int = 1, limit : int = 10):
     q = q.replace("'", "\\'")
     try:
         #db_response = await app.state.db.fetch(f"SELECT * FROM products WHERE UPPER(name) LIKE '%{q.upper()}%' LIMIT {limit} OFFSET {(page - 1) * limit}")
-        db_response = await app.state.db.fetch(f"SELECT owner_id, name FROM events INNER JOIN users ON users.id=events.owner_id LIMIT 10")
+        #db_response = await app.state.db.fetch(f"SELECT owner_id, name FROM events INNER JOIN users ON users.id=events.owner_id LIMIT 10")
+        db_response = await app.state.db.fetch(f"SELECT * FROM users")
     except Exception as error:
         print(error)
         raise HTTPException(status_code=500, detail=[{"msg": "Internal server error."}])

@@ -13,12 +13,6 @@ const logoTextStyle = {
 };
 
 const Brand: React.FC = () => {
-	{/*
-    TODO
-    -the text is not fully vertically aligned with the logo (i think)
-    -i would like it to have an optional margin value, so the login/singup
-      pages can have it above the form box and the header wont be affected
-    */}
 	return (
 		<Link
 			href="/"

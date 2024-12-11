@@ -7,6 +7,7 @@ export interface SparkBytesSessionT {
 }
 
 export class User {
+	id?: number;
 	email?: string;
 	firstName?: string;
 	joinedAt?: string;

@@ -20,12 +20,12 @@ import (
 
 // CreateUser godoc
 //
-//	@ID		CreateUser
+//	@ID			CreateUser
 //
 //	@Summary	Create User
 //	@Tags		Users
 //	@Produce	json
-//	@Param		newUserParams	body		rest.NewUserParams	true	"New user params"
+//	@Param		newUserParams	body	rest.NewUserParams	true	"New user params"
 //	@Success	200
 //	@Failure	401
 //	@Router		/users [post]
@@ -84,15 +84,15 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 
 // GetUser godoc
 //
-// @ID			GetUser
+//	@ID			GetUser
 //
-// @Summary		Get User
-// @Tags		Users
-// @Produce		json
-// @Param		email	query	string	true	"User email"
-// @Success		200 {object} rest.UserInfo
-// @Failure		401
-// @Router		/users [get]
+//	@Summary	Get User
+//	@Tags		Users
+//	@Produce	json
+//	@Param		email	query		string	true	"User email"
+//	@Success	200		{object}	rest.UserInfo
+//	@Failure	401
+//	@Router		/users [get]
 func getUser(w http.ResponseWriter, r *http.Request) {
 	email := r.URL.Query().Get("email")
 
@@ -111,14 +111,14 @@ func getUser(w http.ResponseWriter, r *http.Request) {
 
 // GetLoggedInUser godoc
 //
-// @ID			GetLoggedInUser
+//	@ID			GetLoggedInUser
 //
-// @Summary		Get Logged in user
-// @Tags		Users
-// @Produce		json
-// @Success		200 {object} rest.UserInfo
-// @Failure		401
-// @Router		/users/me [get]
+//	@Summary	Get Logged in user
+//	@Tags		Users
+//	@Produce	json
+//	@Success	200	{object}	rest.UserInfo
+//	@Failure	401
+//	@Router		/users/me [get]
 func getLoggedInUser(w http.ResponseWriter, r *http.Request) {
 	u, err := userFromContext(r.Context())
 	if err != nil {
@@ -133,17 +133,17 @@ func getLoggedInUser(w http.ResponseWriter, r *http.Request) {
 
 // VerifyUser godoc
 //
-// @ID			VerifyUser
+//	@ID			VerifyUser
 //
-// @Summary		Verify a user
-// @Tags		Users
-// @Produce		json
-// @Success		200
+//	@Summary	Verify a user
+//	@Tags		Users
+//	@Produce	json
+//	@Success	200
 //
-// @Param		userId	path		string	true	"UserId to verify"
+//	@Param		userId	path	string	true	"UserId to verify"
 //
-// @Failure		404
-// @Router		/users/{userId}/verify [post]
+//	@Failure	404
+//	@Router		/users/{userId}/verify [post]
 func verifyUser(w http.ResponseWriter, r *http.Request) {
 	db := databaseFromContext(r.Context())
 	// u, err := userFromContext(r.Context())
@@ -184,7 +184,7 @@ type WlClaims struct {
 //	@Tags		Users
 //	@Produce	json
 //	@Param		loginParams	body		rest.LoginParams	true	"Login params"
-//	@Success	200 {object} rest.UserInfo
+//	@Success	200			{object}	rest.UserInfo
 //	@Failure	401
 //	@Router		/users/login [post]
 func loginUser(w http.ResponseWriter, r *http.Request) {
@@ -243,7 +243,7 @@ func loginUser(w http.ResponseWriter, r *http.Request) {
 
 // LogoutUser godoc
 //
-//	@ID		LogoutUser
+//	@ID			LogoutUser
 //
 //	@Summary	Logout User
 //	@Tags		Users

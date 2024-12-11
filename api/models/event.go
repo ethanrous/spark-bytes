@@ -18,6 +18,7 @@ type Event struct {
 	DietaryInfo string    `db:"dietary_info"`
 	StartTime   time.Time `db:"start_time"`
 	EndTime     time.Time `db:"end_time"`
-	Attendees   int       `db:"attendees"`
-	EventOwner
+	Capacity    int       `db:"capacity"`
+	OwnerId     int       `db:"owner_id"`
+	IsClosed    bool      `db:"is_closed"`
 }

@@ -1,48 +1,126 @@
 import { EventApi } from "@/api/eventApi";
+import { EventInfo } from "@/api/swag";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { useSessionStore } from "@/state/session";
 import themeConfig from "@/theme/themeConfig";
-import { Button, Form, Input, InputNumber, TimePicker } from "antd";
+import { Button, Form, Input, InputNumber, TimePicker, Checkbox, Row, Col } from "antd";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState, FC } from "react";
 
-const CreateEventPage: React.FC = () => {
+const CreateEventPage: FC = () => {
+	const router = useRouter();
+	const user = useSessionStore(state => state.user)
+	const params = useSearchParams();
+
 	const [form] = Form.useForm();
+	const [editingEvent, setEditingEvent] = useState<EventInfo | null>(null);
 	const [loading, setLoading] = useState<boolean>(false);
 	const [name, setName] = useState<string>();
 	const [location, setLocation] = useState<string>();
 	const [description, setDescription] = useState<string>();
-	const [dietary_info, setDietaryInfo] = useState<string>();
 	const [start_time, setStartTime] = useState<Date>();
 	const [end_time, setEndTime] = useState<Date>();
-	const [attendeesCount, setAttendeesCount] = useState<number>(0);
+	const [capacity, setCapacity] = useState<number>(0);
+	const [vegetarian, setVegetarian] = useState<boolean>(false);
+	const [vegan, setVegan] = useState<boolean>(false);
+	const [gluten_free, setGlutenFree] = useState<boolean>(false);
+	const [halal, setHalal] = useState<boolean>(false);
+	const [kosher, setKosher] = useState<boolean>(false);
 
-	const router = useRouter();
-	const user = useSessionStore(state => state.user)
+	useEffect(() => {
+		if (!user?.loggedIn) {
+			router.push("/login?redirect=create-event");
+		}
+	}, [router, user]);
+
+	const editEventId = Number(params.get("editEventId"));
+
+	useEffect(() => {
+		if (editEventId) {
+			EventApi.getEvent(editEventId).then((response) => {
+				setEditingEvent(response.data);
+				form.setFieldsValue({
+					...response.data,
+					start_time: new Date(response.data.startTime ?? 0),
+					end_time: new Date(response.data.endTime ?? 0),
+				});
+			});
+		}
+	}, [editEventId, form]);
+
+	const generateDietaryString = () => {
+		let dietary = [];
+		if (vegetarian) {
+			dietary.push("Vegetarian");
+		}
+		if (vegan) {
+			dietary.push("Vegan");
+		}
+		if (gluten_free) {
+			dietary.push("Gluten-Free");
+		}
+		if (halal) {
+			dietary.push("Halal");
+		}
+		if (kosher) {
+			dietary.push("Kosher");
+		}
+		return dietary.join(", ")
+	}
 
 	const handleSubmit = async () => {
-		console.log('Creating event with: ', name, location, description, dietary_info, start_time, end_time, attendeesCount);
+		const dietary_info = generateDietaryString()
+		// alert(dietary_info)
+		console.log('Creating or updating event with:', name, location, description, dietary_info, start_time, end_time, capacity);
 		setLoading(true);
 
 		if (!start_time || !end_time) {
 			setLoading(false);
-			return
+			return;
+		}
+
+		if (editingEvent) {
+			// Modify existing event
+			EventApi.modifyEvent(editingEvent.eventId, {
+				name,
+				location,
+				description,
+				dietary_info,
+				start_time: start_time.getTime(),
+				end_time: end_time.getTime(),
+				capacity: capacity,
+			})
+				.then(() => {
+					setLoading(false);
+					router.push('/view-events'); // Redirect to view events page
+				})
+				.catch((err: Error) => {
+					console.error('Error modifying event:', err);
+					setLoading(false);
+				});
+			return;
 		}
 
 		EventApi.createEvent({
-			end_time: end_time.getTime(),
-			start_time: start_time.getTime(),
-			description: description,
-			dietary_info: dietary_info,
-			location: location,
-			name: name,
-		}).then(() => setLoading(false)).catch((err) => {
-			console.error('Error creating event: ', err);
-			setLoading(false);
+			end_time: end_time?.getTime(),
+			start_time: start_time?.getTime(),
+			description,
+			dietary_info,
+			location,
+			name,
+			capacity
 		})
-	}
+			.then(() => {
+				setLoading(false);
+				router.push('/view-events');
+			})
+			.catch((err) => {
+				console.error('Error creating event:', err);
+				setLoading(false);
+			});
+	};
 
 	useEffect(() => {
 		if (!user) {
@@ -96,10 +174,34 @@ const CreateEventPage: React.FC = () => {
 							<Form.Item
 								label="Dietary Info"
 								name="dietary_info">
-								{/* rules={[{ required: true, message: "Dietary information is required" }]}> */}
-								<Input placeholder="Vegetarian, Gluten-Free, Vegan, etc." style={styles.input}
-									onChange={(e) => setDietaryInfo(e.target.value)}
-								/>
+								<Row>
+									<Col>
+										<Checkbox value="Vegetarian" onChange={(e) => setVegetarian(b => !b)}>
+											Vegetarian
+										</Checkbox>
+									</Col>
+									<Col>
+									<Checkbox value="Vegan" onChange={(e) => setVegan(b => !b)}>
+											Vegan
+											</Checkbox>
+									</Col>
+									
+									<Col>
+									<Checkbox value="Gluten-Free" onChange={(e) => setGlutenFree(b => !b)}>
+											Gluen-Free
+										</Checkbox>
+									</Col>
+									<Col>
+										<Checkbox value="Halal" onChange={(e) => setHalal(b => !b)}>
+											Halal
+										</Checkbox>
+									</Col>
+									<Col>
+										<Checkbox checked={kosher} onChange={(e) => setKosher(b => !b)}>
+											Kosher
+										</Checkbox>
+									</Col>
+								</Row>
 							</Form.Item>
 
 							{/* <Form.Item
@@ -128,13 +230,13 @@ const CreateEventPage: React.FC = () => {
 							</div>
 
 							<Form.Item
-								label="Number of Attendees"
+								label="Capacity"
 								name="capacity"
 								rules={[{ required: true, message: "Capacity is required" }]}>
 								<InputNumber min={1} style={styles.input}
 									onChange={(e) => {
 										if (e) {
-											setAttendeesCount(e)
+											setCapacity(e)
 										}
 									}}
 								/>
@@ -152,7 +254,8 @@ const CreateEventPage: React.FC = () => {
 					<div style={styles.imageSection}>
 						<Image
 							src="/assets/IMG_990.jpeg"
-							alt="Event Illustration"
+							alt={"Event Illustration"}
+							fill={true}
 							style={styles.image}
 						/>
 					</div>
@@ -259,7 +362,6 @@ const styles: { [key: string]: React.CSSProperties } = {
 	},
 	image: {
 		width: "100%",
-		height: "auto",
 		objectFit: "cover",
 		borderRadius: "8px",
 	},
