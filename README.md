@@ -4,8 +4,8 @@ Welcome to the Spark Bytes website repository. This document will guide you thro
 
 Further documentation for the backend can be found [here](http://localhost:5001/docs/index.html) (server must be running).
 
-Requirements doc can be found (here)[https://docs.google.com/document/d/1P9VZrlgj13rJ5iY9FkonjdRMSVcYDg3-1u8MY6RhpkM/edit?usp=sharing]
-Presentation can be found (here)[https://docs.google.com/presentation/d/1dUvbz_Z7VZOwM11rResxRaDGzcaSTCRb/edit?usp=sharing&ouid=116770286333547055598&rtpof=true&sd=true]
+Requirements doc can be found [here](https://docs.google.com/document/d/1P9VZrlgj13rJ5iY9FkonjdRMSVcYDg3-1u8MY6RhpkM/edit?usp=sharing)
+Presentation can be found [here](https://docs.google.com/presentation/d/1dUvbz_Z7VZOwM11rResxRaDGzcaSTCRb/edit?usp=sharing&ouid=116770286333547055598&rtpof=true&sd=true)
 ## Prerequisites
 
 Before running the application, ensure you have the following software installed:
