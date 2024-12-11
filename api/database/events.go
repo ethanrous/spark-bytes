@@ -62,13 +62,13 @@ func (db Database) ModifyEvent(eventID int, newEvent models.Event) error {
 	_, err := db.Exec(
 		`UPDATE events
 		 SET
-			name = $1
-			location = $2
-			description = $3
-			dietary_info = $4
-			start_time = $5
-			end_time = $6
-			owner_id = $7
+			name = $1,
+			location = $2,
+			description = $3,
+			dietary_info = $4,
+			start_time = $5,
+			end_time = $6,
+			owner_id = $7,
 			capacity = $8
 		WHERE id = $9`,
 		newEvent.Name,
@@ -77,7 +77,7 @@ func (db Database) ModifyEvent(eventID int, newEvent models.Event) error {
 		newEvent.DietaryInfo,
 		newEvent.StartTime,
 		newEvent.EndTime,
-		newEvent.ID,
+		newEvent.OwnerId,
 		newEvent.Capacity,
 		eventID,
 	)
@@ -119,8 +119,7 @@ func (db Database) CreateReservation(userID int, eventID int, reserveCode string
 
 func (db Database) GetEventById(eventID int) (models.Event, error) {
 	var event models.Event
-	err := db.QueryRow("SELECT * FROM events WHERE id = $1", eventID).Scan(&event)
-
+	err := db.Get(&event, "SELECT * FROM events WHERE id = $1", eventID)
 	return event, err
 }
 
@@ -177,7 +176,7 @@ func (db Database) GetEventsByOwner(ownerID int) ([]models.Event, error) {
 		return nil, err
 	}
 	defer rows.Close()
-
+	
 	var events []models.Event
 
 	for rows.Next() {

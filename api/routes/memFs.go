@@ -85,7 +85,7 @@ func (fs *InMemoryFS) Exists(path string) bool {
 
 func (fs *InMemoryFS) ReadFile(path string) ([]byte, error) {
 	if path == "/" || path == "//" {
-		return nil, fmt.Errorf("Invalid path")
+		return nil, fmt.Errorf("invalid path")
 	} else if path == "/index" {
 		return fs.index.data, nil
 	}

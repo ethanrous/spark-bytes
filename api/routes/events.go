@@ -258,12 +258,12 @@ func modifyEvent(w http.ResponseWriter, r *http.Request) {
 		StartTime:   time.UnixMilli(newEventParams.StartTime),
 		EndTime:     time.UnixMilli(newEventParams.EndTime),
 		Capacity:    newEventParams.Capacity,
-		OwnerId:     newEventParams.OwnerID,
+		OwnerId:     user.ID,
 	}
 
 	err = db.ModifyEvent(eventID, newEvent)
 	if err != nil {
-		log.Error.Println("Error creating event: ", err)
+		log.Error.Println("Error modifying event: ", err)
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
