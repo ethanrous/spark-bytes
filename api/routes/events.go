@@ -220,6 +220,7 @@ func modifyEvent(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		return
 	}
+	log.Info.Println("AAA", newEventParams)
 
 	eventIDStr := chi.URLParam(r, "eventId")
 	eventID, err := strconv.Atoi(eventIDStr)
