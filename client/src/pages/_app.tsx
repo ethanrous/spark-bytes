@@ -1,3 +1,10 @@
+{/* 
+  client\src\pages\_app.tsx
+
+  Purpose: 
+    This is the root component of the Next.js application that sets up global styles, 
+	manages the user session, and provides a React Query client context for managing server state.
+  */}
 import type { AppProps } from 'next/app';
 import themeConfig from '../theme/themeConfig';
 import { useEffect } from 'react';

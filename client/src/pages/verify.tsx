@@ -1,3 +1,12 @@
+{/* 
+  client\src\pages\verify.tsx
+
+  Purpose: 
+    To handle the verification process for a user who has just signed up. 
+	Specifically, it takes the userId from the query parameters, sends a 
+	request to verify the user's account through the UserApi.verifyUser method, 
+	and provides appropriate feedback to the user.
+  */}
 import { UserApi } from "@/api/userApi";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";

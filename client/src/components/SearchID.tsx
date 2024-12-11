@@ -1,4 +1,12 @@
 /* eslint-disable @next/next/no-img-element */
+{/* 
+  client\src\components\SearchID.tsx 
+
+  Purpose: 
+    Provides functionality for searching and displaying products 
+    with pagination, along with an option to add new products.
+  */}
+
 import React, { useEffect, useRef, useState } from "react";
 import {
   Button,

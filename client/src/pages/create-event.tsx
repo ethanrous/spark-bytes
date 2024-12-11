@@ -1,3 +1,11 @@
+{/* 
+  client\src\pages\create-event.tsx
+
+  Purpose: 
+    Responsible for rendering a page where users can create or edit an event on a web application. 
+	It allows authenticated users to input details such as the event name, location, description, 
+	dietary requirements, start and end times, and event capacity.
+  */}
 import { EventApi } from "@/api/eventApi";
 import { EventInfo } from "@/api/swag";
 import Footer from "@/components/Footer";

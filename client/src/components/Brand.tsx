@@ -1,4 +1,9 @@
-// src/components/Brand.tsx
+{/* 
+  src/components/Brand.tsx
+
+  Purpose: 
+    Renders the Spark! Bytes logo and brand name as a clickable link to the homepage.
+  */}
 import Image from 'next/image';
 import themeConfig from '../theme/themeConfig';
 import Link from 'next/link';
