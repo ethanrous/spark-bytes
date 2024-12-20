@@ -72,6 +72,10 @@ func SendEventCancelledEmail(event models.Event, db database.Database) error {
 	}
 
 	for _, user := range users {
+		if user.ID == event.OwnerId {
+			continue
+		}
+
 		err = SendMail("An event you registered for has been cancelled", fmt.Sprintf("Hi %s, An event you had registed for, %s, has been cancelled", user.FirstName, event.Name), user.Email)
 		if err != nil {
 			return err

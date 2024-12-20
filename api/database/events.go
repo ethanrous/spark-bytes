@@ -17,7 +17,8 @@ CREATE TABLE IF NOT EXISTS events (
 	owner_id INT NOT NULL,
 	capacity INT NOT NULL,
 	start_time TIMESTAMP NOT NULL,
-	end_time TIMESTAMP NOT NULL
+	end_time TIMESTAMP NOT NULL,
+	is_closed BOOLEAN NOT NULL DEFAULT FALSE
 );
 `
 
@@ -191,7 +192,7 @@ func (db Database) GetEventsByOwner(ownerID int) ([]models.Event, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	
+
 	var events []models.Event
 
 	for rows.Next() {

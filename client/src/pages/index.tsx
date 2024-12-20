@@ -100,6 +100,7 @@ const Home: React.FC = () => {
 		alignItems: 'center',
 		padding: '100px',
 		gap: '20px',
+		width: '100vw'
 	};
 
 	const textStyle: React.CSSProperties = {
@@ -119,6 +120,7 @@ const Home: React.FC = () => {
 
 	const imageStyle: React.CSSProperties = {
 		maxWidth: '100%',
+		maxHeight: '100%',
 		borderRadius: '8px',
 	};
 
@@ -186,7 +188,7 @@ const Home: React.FC = () => {
 							{"Ready to never miss a free bite again?"}
 						</p>
 					</div>
-					<div style={{ flex: 1, position: 'relative' }}>
+					<div style={{ display: "flex", position: 'relative', width: '50%', height: '100%' }}>
 						<Image src="/assets/pizza.jpg" alt="pizza" style={imageStyle} fill={true} />
 					</div>
 				</section>
